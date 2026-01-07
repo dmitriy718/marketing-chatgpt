@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     app_url: str = "http://localhost:3001"
     api_url: str = "http://localhost:8001"
     cors_origins: str = ""
-    database_url: str = "postgresql+psycopg://marketing:change_me@localhost:5434/marketing_corp"
+    database_url: str = "postgresql+psycopg://marketing:change_me@localhost:5434/carolina_growth"
     jwt_secret: str = "change_me"
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 60

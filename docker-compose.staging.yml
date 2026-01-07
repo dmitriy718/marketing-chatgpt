@@ -1,20 +1,20 @@
 services:
   postgres_staging:
     image: postgres:16
-    container_name: marketing_postgres_staging
+    container_name: carolina_growth_postgres_staging
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data_staging:/var/lib/postgresql/data
+      - carolina_growth_postgres_data_staging:/var/lib/postgresql/data
 
   api_staging:
     build:
       context: ./apps/api
       dockerfile: Dockerfile.prod
-    container_name: marketing_api_staging
+    container_name: carolina_growth_api_staging
     restart: unless-stopped
     depends_on:
       - postgres_staging
@@ -44,7 +44,7 @@ services:
     build:
       context: ./apps/web
       dockerfile: Dockerfile.prod
-    container_name: marketing_web_staging
+    container_name: carolina_growth_web_staging
     restart: unless-stopped
     depends_on:
       - api_staging
@@ -65,4 +65,4 @@ services:
       - "127.0.0.1:3002:3001"
 
 volumes:
-  postgres_data_staging:
+  carolina_growth_postgres_data_staging:

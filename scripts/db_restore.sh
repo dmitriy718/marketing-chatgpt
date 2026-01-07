@@ -3,7 +3,7 @@ set -euo pipefail
 
 ENV_FILE=${1:-.env.prod}
 BACKUP_FILE=${2:-}
-CONTAINER_NAME=${POSTGRES_CONTAINER:-marketing_postgres}
+CONTAINER_NAME=${POSTGRES_CONTAINER:-carolina_growth_postgres}
 
 if [[ -z "$BACKUP_FILE" ]]; then
   echo "Usage: $0 [env_file] backup_file.sql" >&2

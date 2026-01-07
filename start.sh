@@ -45,7 +45,7 @@ export WEB_PORT API_PORT POSTGRES_PORT
 export APP_URL="http://localhost:$WEB_PORT"
 export API_URL="http://localhost:$API_PORT"
 export NEXT_PUBLIC_SITE_URL="http://localhost:$WEB_PORT"
-export DATABASE_URL="postgresql+psycopg://${POSTGRES_USER:-marketing}:${POSTGRES_PASSWORD:-change_me}@localhost:${POSTGRES_PORT}/marketing_corp"
+export DATABASE_URL="postgresql+psycopg://${POSTGRES_USER:-marketing}:${POSTGRES_PASSWORD:-change_me}@localhost:${POSTGRES_PORT}/carolina_growth"
 
 printf "Using ports: web=%s api=%s db=%s\n" "$WEB_PORT" "$API_PORT" "$POSTGRES_PORT"
 

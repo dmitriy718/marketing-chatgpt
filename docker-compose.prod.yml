@@ -1,20 +1,20 @@
 services:
   postgres:
     image: postgres:16
-    container_name: marketing_postgres
+    container_name: carolina_growth_postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - carolina_growth_postgres_data:/var/lib/postgresql/data
 
   api:
     build:
       context: ./apps/api
       dockerfile: Dockerfile.prod
-    container_name: marketing_api
+    container_name: carolina_growth_api
     restart: unless-stopped
     depends_on:
       - postgres
@@ -44,7 +44,7 @@ services:
     build:
       context: ./apps/web
       dockerfile: Dockerfile.prod
-    container_name: marketing_web
+    container_name: carolina_growth_web
     restart: unless-stopped
     depends_on:
       - api
@@ -66,4 +66,4 @@ services:
 
 
 volumes:
-  postgres_data:
+  carolina_growth_postgres_data:

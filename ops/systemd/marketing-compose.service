@@ -1,5 +1,5 @@
 [Unit]
-Description=MARKETING_CORP docker compose stack
+Description=Carolina Growth docker compose stack
 After=docker.service
 Requires=docker.service
 

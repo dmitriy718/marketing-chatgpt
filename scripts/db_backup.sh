@@ -3,7 +3,7 @@ set -euo pipefail
 
 ENV_FILE=${1:-.env.prod}
 BACKUP_DIR=${2:-./backups}
-CONTAINER_NAME=${POSTGRES_CONTAINER:-marketing_postgres}
+CONTAINER_NAME=${POSTGRES_CONTAINER:-carolina_growth_postgres}
 
 if [[ -f "$ENV_FILE" ]]; then
   set -a
