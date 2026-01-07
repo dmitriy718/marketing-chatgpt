@@ -1,0 +1,20 @@
+{
+  "posts": [
+    {
+      "title": "The 2025 Local Growth Stack",
+      "slug": "2025-local-growth-stack",
+      "excerpt": "A practical breakdown of the channels, systems, and metrics that compound local growth.",
+      "author": "Carolina Growth Team",
+      "publishedAt": "2026-01-04",
+      "body": "Local growth in 2025 requires a tight loop between visibility, conversion, and retention. Start with a technical SEO baseline, build conversion-ready landing pages, and layer paid media for consistent demand. Track lead quality, not just volume, and build nurture sequences that keep prospects warm between touchpoints."
+    },
+    {
+      "title": "How to Fix Conversion Leaks",
+      "slug": "fix-conversion-leaks",
+      "excerpt": "Identify the three most common drop-offs and how to patch them fast.",
+      "author": "Carolina Growth Team",
+      "publishedAt": "2026-01-02",
+      "body": "Conversion leaks usually hide in unclear messaging, slow load times, and misaligned CTAs. Start with a page speed audit, tighten your value proposition, and ensure every section points to a single next step. Then use session replays to confirm user intent."
+    }
+  ]
+}

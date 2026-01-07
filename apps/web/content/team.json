@@ -1,0 +1,24 @@
+{
+  "team": [
+    {
+      "name": "Avery Collins",
+      "role": "Growth Strategy Lead",
+      "focus": "Positioning and market intelligence"
+    },
+    {
+      "name": "Jordan Patel",
+      "role": "Performance Media Director",
+      "focus": "Paid growth + ROI systems"
+    },
+    {
+      "name": "Maya Chen",
+      "role": "Creative Systems Lead",
+      "focus": "Conversion-first web experiences"
+    },
+    {
+      "name": "Luis Ortega",
+      "role": "CRM Architect",
+      "focus": "Pipeline and lifecycle automation"
+    }
+  ]
+}

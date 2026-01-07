@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "source": "Google",
+      "rating": 5,
+      "quote": "Clear strategy, fast execution, and consistent results."
+    },
+    {
+      "source": "Clutch",
+      "rating": 5,
+      "quote": "Best agency partner we've worked with for local growth."
+    },
+    {
+      "source": "G2",
+      "rating": 4.8,
+      "quote": "Strong reporting and hands-on optimization every week."
+    }
+  ]
+}

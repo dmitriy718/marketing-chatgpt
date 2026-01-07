@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "marketing-api"
+version = "0.1.0"
+description = "GraphQL API and backend services for Carolina Growth."
+authors = ["Carolina Growth"]
+readme = "README.md"
+packages = [{ include = "marketing_api", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = "^0.128.0"
+strawberry-graphql = "^0.288.2"
+uvicorn = { version = "^0.35.0", extras = ["standard"] }
+pydantic-settings = "^2.10.1"
+python-dotenv = "^1.1.1"
+email-validator = "^2.3.0"
+sqlalchemy = "^2.0.43"
+asyncpg = "^0.30.0"
+psycopg = { version = "^3.2.9", extras = ["binary"] }
+alembic = "^1.16.5"
+passlib = { version = "^1.7.4", extras = ["argon2"] }
+python-jose = { version = "^3.5.0", extras = ["cryptography"] }
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.2"
+ruff = "^0.12.10"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"

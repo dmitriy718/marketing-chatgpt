@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "quote": "Pipeline quality doubled in 60 days. The reporting was sharper than any agency we've hired.",
+      "author": "Casey R.",
+      "role": "Marketing Director",
+      "company": "Healthcare"
+    },
+    {
+      "quote": "They rebuilt our paid + SEO stack and finally made sales feel predictable.",
+      "author": "Morgan L.",
+      "role": "Owner",
+      "company": "Home Services"
+    },
+    {
+      "quote": "Everything is measurable and proactive. We feel like we have a growth operator on staff.",
+      "author": "Devon S.",
+      "role": "GM",
+      "company": "Fitness"
+    }
+  ]
+}

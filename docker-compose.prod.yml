@@ -1,0 +1,79 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: marketing_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile.prod
+    container_name: marketing_api
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      APP_ENV: ${APP_ENV}
+      APP_URL: ${APP_URL}
+      API_URL: ${API_URL}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ALGORITHM: ${JWT_ALGORITHM}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
+      SESSION_SECRET: ${SESSION_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      POSTHOG_API_KEY: ${POSTHOG_API_KEY}
+      POSTHOG_HOST: ${POSTHOG_HOST}
+      PYTHONPATH: /app/src
+    volumes:
+      - ./scripts:/scripts:ro
+    command: >
+      uvicorn marketing_api.main:app --host 0.0.0.0 --port 8001 --workers 2
+    ports:
+      - "127.0.0.1:8001:8001"
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile.prod
+    container_name: marketing_web
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+      NEXT_PUBLIC_BOOKING_URL: ${NEXT_PUBLIC_BOOKING_URL}
+      NEXT_PUBLIC_GA4_ID: ${NEXT_PUBLIC_GA4_ID}
+      NEXT_PUBLIC_POSTHOG_KEY: ${NEXT_PUBLIC_POSTHOG_KEY}
+      NEXT_PUBLIC_POSTHOG_HOST: ${NEXT_PUBLIC_POSTHOG_HOST}
+      API_INTERNAL_URL: ${API_INTERNAL_URL}
+      API_URL: ${API_URL}
+      CRM_WEBHOOK_URL: ${CRM_WEBHOOK_URL}
+      CRM_WEBHOOK_TOKEN: ${CRM_WEBHOOK_TOKEN}
+      AUTOMATION_WEBHOOK_URL: ${AUTOMATION_WEBHOOK_URL}
+      AUTOMATION_WEBHOOK_TOKEN: ${AUTOMATION_WEBHOOK_TOKEN}
+      REVALIDATION_SECRET: ${REVALIDATION_SECRET}
+    ports:
+      - "127.0.0.1:3001:3001"
+
+  oauth:
+    image: decaporg/decap-oauth:latest
+    container_name: marketing_oauth
+    restart: unless-stopped
+    environment:
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      OAUTH_ORIGIN: ${OAUTH_ORIGIN}
+    ports:
+      - "127.0.0.1:9999:9999"
+
+volumes:
+  postgres_data:

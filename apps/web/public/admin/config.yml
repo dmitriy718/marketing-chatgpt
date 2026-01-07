@@ -1,0 +1,182 @@
+backend:
+  name: github
+  repo: dmitriy718/marketingagency
+  branch: main
+  base_url: https://development.carolinagrowth.co
+  auth_endpoint: /auth
+
+local_backend: true
+
+media_folder: "apps/web/public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: settings
+    label: Settings
+    format: json
+    files:
+      - label: Site Settings
+        name: site_settings
+        file: apps/web/content/settings.json
+        fields:
+          - { label: Site Name, name: siteName, widget: string }
+          - { label: Tagline, name: tagline, widget: string }
+          - { label: Default Description, name: defaultDescription, widget: text }
+          - { label: OG Image URL, name: ogImage, widget: string, required: false }
+
+  - name: services
+    label: Services
+    format: json
+    files:
+      - label: Services
+        name: services
+        file: apps/web/content/services.json
+        fields:
+          - label: Services
+            name: services
+            widget: list
+            fields:
+              - { label: Slug, name: slug, widget: string }
+              - { label: Title, name: title, widget: string }
+              - { label: Kicker, name: kicker, widget: string, required: false }
+              - { label: Summary, name: summary, widget: text, required: false }
+              - { label: Description, name: description, widget: text, required: false }
+              - { label: Meta Title, name: metaTitle, widget: string, required: false }
+              - { label: Meta Description, name: metaDescription, widget: text, required: false }
+              - { label: Deliverables, name: deliverables, widget: list, required: false }
+
+  - name: landing_pages
+    label: Landing Pages
+    format: json
+    files:
+      - label: Landing Pages
+        name: landing_pages
+        file: apps/web/content/landing-pages.json
+        fields:
+          - label: Pages
+            name: pages
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Slug, name: slug, widget: string }
+              - { label: Meta Title, name: metaTitle, widget: string, required: false }
+              - { label: Meta Description, name: metaDescription, widget: text, required: false }
+              - label: Hero
+                name: hero
+                widget: object
+                required: false
+                fields:
+                  - { label: Headline, name: headline, widget: string }
+                  - { label: Subheadline, name: subheadline, widget: text, required: false }
+                  - { label: Primary CTA Label, name: primaryCtaLabel, widget: string, required: false }
+                  - { label: Primary CTA Href, name: primaryCtaHref, widget: string, required: false }
+                  - { label: Secondary CTA Label, name: secondaryCtaLabel, widget: string, required: false }
+                  - { label: Secondary CTA Href, name: secondaryCtaHref, widget: string, required: false }
+              - label: Sections
+                name: sections
+                widget: list
+                required: false
+                fields:
+                  - { label: Title, name: title, widget: string }
+                  - { label: Body, name: body, widget: text, required: false }
+                  - { label: Bullets, name: bullets, widget: list, required: false }
+
+  - name: blog
+    label: Blog
+    format: json
+    files:
+      - label: Blog Posts
+        name: blog_posts
+        file: apps/web/content/blog.json
+        fields:
+          - label: Posts
+            name: posts
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Slug, name: slug, widget: string }
+              - { label: Excerpt, name: excerpt, widget: text, required: false }
+              - { label: Author, name: author, widget: string, required: false }
+              - { label: Published At, name: publishedAt, widget: string, required: false }
+              - { label: Body, name: body, widget: text, required: false }
+
+  - name: testimonials
+    label: Testimonials
+    format: json
+    files:
+      - label: Testimonials
+        name: testimonials
+        file: apps/web/content/testimonials.json
+        fields:
+          - label: Items
+            name: items
+            widget: list
+            fields:
+              - { label: Quote, name: quote, widget: text }
+              - { label: Author, name: author, widget: string }
+              - { label: Role, name: role, widget: string, required: false }
+              - { label: Company, name: company, widget: string, required: false }
+
+  - name: reviews
+    label: Reviews
+    format: json
+    files:
+      - label: Reviews
+        name: reviews
+        file: apps/web/content/reviews.json
+        fields:
+          - label: Items
+            name: items
+            widget: list
+            fields:
+              - { label: Source, name: source, widget: string }
+              - { label: Rating, name: rating, widget: number }
+              - { label: Quote, name: quote, widget: text }
+
+  - name: team
+    label: Team
+    format: json
+    files:
+      - label: Team
+        name: team
+        file: apps/web/content/team.json
+        fields:
+          - label: Team Members
+            name: team
+            widget: list
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: Role, name: role, widget: string }
+              - { label: Focus, name: focus, widget: string }
+
+  - name: portfolio
+    label: Portfolio
+    format: json
+    files:
+      - label: Portfolio Items
+        name: portfolio
+        file: apps/web/content/portfolio.json
+        fields:
+          - label: Items
+            name: items
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Result, name: result, widget: text }
+              - { label: Focus, name: focus, widget: string }
+
+  - name: lead_magnets
+    label: Lead Magnets
+    format: json
+    files:
+      - label: Lead Magnets
+        name: lead_magnets
+        file: apps/web/content/lead-magnets.json
+        fields:
+          - label: Items
+            name: items
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: description, widget: text, required: false }
+              - { label: Download URL, name: downloadUrl, widget: string }

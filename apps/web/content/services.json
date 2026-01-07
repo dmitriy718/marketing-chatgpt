@@ -1,0 +1,82 @@
+{
+  "services": [
+    {
+      "slug": "lead-gen",
+      "title": "Lead Generation",
+      "kicker": "Demand Capture",
+      "summary": "Predictable inbound pipelines through targeted campaigns, conversion funnels, and lifecycle automation.",
+      "description": "We architect demand systems that meet customers where they are, qualify intent, and route leads into your CRM with clear next actions.",
+      "deliverables": [
+        "Persona-based offer positioning",
+        "Conversion-focused landing pages",
+        "Lead scoring + routing rules",
+        "Lifecycle email sequences"
+      ]
+    },
+    {
+      "slug": "seo",
+      "title": "SEO Growth",
+      "kicker": "Search Visibility",
+      "summary": "Technical SEO, content architecture, and authority building that keeps ranking.",
+      "description": "Modern SEO that combines technical hygiene, content authority, and structured data built for AI-assisted search.",
+      "deliverables": [
+        "Technical audits + fixes",
+        "Local and national SEO playbooks",
+        "Authority-building content plan",
+        "Schema + analytics instrumentation"
+      ]
+    },
+    {
+      "slug": "web-design",
+      "title": "Web Design",
+      "kicker": "Experience Design",
+      "summary": "High-converting sites built for speed, clarity, and revenue impact.",
+      "description": "Performance-first websites that load fast, tell a clear story, and guide visitors toward a conversion moment.",
+      "deliverables": [
+        "UX strategy + information architecture",
+        "High-fidelity UI systems",
+        "CRO-ready page layouts",
+        "Speed + accessibility optimization"
+      ]
+    },
+    {
+      "slug": "review-mediation",
+      "title": "Review Mediation",
+      "kicker": "Reputation Care",
+      "summary": "Reputation monitoring, response workflows, and sentiment-driven improvements.",
+      "description": "Automated review capture and response workflows that improve sentiment while keeping compliance in check.",
+      "deliverables": [
+        "Reputation dashboards",
+        "Auto-response playbooks",
+        "Review capture campaigns",
+        "Sentiment insights + alerts"
+      ]
+    },
+    {
+      "slug": "ppc",
+      "title": "Performance Ads",
+      "kicker": "Paid Media",
+      "summary": "Full-funnel campaigns across search, social, and retargeting with profit controls.",
+      "description": "Precision targeting and creative testing across paid channels, optimized weekly for profitability.",
+      "deliverables": [
+        "Search + social campaign buildout",
+        "Creative testing sprints",
+        "Retargeting sequences",
+        "Attribution + ROAS reporting"
+      ]
+    },
+    {
+      "slug": "graphic-design",
+      "title": "Graphic Design",
+      "kicker": "Brand Systems",
+      "summary": "Visual identity and campaign assets that scale across channels.",
+      "description": "Brand systems and campaign visuals that keep every touchpoint cohesive and premium.",
+      "deliverables": [
+        "Identity guidelines",
+        "Campaign asset libraries",
+        "Motion-ready social templates",
+        "Sales collateral kits"
+      ]
+    }
+  ]
+}

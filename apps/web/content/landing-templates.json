@@ -1,0 +1,46 @@
+{
+  "templates": [
+    {
+      "title": "Local Lead Capture",
+      "industry": "Home Services",
+      "focus": "Lead Gen",
+      "summary": "A high-converting layout with trust badges and local proof.",
+      "sections": ["Hero + Offer", "Trust + Reviews", "Service Highlights", "CTA Form"]
+    },
+    {
+      "title": "Premium Consultation",
+      "industry": "Healthcare",
+      "focus": "Appointments",
+      "summary": "Designed to book consultations with clear outcomes and urgency.",
+      "sections": ["Hero + Proof", "Outcomes", "Physician Credibility", "Booking CTA"]
+    },
+    {
+      "title": "Fitness Membership Sprint",
+      "industry": "Fitness",
+      "focus": "Membership",
+      "summary": "A launch-ready membership page with pricing tiers and FAQs.",
+      "sections": ["Hero + Offer", "Pricing Grid", "Transformation Proof", "FAQ + CTA"]
+    },
+    {
+      "title": "Local Real Estate Pipeline",
+      "industry": "Real Estate",
+      "focus": "Listings",
+      "summary": "A pipeline-first landing page for listings and seller consults.",
+      "sections": ["Hero + Value", "Neighborhood Proof", "Process", "Lead Form"]
+    },
+    {
+      "title": "B2B Services Growth",
+      "industry": "B2B Services",
+      "focus": "Pipeline",
+      "summary": "A focused B2B template for high-ticket services and demos.",
+      "sections": ["Hero + ICP", "Use Cases", "Case Studies", "Demo CTA"]
+    },
+    {
+      "title": "Retail Offer Launch",
+      "industry": "Retail",
+      "focus": "Foot Traffic",
+      "summary": "Built for seasonal offers with QR-driven in-store conversion.",
+      "sections": ["Hero + Promo", "Offer Details", "Location Proof", "CTA + QR"]
+    }
+  ]
+}

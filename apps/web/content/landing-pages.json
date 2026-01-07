@@ -1,0 +1,39 @@
+{
+  "pages": [
+    {
+      "title": "Local Growth Sprint",
+      "slug": "local-growth-sprint",
+      "metaTitle": "Local Growth Sprint",
+      "metaDescription": "A focused 6-week sprint to accelerate local visibility, lead flow, and conversion clarity.",
+      "hero": {
+        "headline": "A 6-week sprint to unlock local growth.",
+        "subheadline": "Targeted SEO, conversion-ready landing pages, and paid media optimization built around measurable pipeline lift.",
+        "primaryCtaLabel": "Book a Strategy Call",
+        "primaryCtaHref": "/contact?utm_source=landing&utm_medium=cta&utm_campaign=local-growth-sprint",
+        "secondaryCtaLabel": "View Services",
+        "secondaryCtaHref": "/services"
+      },
+      "sections": [
+        {
+          "title": "What you get",
+          "body": "We prioritize the highest leverage wins across visibility, conversion, and retention, then deliver a clear sprint plan with weekly checkpoints.",
+          "bullets": [
+            "Local SEO audit and fixes",
+            "Conversion-ready messaging",
+            "Paid media optimization plan",
+            "Lead handoff playbook"
+          ]
+        },
+        {
+          "title": "Who it is for",
+          "body": "Growing local brands ready to build a predictable pipeline without bloated retainers.",
+          "bullets": [
+            "Service businesses with 5+ staff",
+            "Existing ad spend above $3k/month",
+            "Teams that want measurable ROI"
+          ]
+        }
+      ]
+    }
+  ]
+}
