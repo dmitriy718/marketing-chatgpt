@@ -64,16 +64,6 @@ services:
     ports:
       - "127.0.0.1:3001:3001"
 
-  oauth:
-    image: netlify/netlify-cms-oauth:latest
-    container_name: marketing_oauth
-    restart: unless-stopped
-    environment:
-      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
-      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
-      OAUTH_ORIGIN: ${OAUTH_ORIGIN}
-    ports:
-      - "127.0.0.1:9999:9999"
 
 volumes:
   postgres_data:
