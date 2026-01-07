@@ -65,7 +65,7 @@ services:
       - "127.0.0.1:3001:3001"
 
   oauth:
-    image: netlify/decap-cms-oauth:latest
+    image: decaporg/decap-cms-oauth:latest
     container_name: marketing_oauth
     restart: unless-stopped
     environment:
