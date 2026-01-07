@@ -8,13 +8,14 @@ export function generateStaticParams() {
   return getPortfolioItems().map((item) => ({ slug: item.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const item = getPortfolioItems().find((entry) => entry.slug === params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const item = getPortfolioItems().find((entry) => entry.slug === slug);
   if (!item) {
     return buildPageMetadata({
       title: "Case Study",
       description: "Case study details for Carolina Growth.",
-      path: `/portfolio/${params.slug}`,
+      path: `/portfolio/${slug}`,
     });
   }
 
@@ -25,8 +26,13 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   });
 }
 
-export default function CaseStudyPage({ params }: { params: { slug: string } }) {
-  const item = getPortfolioItems().find((entry) => entry.slug === params.slug);
+export default async function CaseStudyPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const item = getPortfolioItems().find((entry) => entry.slug === slug);
 
   if (!item) {
     notFound();
