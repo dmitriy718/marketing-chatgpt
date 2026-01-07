@@ -25,7 +25,7 @@ export function SiteHeader() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const closeDetails = (ref: React.RefObject<HTMLDetailsElement>) => {
+  const closeDetails = (ref: React.RefObject<HTMLDetailsElement | null>) => {
     if (ref.current?.open) {
       ref.current.open = false;
     }
