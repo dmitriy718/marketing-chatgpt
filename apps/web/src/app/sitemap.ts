@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { getBlogPosts, getLandingPages, getServices } from "@/lib/content";
+import { getBlogPosts, getLandingPages, getPortfolioItems, getServices } from "@/lib/content";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://carolinagrowth.co";
@@ -54,5 +54,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
   }));
 
-  return [...staticEntries, ...serviceEntries, ...landingEntries, ...blogEntries];
+  const portfolioEntries = getPortfolioItems().map((item) => ({
+    url: `${baseUrl}/portfolio/${item.slug}`,
+    lastModified: new Date(),
+  }));
+
+  return [
+    ...staticEntries,
+    ...serviceEntries,
+    ...landingEntries,
+    ...blogEntries,
+    ...portfolioEntries,
+  ];
 }

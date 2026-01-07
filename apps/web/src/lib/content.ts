@@ -22,8 +22,14 @@ export type Service = {
 
 export type PortfolioItem = {
   title: string;
+  slug: string;
   result: string;
   focus: string;
+  summary?: string | null;
+  challenge?: string | null;
+  solution?: string | null;
+  outcomes?: string[] | null;
+  siteUrl?: string | null;
   metrics?: {
     label: string;
     before: number;

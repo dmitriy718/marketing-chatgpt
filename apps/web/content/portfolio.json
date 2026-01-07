@@ -1,9 +1,18 @@
 {
   "items": [
     {
-      "title": "Northshore Dental",
+      "title": "TradeFlows",
+      "slug": "tradeflows",
       "result": "+212% qualified leads",
       "focus": "Lead Gen + SEO",
+      "summary": "Rebuilt the local acquisition engine for a B2B logistics firm and created a conversion-focused service flow.",
+      "challenge": "TradeFlows needed more qualified inbound leads without increasing ad spend or widening the service area.",
+      "solution": "We rebuilt their service pages, tightened on-page SEO, and launched a lead magnet with automated follow-up.",
+      "outcomes": [
+        "Qualified leads doubled within 90 days",
+        "Lead quality improved through better intent filtering",
+        "Sales team got a predictable follow-up workflow"
+      ],
       "metrics": {
         "label": "Qualified leads / month",
         "before": 45,
@@ -13,9 +22,18 @@
       "timeframe": "90 days"
     },
     {
-      "title": "Bayside Fitness",
+      "title": "ReturnShield",
+      "slug": "returnshield",
       "result": "3.6x ROAS in 90 days",
       "focus": "Paid Media",
+      "summary": "Scaled paid media for a warranty provider with a tighter creative system and landing page refresh.",
+      "challenge": "ReturnShield was spending aggressively but conversion quality was inconsistent across ad groups.",
+      "solution": "We rebuilt paid media structure, paired each offer with a dedicated landing page, and refreshed creative weekly.",
+      "outcomes": [
+        "ROAS increased from 1.2x to 3.6x",
+        "Lead cost dropped 38% with tighter targeting",
+        "Conversion rate held steady as spend scaled"
+      ],
       "metrics": {
         "label": "Monthly ROAS",
         "before": 1.2,
@@ -25,9 +43,18 @@
       "timeframe": "90 days"
     },
     {
-      "title": "Lumen Builders",
+      "title": "Horizon Credit",
+      "slug": "horizon-credit",
       "result": "From cold to waitlist",
       "focus": "Brand + Web Design",
+      "summary": "Designed a full rebrand and web experience for a local credit union expansion launch.",
+      "challenge": "Horizon Credit needed a premium digital presence ahead of a new branch rollout.",
+      "solution": "We delivered a brand refresh, built a high-converting site, and created a digital onboarding kit.",
+      "outcomes": [
+        "Inquiry volume tripled in 60 days",
+        "Waitlist volume increased across all locations",
+        "Brand trust metrics improved in local surveys"
+      ],
       "metrics": {
         "label": "Project inquiries / month",
         "before": 8,
