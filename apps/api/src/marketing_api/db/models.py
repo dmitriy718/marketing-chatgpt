@@ -247,3 +247,14 @@ class StripeWebhookEvent(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     event_created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     data_object_id: Mapped[str | None] = mapped_column(String(255))
     payload: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class ChatMessage(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "chat_messages"
+
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    email: Mapped[str | None] = mapped_column(String(255))
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    page_url: Mapped[str | None] = mapped_column(String(500))
+    user_agent: Mapped[str | None] = mapped_column(String(255))
+    referrer: Mapped[str | None] = mapped_column(String(500))

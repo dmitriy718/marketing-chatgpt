@@ -2,9 +2,10 @@ from fastapi import APIRouter, BackgroundTasks, Depends, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from marketing_api.db.models import BugReport, Lead, LeadStatus, NewsletterSignup
+from marketing_api.db.models import BugReport, ChatMessage, Lead, LeadStatus, NewsletterSignup
 from marketing_api.db.session import get_session
 from marketing_api.notifications.email import notify_admin, send_email
+from marketing_api.notifications.pushover import send_pushover
 from marketing_api.settings import settings
 
 router = APIRouter(prefix="/public", tags=["public"])
@@ -32,6 +33,15 @@ class BugReportRequest(BaseModel):
     user_agent: str | None = None
     referrer: str | None = None
     context: str | None = None
+
+
+class ChatMessageRequest(BaseModel):
+    name: str
+    email: EmailStr | None = None
+    message: str
+    page_url: str | None = None
+    user_agent: str | None = None
+    referrer: str | None = None
 
 
 @router.post("/leads", status_code=status.HTTP_201_CREATED)
@@ -173,4 +183,46 @@ async def capture_bug_report(
         subject=f"Bug report on {settings.app_url}",
         body=admin_body,
     )
+    return {"status": "ok"}
+
+
+@router.post("/chat", status_code=status.HTTP_201_CREATED)
+async def capture_chat_message(
+    payload: ChatMessageRequest,
+    background_tasks: BackgroundTasks,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, str]:
+    message = ChatMessage(
+        name=payload.name,
+        email=payload.email,
+        message=payload.message,
+        page_url=payload.page_url,
+        user_agent=payload.user_agent,
+        referrer=payload.referrer,
+    )
+    session.add(message)
+    await session.commit()
+
+    summary = "\n".join(
+        [
+            f"Name: {payload.name}",
+            f"Email: {payload.email or 'Not provided'}",
+            f"Page: {payload.page_url or 'Unknown'}",
+            "",
+            payload.message,
+        ]
+    )
+
+    background_tasks.add_task(
+        notify_admin,
+        subject="New live chat message",
+        body=summary,
+        reply_to=payload.email,
+    )
+    background_tasks.add_task(
+        send_pushover,
+        title="New live chat",
+        message=f"{payload.name}: {payload.message[:200]}".strip(),
+    )
+
     return {"status": "ok"}

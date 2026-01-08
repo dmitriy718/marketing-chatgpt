@@ -37,6 +37,13 @@ Bug reporting:
   `POST /public/bug-reports` and triggers an admin notification email.
   Status: Live.
 
+Live chat:
+- Floating chat widget posts to `POST /api/chat`, which forwards to
+  `POST /public/chat` and triggers:
+  - Admin email notification.
+  - Pushover notification (if configured).
+  Status: Live.
+
 ## Leadgen App (leadgen)
 
 - Leadgen landing page (`leadgen/public/index.html`) posts to `POST /lead` in
@@ -56,3 +63,9 @@ The following environment variables must be set in production:
 - `ADMIN_EMAIL`
 
 If SMTP is missing, forms still store data but email notifications are skipped.
+
+## Pushover
+
+For live chat phone notifications:
+- `PUSHOVER_APP_TOKEN`
+- `PUSHOVER_USER_KEY` or `PUSHOVER_GROUP_KEY`

@@ -2,6 +2,7 @@ import { Manrope, Sora } from "next/font/google";
 
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { ChatWidget } from "@/components/ChatWidget";
 import { Analytics } from "@/components/Analytics";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeScript } from "@/components/ThemeScript";
@@ -74,6 +75,7 @@ export default function RootLayout({
               {children}
             </main>
             <SiteFooter />
+            <ChatWidget />
           </div>
         </ThemeProvider>
       </body>
