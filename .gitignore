@@ -1,4 +1,8 @@
 .env
+secrets/*.env
+secrets/*.dec
+secrets/*.txt
+secrets/*.key
 __pycache__/
 *.pyc
 node_modules/
