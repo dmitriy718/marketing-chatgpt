@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+
 type ChatStatus = "idle" | "sending" | "sent" | "error";
 
 export function ChatWidget() {
@@ -11,6 +13,8 @@ export function ChatWidget() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
   const toggle = () => setOpen((prev) => !prev);
 
@@ -20,12 +24,21 @@ export function ChatWidget() {
       setError("Please add your name and message.");
       return;
     }
+    if (turnstileEnabled && !turnstileToken) {
+      setError("Please complete the bot check.");
+      return;
+    }
     setStatus("sending");
     setError(null);
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN
+            ? { "x-rate-limit-token": process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN }
+            : null),
+        },
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim() || null,
@@ -33,6 +46,7 @@ export function ChatWidget() {
           pageUrl: window.location.href,
           userAgent: navigator.userAgent,
           referrer: document.referrer,
+          turnstileToken,
         }),
       });
       const payload = await response.json().catch(() => ({}));
@@ -41,6 +55,7 @@ export function ChatWidget() {
       }
       setStatus("sent");
       setMessage("");
+      setTurnstileToken(null);
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Unable to send message.");
@@ -90,6 +105,11 @@ export function ChatWidget() {
               value={message}
               onChange={(event) => setMessage(event.target.value)}
               required
+            />
+            <TurnstileWidget
+              onVerify={(token) => setTurnstileToken(token)}
+              onExpire={() => setTurnstileToken(null)}
+              onError={() => setTurnstileToken(null)}
             />
             {error ? <p className="text-xs text-[var(--danger)]">{error}</p> : null}
             {status === "sent" ? (

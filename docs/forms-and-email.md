@@ -65,6 +65,12 @@ The following environment variables must be set in production:
 
 If SMTP is missing, forms still store data but email notifications are skipped.
 
+## Bot Protection + Rate Limiting
+
+Turnstile is enforced when `TURNSTILE_SECRET_KEY` and `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+are configured. Public API endpoints also use rate limiting on the API and nginx
+to reduce abuse.
+
 ## Pushover
 
 For live chat phone notifications:

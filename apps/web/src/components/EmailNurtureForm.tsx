@@ -3,12 +3,15 @@
 import { useState } from "react";
 
 import { trackEvent } from "@/lib/analytics";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
 export function EmailNurtureForm() {
   const [status, setStatus] = useState<FormState>("idle");
   const [message, setMessage] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -35,12 +38,22 @@ export function EmailNurtureForm() {
       budget: String(formData.get("budget") ?? ""),
       details,
       source: "email-nurture",
+      turnstileToken,
     };
 
     try {
+      if (turnstileEnabled && !turnstileToken) {
+        throw new Error("Please complete the bot check.");
+      }
+
       const response = await fetch("/api/leads", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN
+            ? { "x-rate-limit-token": process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN }
+            : null),
+        },
         body: JSON.stringify(payload),
       });
 
@@ -53,6 +66,7 @@ export function EmailNurtureForm() {
       setMessage("Thanks! We will send the nurture plan and sequence map shortly.");
       trackEvent({ name: "nurture_submit", params: { source: "email-nurture" } });
       form.reset();
+      setTurnstileToken(null);
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "Submission failed.");
@@ -94,6 +108,11 @@ export function EmailNurtureForm() {
           className="rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] px-4 py-3"
         />
       </label>
+      <TurnstileWidget
+        onVerify={(token) => setTurnstileToken(token)}
+        onExpire={() => setTurnstileToken(null)}
+        onError={() => setTurnstileToken(null)}
+      />
       <button
         type="submit"
         className="btn-primary rounded-full px-6 py-3 text-sm font-semibold"

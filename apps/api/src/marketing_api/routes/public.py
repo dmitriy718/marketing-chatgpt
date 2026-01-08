@@ -1,11 +1,15 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import stripe
+import json
+import urllib.parse
+import urllib.request
 
 from marketing_api.db.models import BugReport, ChatMessage, Lead, LeadStatus, NewsletterSignup
 from marketing_api.db.session import get_session
+from marketing_api.limits import limiter
 from marketing_api.notifications.email import notify_admin, send_email
 from marketing_api.notifications.pushover import send_pushover
 from marketing_api.settings import settings
@@ -20,11 +24,13 @@ class PublicLeadRequest(BaseModel):
     budget: str | None = None
     details: str
     source: str | None = None
+    turnstile_token: str | None = None
 
 
 class NewsletterSignupRequest(BaseModel):
     email: EmailStr
     lead_magnet: str | None = None
+    turnstile_token: str | None = None
 
 
 class BugReportRequest(BaseModel):
@@ -35,6 +41,7 @@ class BugReportRequest(BaseModel):
     user_agent: str | None = None
     referrer: str | None = None
     context: str | None = None
+    turnstile_token: str | None = None
 
 
 class ChatMessageRequest(BaseModel):
@@ -44,6 +51,7 @@ class ChatMessageRequest(BaseModel):
     page_url: str | None = None
     user_agent: str | None = None
     referrer: str | None = None
+    turnstile_token: str | None = None
 
 
 class StripeSubscriptionRequest(BaseModel):
@@ -74,6 +82,29 @@ def configure_stripe() -> None:
     stripe.api_key = settings.stripe_secret_key
 
 
+def verify_turnstile(token: str | None) -> None:
+    secret = settings.turnstile_secret_key
+    if not secret:
+        return
+    if not token:
+        raise HTTPException(status_code=400, detail="Bot verification failed.")
+
+    data = urllib.parse.urlencode({"secret": secret, "response": token}).encode()
+    request = urllib.request.Request(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        data=data,
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=5) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Bot verification failed.") from exc
+
+    if not payload.get("success"):
+        raise HTTPException(status_code=400, detail="Bot verification failed.")
+
+
 def get_or_create_customer(name: str, email: str):
     customers = stripe.Customer.list(email=email, limit=1)
     if customers.data:
@@ -85,11 +116,14 @@ def get_or_create_customer(name: str, email: str):
 
 
 @router.post("/leads", status_code=status.HTTP_201_CREATED)
+@limiter.limit("6/minute")
 async def capture_lead(
+    request: Request,
     payload: PublicLeadRequest,
     background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
+    verify_turnstile(payload.turnstile_token)
     lead = Lead(
         full_name=payload.name,
         email=payload.email,
@@ -144,11 +178,14 @@ async def capture_lead(
 
 
 @router.post("/newsletter", status_code=status.HTTP_201_CREATED)
+@limiter.limit("10/minute")
 async def capture_newsletter_signup(
+    request: Request,
     payload: NewsletterSignupRequest,
     background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
+    verify_turnstile(payload.turnstile_token)
     signup = NewsletterSignup(email=payload.email, lead_magnet=payload.lead_magnet)
     session.add(signup)
     await session.commit()
@@ -186,11 +223,14 @@ async def capture_newsletter_signup(
 
 
 @router.post("/bug-reports", status_code=status.HTTP_201_CREATED)
+@limiter.limit("5/minute")
 async def capture_bug_report(
+    request: Request,
     payload: BugReportRequest,
     background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
+    verify_turnstile(payload.turnstile_token)
     report = BugReport(
         message=payload.message,
         stack=payload.stack,
@@ -227,11 +267,14 @@ async def capture_bug_report(
 
 
 @router.post("/chat", status_code=status.HTTP_201_CREATED)
+@limiter.limit("6/minute")
 async def capture_chat_message(
+    request: Request,
     payload: ChatMessageRequest,
     background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
+    verify_turnstile(payload.turnstile_token)
     message = ChatMessage(
         name=payload.name,
         email=payload.email,

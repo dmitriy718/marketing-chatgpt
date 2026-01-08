@@ -13,6 +13,7 @@
 - Added lead capture, newsletter, and bug report email notifications via SMTP.
 - Deployed leadgen micro-app to `leadgen.carolinagrowth.co`.
 - Added Stripe API endpoints and checkout pages for subscriptions/one-time payments (needs price IDs + env wiring).
+- Added Turnstile bot protection hooks and rate limiting on public intake endpoints.
 
 ## Implemented Feature List
 1) Growth Audit

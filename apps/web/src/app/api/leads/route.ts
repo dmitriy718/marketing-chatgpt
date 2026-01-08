@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { verifyTurnstileToken } from "@/lib/turnstile";
+
 type LeadPayload = {
   name: string;
   email: string;
@@ -7,18 +9,30 @@ type LeadPayload = {
   budget?: string | null;
   details: string;
   source?: string | null;
+  turnstileToken?: string | null;
 };
 
 const API_URL =
   process.env.API_INTERNAL_URL ?? process.env.API_URL ?? "http://localhost:8001";
 const CRM_WEBHOOK_URL = process.env.CRM_WEBHOOK_URL;
 const CRM_WEBHOOK_TOKEN = process.env.CRM_WEBHOOK_TOKEN;
+const RATE_LIMIT_AUTH = process.env.RATE_LIMIT_TOKEN;
 
 export async function POST(request: Request) {
+  const authToken = request.headers.get("x-rate-limit-token");
+  if (RATE_LIMIT_AUTH && authToken && authToken !== RATE_LIMIT_AUTH) {
+    return NextResponse.json({ ok: false, error: "Unauthorized." }, { status: 401 });
+  }
+
   const body = (await request.json().catch(() => null)) as LeadPayload | null;
 
   if (!body?.name || !body?.email || !body?.company || !body?.details) {
     return NextResponse.json({ ok: false, error: "Missing required fields." }, { status: 400 });
+  }
+
+  const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
+  if (!turnstileOk) {
+    return NextResponse.json({ ok: false, error: "Bot verification failed." }, { status: 400 });
   }
 
   const entry: LeadPayload = {
@@ -30,7 +44,10 @@ export async function POST(request: Request) {
     const apiResponse = await fetch(`${API_URL}/public/leads`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(entry),
+      body: JSON.stringify({
+        ...entry,
+        turnstile_token: body.turnstileToken ?? null,
+      }),
     });
 
     if (!apiResponse.ok) {

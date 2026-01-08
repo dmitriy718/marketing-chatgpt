@@ -1,9 +1,12 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from strawberry.fastapi import GraphQLRouter
 
 from marketing_api.auth.dependencies import extract_bearer_token, resolve_user_from_token
 from marketing_api.graphql.schema import schema
+from marketing_api.limits import limiter
 from marketing_api.routes.auth import router as auth_router
 from marketing_api.routes.health import router as health_router
 from marketing_api.routes.public import router as public_router
@@ -24,6 +27,8 @@ def build_cors_origins() -> list[str]:
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Carolina Growth API", version="0.1.0")
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=build_cors_origins(),

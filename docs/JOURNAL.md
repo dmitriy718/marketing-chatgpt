@@ -63,3 +63,5 @@
 - Deployed leadgen app and collectors to `leadgen.carolinagrowth.co`.
 - Added Stripe subscription, payment-intent, and invoice endpoints.
 - Added Stripe checkout flow for subscriptions and one-time payments (waiting on price IDs).
+- Added Turnstile hooks + rate limiting for public intake endpoints.
+- Added PostHog proxy support via `/ph` and build-time env wiring for NEXT_PUBLIC values.

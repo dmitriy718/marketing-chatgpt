@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+
 type ErrorWithDigest = Error & { digest?: string };
 
 type ErrorNoticeProps = {
@@ -13,6 +15,8 @@ type ReportState = "idle" | "sending" | "sent" | "failed";
 
 export function ErrorNotice({ error, context }: ErrorNoticeProps) {
   const [status, setStatus] = useState<ReportState>("idle");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
   const sendReport = async () => {
     if (status === "sending" || status === "sent") {
@@ -32,13 +36,26 @@ export function ErrorNotice({ error, context }: ErrorNoticeProps) {
     };
 
     try {
+      if (turnstileEnabled && !turnstileToken) {
+        setStatus("failed");
+        return;
+      }
+
       const response = await fetch("/api/bug-report", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+          ...(process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN
+            ? { "x-rate-limit-token": process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN }
+            : null),
+        },
+        body: JSON.stringify({ ...payload, turnstileToken }),
       });
 
       setStatus(response.ok ? "sent" : "failed");
+      if (response.ok) {
+        setTurnstileToken(null);
+      }
     } catch {
       setStatus("failed");
     }
@@ -61,6 +78,11 @@ export function ErrorNotice({ error, context }: ErrorNoticeProps) {
         <div>Message: {error?.message ?? "Unknown error"}</div>
         {error?.digest ? <div>Digest: {error.digest}</div> : null}
       </div>
+      <TurnstileWidget
+        onVerify={(token) => setTurnstileToken(token)}
+        onExpire={() => setTurnstileToken(null)}
+        onError={() => setTurnstileToken(null)}
+      />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <button
           type="button"

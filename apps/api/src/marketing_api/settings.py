@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     stripe_webhook_secret: str = "whsec_change_me"
     posthog_api_key: str = "phc_change_me"
     posthog_host: str = "https://app.posthog.com"
+    turnstile_secret_key: str | None = None
     smtp_host: str | None = None
     smtp_port: int = 587
     smtp_user: str | None = None

@@ -15,7 +15,7 @@ export function PostHogProvider({ children }: PostHogProviderProps) {
       return;
     }
 
-    const apiHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com";
+    const apiHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || "/ph";
     posthog.init(apiKey, {
       api_host: apiHost,
       capture_pageview: true,

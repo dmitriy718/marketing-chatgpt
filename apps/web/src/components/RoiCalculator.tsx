@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { trackEvent } from "@/lib/analytics";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -19,6 +20,8 @@ export function RoiCalculator() {
   const [liftPercent, setLiftPercent] = useState("25");
   const [status, setStatus] = useState<FormState>("idle");
   const [message, setMessage] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
   const result = useMemo(() => {
     const leads = toNumber(monthlyLeads);
@@ -45,12 +48,22 @@ export function RoiCalculator() {
       budget: String(formData.get("budget") ?? ""),
       details: `ROI Calculator: leads=${monthlyLeads}, closeRate=${closeRate}%, avgDeal=${avgDeal}, lift=${liftPercent}%`,
       source: "roi-calculator",
+      turnstileToken,
     };
 
     try {
+      if (turnstileEnabled && !turnstileToken) {
+        throw new Error("Please complete the bot check.");
+      }
+
       const response = await fetch("/api/leads", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN
+            ? { "x-rate-limit-token": process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN }
+            : null),
+        },
         body: JSON.stringify(payload),
       });
 
@@ -63,6 +76,7 @@ export function RoiCalculator() {
       setMessage("Thanks! We will send your ROI snapshot shortly.");
       trackEvent({ name: "roi_submit", params: { source: "roi-calculator" } });
       form.reset();
+      setTurnstileToken(null);
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "Submission failed.");
@@ -136,6 +150,11 @@ export function RoiCalculator() {
             />
           </label>
         ))}
+        <TurnstileWidget
+          onVerify={(token) => setTurnstileToken(token)}
+          onExpire={() => setTurnstileToken(null)}
+          onError={() => setTurnstileToken(null)}
+        />
         <button
           type="submit"
           className="btn-primary rounded-full px-6 py-3 text-sm font-semibold"
