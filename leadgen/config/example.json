@@ -1,0 +1,6 @@
+{
+  "region": "South Carolina",
+  "keywords": ["marketing agency", "seo", "web design", "local ads"],
+  "sources": ["google-places", "yelp"],
+  "notes": "Use official APIs and comply with terms."
+}

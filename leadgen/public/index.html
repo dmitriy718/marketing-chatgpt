@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Carolina Growth Lead Audit</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f7f2;
+        --card: #ffffff;
+        --ink: #141414;
+        --muted: #6b6b6b;
+        --accent: #0f5e9c;
+        --accent-2: #17b890;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Manrope", "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #ffffff, var(--bg));
+        color: var(--ink);
+      }
+      header {
+        padding: 32px 24px 0;
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.25em;
+        color: var(--muted);
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 32px;
+        padding: 24px;
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      .hero h1 {
+        font-size: 40px;
+        margin: 16px 0;
+      }
+      .hero p {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 20px 50px rgba(15, 94, 156, 0.08);
+      }
+      .form-grid {
+        display: grid;
+        gap: 14px;
+      }
+      label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid #e2e2e2;
+        font-size: 14px;
+      }
+      button {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 999px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .stack {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: var(--accent);
+        font-weight: 600;
+      }
+      @media (max-width: 820px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .hero h1 {
+          font-size: 32px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="badge">Carolina Growth Lead Audit</span>
+    </header>
+    <section class="hero">
+      <div>
+        <h1>Get a free local growth audit for your business.</h1>
+        <p>
+          We help South Carolina businesses turn their websites into lead engines. Share a few
+          details and we will send back a custom plan within 48 hours.
+        </p>
+        <div class="stack">
+          <div>Local SEO + paid ads quick wins</div>
+          <div>Conversion fixes and ROI breakdown</div>
+          <div>Personalized next steps from our team</div>
+        </div>
+        <p style="margin-top: 20px;">
+          <a class="cta" href="https://carolinagrowth.co">Visit Carolina Growth →</a>
+        </p>
+      </div>
+      <div class="card">
+        <form method="post" action="/lead">
+          <div class="form-grid">
+            <div>
+              <label for="name">Name</label>
+              <input id="name" name="name" required />
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required />
+            </div>
+            <div>
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" required />
+            </div>
+            <div>
+              <label for="business">Business Name</label>
+              <input id="business" name="company" required />
+            </div>
+            <div>
+              <label for="website">Website</label>
+              <input id="website" name="website" />
+            </div>
+            <div>
+              <label for="budget">Monthly Budget</label>
+              <input id="budget" name="budget" placeholder="$500 - $2,000" />
+            </div>
+            <div>
+              <label for="location">Location</label>
+              <input id="location" name="location" />
+            </div>
+            <div>
+              <label for="goals">Goals</label>
+              <textarea id="goals" name="goals" rows="4"></textarea>
+            </div>
+            <button type="submit">Send my audit request</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </body>
+</html>

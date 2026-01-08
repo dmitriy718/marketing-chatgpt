@@ -13,6 +13,7 @@ Monorepo for the Carolina Growth marketing website ecosystem.
 - `apps/web/content`: CMS content collection files.
 - `assets`: Static assets.
 - `docs`: Architecture, decisions, and development journal.
+- `leadgen`: Lead generation landing page + outbound collector.
 - `tests`: Automated tests.
 - `scripts`: Maintenance and helper scripts.
 

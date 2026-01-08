@@ -1,0 +1,51 @@
+import { promises as fs } from "fs";
+import path from "path";
+
+const dataDir = path.resolve("leadgen/data");
+const jsonPath = path.join(dataDir, "leads.json");
+const csvPath = path.join(dataDir, "leads.csv");
+
+export async function ensureStorage() {
+  await fs.mkdir(dataDir, { recursive: true });
+  try {
+    await fs.access(jsonPath);
+  } catch {
+    await fs.writeFile(jsonPath, "[]", "utf8");
+  }
+  try {
+    await fs.access(csvPath);
+  } catch {
+    const header = "created_at,name,email,phone,company,website,budget,location,goals,source\n";
+    await fs.writeFile(csvPath, header, "utf8");
+  }
+}
+
+export async function readLeads() {
+  await ensureStorage();
+  const raw = await fs.readFile(jsonPath, "utf8");
+  return JSON.parse(raw);
+}
+
+export async function writeLeads(leads) {
+  await ensureStorage();
+  await fs.writeFile(jsonPath, JSON.stringify(leads, null, 2), "utf8");
+}
+
+export async function appendCsv(lead) {
+  await ensureStorage();
+  const line = [
+    lead.created_at,
+    lead.name,
+    lead.email,
+    lead.phone,
+    lead.company,
+    lead.website,
+    lead.budget,
+    lead.location,
+    lead.goals,
+    lead.source,
+  ]
+    .map((value) => `"${String(value ?? "").replaceAll('"', '""')}"`)
+    .join(",");
+  await fs.appendFile(csvPath, `${line}\n`, "utf8");
+}
