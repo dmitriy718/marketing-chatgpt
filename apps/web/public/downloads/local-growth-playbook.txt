@@ -1,56 +1,91 @@
-Carolina Growth - Local Growth Playbook
-=======================================
+Carolina Growth - Local Growth Playbook (v1)
+============================================
 
-This playbook is a quick-start guide for local businesses that want more leads,
-more phone calls, and a steady pipeline of qualified customers.
+This guide is a practical, no-fluff plan for local businesses that want a steady
+flow of qualified leads. Use it as a checklist to tighten your website, map your
+local visibility, and improve conversions.
 
-1) Positioning that earns trust fast
-- Pick one primary service and one primary audience per landing page.
-- Use a clear headline: "We help [audience] get [outcome] in [timeframe]."
-- Add one proof point above the fold (review count, years in business, or results).
+SECTION 1: POSITIONING THAT EARNS TRUST
+1) One offer per page
+- Pick a single service + single audience per landing page.
+- Example: "We help Charleston HVAC companies add 20+ service calls/month."
 
-2) Lead capture that converts
-- Keep the form short: name, email, phone, business.
-- Use a single CTA repeated 3x per page (hero, mid, footer).
-- Offer a local incentive (audit, estimate, or quick plan).
+2) Proof above the fold
+- Add one clear trust signal: review count, awards, or a case study result.
+- Show a real number (e.g., "124 five-star reviews").
 
-3) Local SEO checklist
-- Optimize your Google Business Profile (categories, services, photos, posts).
-- Ask for reviews every week and reply to them within 48 hours.
-- Build location pages for each city you serve.
-- Add schema markup (LocalBusiness + service area).
+3) One primary CTA
+- Repeat the same CTA in the hero, mid-page, and footer.
+- Avoid split goals like "download + call + book" on the same page.
 
-4) Paid search starter kit
-- Use exact match for high-intent keywords.
-- Add negative keywords weekly.
-- Create one ad group per service.
-- Point ads to dedicated landing pages, not your homepage.
+SECTION 2: CONVERSION FIXES THAT MOVE THE NEEDLE
+4) Top-right phone number on desktop
+- Use click-to-call on mobile.
 
-5) Conversion fixes that matter
-- Put your phone number in the top-right on desktop.
-- Add social proof in every section (logos, ratings, testimonials).
-- Show pricing ranges or "starting at" numbers.
-- Reduce above-the-fold clutter.
+5) Lead form length
+- Best-performing forms ask for 3-4 fields: name, email, phone, company.
 
-6) Follow-up that closes
-- Reply to new leads within 5 minutes when possible.
-- Use a 3-touch sequence: call + email + text.
-- Offer a specific next step: "15-minute plan review."
+6) Show starting prices
+- Use "starts at" or "most projects fall between $X-$Y" to reduce hesitation.
 
-7) Metrics to track weekly
-- Leads by channel
-- Conversion rate from visit to lead
+7) Add a fast follow-up promise
+- Example: "We respond in under 10 minutes during business hours."
+
+SECTION 3: LOCAL SEO CHECKLIST
+8) Google Business Profile
+- Use accurate categories, service list, and weekly posts.
+- Upload fresh photos (exterior, team, work examples).
+
+9) Location pages
+- One unique page per city or service area.
+- Include a map, local testimonials, and city-specific keywords.
+
+10) Reviews system
+- Ask every satisfied customer.
+- Reply within 48 hours, even to negative feedback.
+
+SECTION 4: PAID SEARCH STARTER KIT
+11) Tight keyword groups
+- One service per ad group, no mixed intent.
+- Start with exact and phrase match.
+
+12) Negative keywords weekly
+- Remove junk traffic early (free, jobs, DIY, etc.).
+
+13) Dedicated landing pages
+- Each ad group gets a matching page, not your homepage.
+
+SECTION 5: SPEED + TRUST STACK
+14) Performance basics
+- Compress images, lazy-load below-the-fold sections.
+- Use a CDN for assets (Cloudflare is fine).
+
+15) Trust stack
+- Add a "Why us" section with 3 bullets.
+- Show recognizable logos or brand partnerships.
+
+SECTION 6: FOLLOW-UP THAT CLOSES
+16) First response goal
+- Under 5 minutes if possible.
+- Use a 3-touch sequence: call -> email -> text.
+
+17) Qualification script
+- Ask about budget, timeline, and main goal in the first call.
+
+SECTION 7: WEEKLY METRICS TO TRACK
+- Leads by channel (organic, paid, referrals)
+- Conversion rate (visit to lead)
 - Cost per lead (paid)
 - Lead response time
 - Close rate
 
-Bonus: The 7-Day Jumpstart
-Day 1: Fix the homepage headline and CTA.
+BONUS: 7-DAY JUMPSTART
+Day 1: Fix the homepage headline + CTA.
 Day 2: Update Google Business Profile photos.
 Day 3: Launch one paid search campaign.
-Day 4: Add a testimonial block.
-Day 5: Create a local landing page.
-Day 6: Audit competitors and add two differentiators.
-Day 7: Review performance and refine ads.
+Day 4: Add a testimonials block.
+Day 5: Create one local landing page.
+Day 6: Review competitors and add two differentiators.
+Day 7: Review results and refine ads.
 
 Need help? Contact Carolina Growth at https://carolinagrowth.co/contact

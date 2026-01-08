@@ -1,5 +1,19 @@
 import { logInfo } from "../../utils/logger.js";
 
+async function fetchBusinessDetails(apiKey, id) {
+  if (!apiKey || !id) {
+    return null;
+  }
+
+  const response = await fetch(`https://api.yelp.com/v3/businesses/${id}`, {
+    headers: { Authorization: `Bearer ${apiKey}` },
+  });
+  if (!response.ok) {
+    return null;
+  }
+  return response.json();
+}
+
 export async function collectYelp({ apiKey, region, keywords }) {
   if (!apiKey) {
     logInfo("Yelp API key missing, skipping.");
@@ -23,16 +37,26 @@ export async function collectYelp({ apiKey, region, keywords }) {
     }
 
     for (const business of data.businesses) {
+      const details = await fetchBusinessDetails(apiKey, business.id);
+      const yelpUrl = details?.url || business.url || "";
       leads.push({
         name: business.name,
         company: business.name,
         email: "",
-        phone: business.phone || "",
-        website: business.url || "",
+        phone: details?.phone || business.phone || "",
+        website: "",
         budget: "",
-        location: business.location?.display_address?.join(", ") || "",
+        location:
+          details?.location?.display_address?.join(", ") ||
+          business.location?.display_address?.join(", ") ||
+          "",
         goals: "",
-        details: business.categories?.map((cat) => cat.title).join(", ") || "",
+        details: [
+          details?.categories?.map((cat) => cat.title).join(", "),
+          yelpUrl ? `Yelp profile: ${yelpUrl}` : null,
+        ]
+          .filter(Boolean)
+          .join("\n"),
         source: "yelp",
         created_at: new Date().toISOString(),
       });

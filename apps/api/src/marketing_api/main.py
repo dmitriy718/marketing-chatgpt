@@ -26,7 +26,14 @@ def build_cors_origins() -> list[str]:
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Carolina Growth API", version="0.1.0")
+    docs_disabled = settings.app_env == "production" or settings.disable_docs
+    app = FastAPI(
+        title="Carolina Growth API",
+        version="0.1.0",
+        docs_url=None if docs_disabled else "/docs",
+        redoc_url=None if docs_disabled else "/redoc",
+        openapi_url=None if docs_disabled else "/openapi.json",
+    )
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
     app.add_middleware(

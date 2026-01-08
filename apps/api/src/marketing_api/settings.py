@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     posthog_api_key: str = "phc_change_me"
     posthog_host: str = "https://app.posthog.com"
     turnstile_secret_key: str | None = None
+    disable_docs: bool = False
     smtp_host: str | None = None
     smtp_port: int = 587
     smtp_user: str | None = None

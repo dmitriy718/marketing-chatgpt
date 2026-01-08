@@ -7,6 +7,7 @@ import { Analytics } from "@/components/Analytics";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeScript } from "@/components/ThemeScript";
+import { UtmTracker } from "@/components/UtmTracker";
 import { getSiteSettings } from "@/lib/content";
 
 import "./globals.css";
@@ -68,6 +69,7 @@ export default function RootLayout({
         <PostHogProvider>
           <ThemeProvider>
             <Analytics />
+            <UtmTracker />
             <div className="flex min-h-screen flex-col">
               <a href="#main-content" className="skip-link">
                 Skip to content

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { primaryNavLinks, toolLinks } from "@/content/site";
@@ -36,7 +37,14 @@ export function SiteHeader() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-6 py-4 md:flex-row md:items-center md:justify-between md:gap-0">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3 whitespace-nowrap">
-            <img src="/logo.svg" alt="Carolina Growth" className="h-7 w-7" />
+            <Image
+              src="/logo.svg"
+              alt="Carolina Growth"
+              width={28}
+              height={28}
+              className="h-7 w-7"
+              priority
+            />
             <span className="text-xl font-bold tracking-tight text-[var(--foreground)]">
               Carolina Growth
             </span>

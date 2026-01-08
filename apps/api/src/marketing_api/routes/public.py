@@ -323,7 +323,7 @@ async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict
         items=[{"price": payload.price_id}],
         payment_behavior="default_incomplete",
         expand=["latest_invoice.payment_intent"],
-        metadata={"plan_label": payload.plan_label or ""},
+        metadata={"plan_label": payload.plan_label or "", "source": "web-checkout"},
     )
     payment_intent = subscription.latest_invoice.payment_intent
     return {
@@ -344,6 +344,7 @@ async def create_stripe_payment_intent(payload: StripePaymentIntentRequest) -> d
         currency="usd",
         customer=customer.id,
         description=payload.description or "Carolina Growth payment",
+        metadata={"plan_label": payload.description or "", "source": "web-checkout"},
         automatic_payment_methods={"enabled": True},
     )
     return {"client_secret": intent.client_secret, "payment_intent_id": intent.id}
@@ -361,12 +362,14 @@ async def create_stripe_invoice(payload: StripeInvoiceRequest) -> dict[str, str]
         amount=payload.amount,
         currency="usd",
         description=payload.description or "Custom package deposit",
+        metadata={"plan_label": payload.description or "", "source": "web-checkout"},
     )
     invoice = stripe.Invoice.create(
         customer=customer.id,
         collection_method="send_invoice",
         days_until_due=payload.days_until_due or 1,
         auto_advance=True,
+        metadata={"plan_label": payload.description or "", "source": "web-checkout"},
     )
     finalized = stripe.Invoice.finalize_invoice(invoice.id)
     stripe.Invoice.send_invoice(finalized.id)

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 import { verifyTurnstileToken } from "@/lib/turnstile";
 
@@ -18,6 +19,28 @@ const CRM_WEBHOOK_URL = process.env.CRM_WEBHOOK_URL;
 const CRM_WEBHOOK_TOKEN = process.env.CRM_WEBHOOK_TOKEN;
 const RATE_LIMIT_AUTH = process.env.RATE_LIMIT_TOKEN;
 
+function getUtmDetails() {
+  const cookieStore = cookies();
+  const rawUtm = cookieStore.get("cg_utm")?.value;
+  const rawRef = cookieStore.get("cg_ref")?.value;
+  const details: string[] = [];
+
+  if (rawUtm) {
+    try {
+      const parsed = JSON.parse(decodeURIComponent(rawUtm));
+      details.push(`UTM: ${JSON.stringify(parsed)}`);
+    } catch {
+      details.push(`UTM: ${rawUtm}`);
+    }
+  }
+
+  if (rawRef) {
+    details.push(`Referrer: ${decodeURIComponent(rawRef)}`);
+  }
+
+  return details.length ? details.join("\n") : null;
+}
+
 export async function POST(request: Request) {
   const authToken = request.headers.get("x-rate-limit-token");
   if (RATE_LIMIT_AUTH && authToken && authToken !== RATE_LIMIT_AUTH) {
@@ -35,8 +58,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Bot verification failed." }, { status: 400 });
   }
 
+  const utmDetails = getUtmDetails();
   const entry: LeadPayload = {
     ...body,
+    details: utmDetails ? `${body.details}\n\n${utmDetails}` : body.details,
     source: body.source ?? "web",
   };
 

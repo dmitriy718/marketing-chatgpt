@@ -6,6 +6,7 @@ import { logInfo, logError } from "../utils/logger.js";
 import { collectGooglePlaces } from "./sources/googlePlaces.js";
 import { collectYelp } from "./sources/yelp.js";
 import { collectDirectories } from "./sources/directories.js";
+import { enrichLead } from "../utils/enrich.js";
 
 const region = process.env.LEADGEN_REGION || "South Carolina";
 const keywords = (process.env.LEADGEN_KEYWORDS || "marketing")
@@ -73,11 +74,16 @@ async function run() {
     return;
   }
 
+  const enrichedLeads = [];
+  for (const lead of leads) {
+    enrichedLeads.push(await enrichLead(lead));
+  }
+
   const existing = await readLeads();
-  const merged = dedupeLeads([...existing, ...leads]);
+  const merged = dedupeLeads([...existing, ...enrichedLeads]);
   await writeLeads(merged);
 
-  for (const lead of leads) {
+  for (const lead of enrichedLeads) {
     await appendCsv(lead);
     await forwardLead(lead);
   }

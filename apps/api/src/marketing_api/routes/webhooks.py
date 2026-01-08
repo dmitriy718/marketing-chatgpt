@@ -13,6 +13,108 @@ from marketing_api.settings import settings
 router = APIRouter(prefix="/webhooks", tags=["webhooks"])
 
 
+async def get_customer_details(customer_id: str | None) -> tuple[str | None, str | None]:
+    if not customer_id:
+        return None, None
+    try:
+        customer = stripe.Customer.retrieve(customer_id)
+    except Exception:
+        return None, None
+    return customer.get("email"), customer.get("name")
+
+
+def merge_details(existing: str | None, new: str) -> str:
+    if not existing:
+        return new
+    if new in existing:
+        return existing
+    return f"{existing}\n\n{new}"
+
+
+async def record_stripe_lead(
+    session: AsyncSession,
+    *,
+    email: str | None,
+    name: str | None,
+    details: str,
+) -> None:
+    if not email:
+        return
+
+    existing = await session.execute(select(models.Lead).where(models.Lead.email == email))
+    lead = existing.scalar_one_or_none()
+    if lead:
+        lead.full_name = lead.full_name or name or email
+        lead.details = merge_details(lead.details, details)
+        lead.status = models.LeadStatus.converted
+        await session.commit()
+        return
+
+    new_lead = models.Lead(
+        full_name=name or email,
+        email=email,
+        company=name or None,
+        details=details,
+        source="stripe",
+        status=models.LeadStatus.converted,
+    )
+    session.add(new_lead)
+    await session.commit()
+
+
+async def handle_payment_intent(session: AsyncSession, data: dict) -> None:
+    customer_id = data.get("customer")
+    email = data.get("receipt_email") or data.get("customer_email")
+    name = data.get("shipping", {}).get("name") if isinstance(data.get("shipping"), dict) else None
+    if not email:
+        customer_email, customer_name = await get_customer_details(customer_id)
+        email = customer_email
+        name = name or customer_name
+    metadata = data.get("metadata") or {}
+    plan_label = metadata.get("plan_label") or data.get("description") or "Stripe payment"
+    amount = data.get("amount_received") or data.get("amount")
+    details = "\n".join(
+        [
+            "Stripe payment succeeded",
+            f"Plan: {plan_label}",
+            f"Amount: {amount}",
+            f"Payment intent: {data.get('id')}",
+        ]
+    )
+    await record_stripe_lead(session, email=email, name=name, details=details)
+
+
+async def handle_invoice_paid(session: AsyncSession, data: dict) -> None:
+    customer_id = data.get("customer")
+    email = data.get("customer_email")
+    name = data.get("customer_name")
+    if not email:
+        customer_email, customer_name = await get_customer_details(customer_id)
+        email = customer_email
+        name = name or customer_name
+
+    plan_label = data.get("metadata", {}).get("plan_label")
+    subscription_id = data.get("subscription")
+    if subscription_id and not plan_label:
+        try:
+            subscription = stripe.Subscription.retrieve(subscription_id)
+            plan_label = subscription.get("metadata", {}).get("plan_label")
+        except Exception:
+            plan_label = plan_label
+    plan_label = plan_label or "Stripe subscription"
+
+    details = "\n".join(
+        [
+            "Stripe invoice paid",
+            f"Plan: {plan_label}",
+            f"Amount paid: {data.get('amount_paid')}",
+            f"Invoice: {data.get('id')}",
+            f"Subscription: {subscription_id or 'n/a'}",
+        ]
+    )
+    await record_stripe_lead(session, email=email, name=name, details=details)
+
+
 @router.post("/stripe", status_code=status.HTTP_200_OK)
 async def handle_stripe_webhook(
     request: Request, session: AsyncSession = Depends(get_session)
@@ -69,5 +171,13 @@ async def handle_stripe_webhook(
     )
     session.add(record)
     await session.commit()
+
+    event_type = event.type
+    data_object = event.data.object if event.data else None
+    if isinstance(data_object, dict):
+        if event_type == "payment_intent.succeeded":
+            await handle_payment_intent(session, data_object)
+        elif event_type == "invoice.paid":
+            await handle_invoice_paid(session, data_object)
 
     return {"status": "ok"}
