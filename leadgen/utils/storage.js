@@ -7,6 +7,8 @@ const __dirname = path.dirname(__filename);
 const dataDir = path.resolve(__dirname, "..", "data");
 const jsonPath = path.join(dataDir, "leads.json");
 const csvPath = path.join(dataDir, "leads.csv");
+const csvHeader =
+  "created_at,id,name,email,phone,company,website,budget,location,industry,source,status,consent,score,goals,notes\n";
 
 export async function ensureStorage() {
   await fs.mkdir(dataDir, { recursive: true });
@@ -18,8 +20,7 @@ export async function ensureStorage() {
   try {
     await fs.access(csvPath);
   } catch {
-    const header = "created_at,name,email,phone,company,website,budget,location,goals,source\n";
-    await fs.writeFile(csvPath, header, "utf8");
+    await fs.writeFile(csvPath, csvHeader, "utf8");
   }
 }
 
@@ -38,6 +39,7 @@ export async function appendCsv(lead) {
   await ensureStorage();
   const line = [
     lead.created_at,
+    lead.id,
     lead.name,
     lead.email,
     lead.phone,
@@ -45,8 +47,13 @@ export async function appendCsv(lead) {
     lead.website,
     lead.budget,
     lead.location,
-    lead.goals,
+    lead.industry,
     lead.source,
+    lead.status,
+    lead.consent,
+    lead.score,
+    lead.goals,
+    lead.notes,
   ]
     .map((value) => `"${String(value ?? "").replaceAll('"', '""')}"`)
     .join(",");
