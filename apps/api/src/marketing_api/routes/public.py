@@ -115,6 +115,27 @@ def get_or_create_customer(name: str, email: str):
     return stripe.Customer.create(name=name, email=email)
 
 
+def resolve_payment_intent(invoice) -> stripe.PaymentIntent | None:
+    if not invoice:
+        return None
+    payment_intent = None
+    if isinstance(invoice, dict):
+        payment_intent = invoice.get("payment_intent") or None
+        if not payment_intent:
+            payment_intents = invoice.get("payment_intents") or []
+            payment_intent = payment_intents[0] if payment_intents else None
+    else:
+        payment_intent = getattr(invoice, "payment_intent", None)
+        if not payment_intent:
+            payment_intents = getattr(invoice, "payment_intents", None)
+            if payment_intents:
+                payment_intent = payment_intents[0]
+
+    if isinstance(payment_intent, str):
+        return stripe.PaymentIntent.retrieve(payment_intent)
+    return payment_intent
+
+
 @router.post("/leads", status_code=status.HTTP_201_CREATED)
 @limiter.limit("6/minute")
 async def capture_lead(
@@ -322,10 +343,18 @@ async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict
         customer=customer.id,
         items=[{"price": payload.price_id}],
         payment_behavior="default_incomplete",
-        expand=["latest_invoice.payment_intent"],
+        expand=["latest_invoice"],
         metadata={"plan_label": payload.plan_label or "", "source": "web-checkout"},
     )
-    payment_intent = subscription.latest_invoice.payment_intent
+    invoice = subscription.latest_invoice
+    payment_intent = resolve_payment_intent(invoice)
+    if not payment_intent and invoice:
+        invoice_id = invoice.get("id") if isinstance(invoice, dict) else getattr(invoice, "id", None)
+        if invoice_id:
+            refreshed = stripe.Invoice.retrieve(invoice_id)
+            payment_intent = resolve_payment_intent(refreshed)
+    if not payment_intent:
+        raise HTTPException(status_code=500, detail="Stripe payment intent unavailable.")
     return {
         "client_secret": payment_intent.client_secret,
         "subscription_id": subscription.id,
