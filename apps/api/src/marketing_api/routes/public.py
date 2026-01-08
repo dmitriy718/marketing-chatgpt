@@ -351,8 +351,15 @@ async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict
     if not payment_intent and invoice:
         invoice_id = invoice.get("id") if isinstance(invoice, dict) else getattr(invoice, "id", None)
         if invoice_id:
-            refreshed = stripe.Invoice.retrieve(invoice_id, expand=["payment_intent"])
-            payment_intent = resolve_payment_intent(refreshed)
+            try:
+                finalized = stripe.Invoice.finalize_invoice(invoice_id)
+            except stripe.error.InvalidRequestError:
+                finalized = stripe.Invoice.retrieve(invoice_id)
+            payment_intent = resolve_payment_intent(finalized)
+            if not payment_intent:
+                intents = stripe.PaymentIntent.list(invoice=invoice_id, limit=1)
+                if intents.data:
+                    payment_intent = intents.data[0]
     if not payment_intent:
         raise HTTPException(status_code=500, detail="Stripe payment intent unavailable.")
     return {
