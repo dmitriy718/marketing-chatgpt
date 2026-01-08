@@ -84,6 +84,28 @@ services:
     ports:
       - "127.0.0.1:9999:9999"
 
+  leadgen:
+    build:
+      context: .
+      dockerfile: leadgen/Dockerfile.prod
+    container_name: carolina_growth_leadgen
+    restart: unless-stopped
+    environment:
+      PORT: 5050
+      SITE_NAME: ${SITE_NAME}
+      SITE_URL: ${SITE_URL}
+      LEADS_API_URL: ${LEADS_API_URL}
+      LEADS_WEBHOOK_URL: ${LEADS_WEBHOOK_URL}
+      LEADS_WEBHOOK_TOKEN: ${LEADS_WEBHOOK_TOKEN}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_FROM: ${SMTP_FROM}
+      ALERT_EMAIL: ${ADMIN_EMAIL}
+    ports:
+      - "127.0.0.1:5050:5050"
+
 
 volumes:
   carolina_growth_postgres_data:

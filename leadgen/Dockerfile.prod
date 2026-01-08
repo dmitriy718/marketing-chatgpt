@@ -1,0 +1,18 @@
+FROM node:20-slim
+
+WORKDIR /app/leadgen
+
+COPY leadgen/package.json ./package.json
+
+RUN npm install --omit=dev
+
+COPY leadgen /app/leadgen
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=5050
+
+EXPOSE 5050
+
+CMD ["node", "leadgen/src/server.js"]

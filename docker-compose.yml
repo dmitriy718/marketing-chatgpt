@@ -69,6 +69,28 @@ services:
     command: >
       npx next dev --webpack --hostname 0.0.0.0 --port ${WEB_PORT:-3001}
 
+  leadgen:
+    build:
+      context: .
+      dockerfile: leadgen/Dockerfile.prod
+    container_name: carolina_growth_leadgen
+    network_mode: host
+    environment:
+      PORT: 5050
+      SITE_NAME: ${SITE_NAME:-Carolina Growth}
+      SITE_URL: ${SITE_URL:-http://localhost:3001}
+      LEADS_API_URL: ${LEADS_API_URL:-http://localhost:${API_PORT:-8001}/public/leads}
+      LEADS_WEBHOOK_URL: ${LEADS_WEBHOOK_URL:-}
+      LEADS_WEBHOOK_TOKEN: ${LEADS_WEBHOOK_TOKEN:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      ALERT_EMAIL: ${ADMIN_EMAIL:-}
+    command: >
+      node leadgen/src/server.js
+
 volumes:
   carolina_growth_postgres_data:
   carolina_growth_web_node_modules:
