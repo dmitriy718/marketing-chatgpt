@@ -18,6 +18,14 @@ async function forwardLead(lead) {
     return;
   }
 
+  if (!lead.email) {
+    logInfo("Skipping CRM forward (missing email)", {
+      company: lead.company || lead.name,
+      source: lead.source,
+    });
+    return;
+  }
+
   try {
     const response = await fetch(process.env.LEADS_API_URL, {
       method: "POST",
@@ -26,7 +34,7 @@ async function forwardLead(lead) {
       },
       body: JSON.stringify({
         name: lead.name,
-        email: lead.email || "placeholder@carolinagrowth.co",
+        email: lead.email,
         company: lead.company || lead.name,
         budget: lead.budget,
         details: lead.details,

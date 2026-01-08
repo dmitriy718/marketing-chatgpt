@@ -1,3 +1,56 @@
-Local Growth Playbook
+Carolina Growth - Local Growth Playbook
+=======================================
 
-This is a placeholder download. Replace with your real resource.
+This playbook is a quick-start guide for local businesses that want more leads,
+more phone calls, and a steady pipeline of qualified customers.
+
+1) Positioning that earns trust fast
+- Pick one primary service and one primary audience per landing page.
+- Use a clear headline: "We help [audience] get [outcome] in [timeframe]."
+- Add one proof point above the fold (review count, years in business, or results).
+
+2) Lead capture that converts
+- Keep the form short: name, email, phone, business.
+- Use a single CTA repeated 3x per page (hero, mid, footer).
+- Offer a local incentive (audit, estimate, or quick plan).
+
+3) Local SEO checklist
+- Optimize your Google Business Profile (categories, services, photos, posts).
+- Ask for reviews every week and reply to them within 48 hours.
+- Build location pages for each city you serve.
+- Add schema markup (LocalBusiness + service area).
+
+4) Paid search starter kit
+- Use exact match for high-intent keywords.
+- Add negative keywords weekly.
+- Create one ad group per service.
+- Point ads to dedicated landing pages, not your homepage.
+
+5) Conversion fixes that matter
+- Put your phone number in the top-right on desktop.
+- Add social proof in every section (logos, ratings, testimonials).
+- Show pricing ranges or "starting at" numbers.
+- Reduce above-the-fold clutter.
+
+6) Follow-up that closes
+- Reply to new leads within 5 minutes when possible.
+- Use a 3-touch sequence: call + email + text.
+- Offer a specific next step: "15-minute plan review."
+
+7) Metrics to track weekly
+- Leads by channel
+- Conversion rate from visit to lead
+- Cost per lead (paid)
+- Lead response time
+- Close rate
+
+Bonus: The 7-Day Jumpstart
+Day 1: Fix the homepage headline and CTA.
+Day 2: Update Google Business Profile photos.
+Day 3: Launch one paid search campaign.
+Day 4: Add a testimonial block.
+Day 5: Create a local landing page.
+Day 6: Audit competitors and add two differentiators.
+Day 7: Review performance and refine ads.
+
+Need help? Contact Carolina Growth at https://carolinagrowth.co/contact
