@@ -30,6 +30,12 @@ class Settings(BaseSettings):
     stripe_webhook_secret: str = "whsec_change_me"
     posthog_api_key: str = "phc_change_me"
     posthog_host: str = "https://app.posthog.com"
+    smtp_host: str | None = None
+    smtp_port: int = 587
+    smtp_user: str | None = None
+    smtp_password: str | None = None
+    smtp_from: str | None = None
+    admin_email: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=(str(ROOT_DIR / ".env"), ".env"), extra="ignore"

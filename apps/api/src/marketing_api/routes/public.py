@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, BackgroundTasks, Depends, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from marketing_api.db.models import BugReport, Lead, LeadStatus, NewsletterSignup
 from marketing_api.db.session import get_session
+from marketing_api.notifications.email import notify_admin, send_email
+from marketing_api.settings import settings
 
 router = APIRouter(prefix="/public", tags=["public"])
 
@@ -34,7 +36,9 @@ class BugReportRequest(BaseModel):
 
 @router.post("/leads", status_code=status.HTTP_201_CREATED)
 async def capture_lead(
-    payload: PublicLeadRequest, session: AsyncSession = Depends(get_session)
+    payload: PublicLeadRequest,
+    background_tasks: BackgroundTasks,
+    session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
     lead = Lead(
         full_name=payload.name,
@@ -47,22 +51,95 @@ async def capture_lead(
     )
     session.add(lead)
     await session.commit()
+
+    admin_body = "\n".join(
+        [
+            "New lead captured",
+            "",
+            f"Name: {payload.name}",
+            f"Email: {payload.email}",
+            f"Company: {payload.company}",
+            f"Budget: {payload.budget or 'Not provided'}",
+            f"Source: {payload.source or 'web'}",
+            "",
+            payload.details,
+        ]
+    )
+    background_tasks.add_task(
+        notify_admin,
+        subject="New lead captured",
+        body=admin_body,
+        reply_to=payload.email,
+    )
+
+    confirmation_body = "\n".join(
+        [
+            f"Hi {payload.name},",
+            "",
+            "Thanks for reaching out to Carolina Growth.",
+            "We received your request and will follow up shortly.",
+            "",
+            "If you have any additional details, reply to this email.",
+            "",
+            "— Carolina Growth",
+        ]
+    )
+    background_tasks.add_task(
+        send_email,
+        to_address=payload.email,
+        subject="We received your request",
+        body=confirmation_body,
+    )
     return {"status": "ok"}
 
 
 @router.post("/newsletter", status_code=status.HTTP_201_CREATED)
 async def capture_newsletter_signup(
-    payload: NewsletterSignupRequest, session: AsyncSession = Depends(get_session)
+    payload: NewsletterSignupRequest,
+    background_tasks: BackgroundTasks,
+    session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
     signup = NewsletterSignup(email=payload.email, lead_magnet=payload.lead_magnet)
     session.add(signup)
     await session.commit()
+
+    admin_body = "\n".join(
+        [
+            "New newsletter signup",
+            "",
+            f"Email: {payload.email}",
+            f"Lead magnet: {payload.lead_magnet or 'None'}",
+        ]
+    )
+    background_tasks.add_task(
+        notify_admin,
+        subject="New newsletter signup",
+        body=admin_body,
+        reply_to=payload.email,
+    )
+
+    confirmation_body = "\n".join(
+        [
+            "Thanks for subscribing to Carolina Growth.",
+            "We will send the next update soon.",
+            "",
+            "— Carolina Growth",
+        ]
+    )
+    background_tasks.add_task(
+        send_email,
+        to_address=payload.email,
+        subject="Subscription confirmed",
+        body=confirmation_body,
+    )
     return {"status": "ok"}
 
 
 @router.post("/bug-reports", status_code=status.HTTP_201_CREATED)
 async def capture_bug_report(
-    payload: BugReportRequest, session: AsyncSession = Depends(get_session)
+    payload: BugReportRequest,
+    background_tasks: BackgroundTasks,
+    session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
     report = BugReport(
         message=payload.message,
@@ -75,4 +152,25 @@ async def capture_bug_report(
     )
     session.add(report)
     await session.commit()
+
+    admin_body = "\n".join(
+        [
+            "New bug report",
+            "",
+            f"Message: {payload.message}",
+            f"URL: {payload.url or 'Unknown'}",
+            f"User agent: {payload.user_agent or 'Unknown'}",
+            f"Referrer: {payload.referrer or 'Unknown'}",
+            f"Digest: {payload.digest or 'None'}",
+            "",
+            payload.stack or "",
+            "",
+            payload.context or "",
+        ]
+    )
+    background_tasks.add_task(
+        notify_admin,
+        subject=f"Bug report on {settings.app_url}",
+        body=admin_body,
+    )
     return {"status": "ok"}
