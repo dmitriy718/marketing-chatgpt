@@ -54,9 +54,9 @@ export function ChatWidget() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
-                Live Chat
+                Message Us
               </p>
-              <h3 className="title text-lg font-semibold">Talk to Carolina Growth</h3>
+              <h3 className="title text-lg font-semibold">Message Carolina Growth</h3>
             </div>
             <button
               type="button"
@@ -67,7 +67,7 @@ export function ChatWidget() {
             </button>
           </div>
           <p className="mt-3 text-sm text-[var(--muted)]">
-            Share your goal and we will respond quickly.
+            Send us a message and we will respond quickly.
           </p>
           <form className="mt-4 grid gap-3" onSubmit={handleSubmit}>
             <input
@@ -113,7 +113,7 @@ export function ChatWidget() {
           onClick={toggle}
         >
           <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
-          Live chat
+          Message us
         </button>
       )}
     </div>

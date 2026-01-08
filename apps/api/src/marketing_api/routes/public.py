@@ -215,13 +215,13 @@ async def capture_chat_message(
 
     background_tasks.add_task(
         notify_admin,
-        subject="New live chat message",
+        subject="New website message",
         body=summary,
         reply_to=payload.email,
     )
     background_tasks.add_task(
         send_pushover,
-        title="New live chat",
+        title="New website message",
         message=f"{payload.name}: {payload.message[:200]}".strip(),
     )
 

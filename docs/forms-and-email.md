@@ -37,8 +37,8 @@ Bug reporting:
   `POST /public/bug-reports` and triggers an admin notification email.
   Status: Live.
 
-Live chat:
-- Floating chat widget posts to `POST /api/chat`, which forwards to
+Message us:
+- Floating message widget posts to `POST /api/chat`, which forwards to
   `POST /public/chat` and triggers:
   - Admin email notification.
   - Pushover notification (if configured).
