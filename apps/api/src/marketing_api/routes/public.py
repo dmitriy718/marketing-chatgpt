@@ -116,6 +116,44 @@ def get_or_create_customer(name: str, email: str):
     return stripe.Customer.create(name=name, email=email)
 
 
+def merge_details(existing: str | None, new: str) -> str:
+    if not existing:
+        return new
+    if new in existing:
+        return existing
+    return f"{existing}\n\n{new}"
+
+
+async def upsert_lead(
+    session: AsyncSession,
+    *,
+    full_name: str,
+    email: str,
+    company: str | None,
+    details: str,
+    source: str,
+) -> None:
+    existing = await session.execute(select(Lead).where(Lead.email == email))
+    lead = existing.scalar_one_or_none()
+    if lead:
+        lead.full_name = lead.full_name or full_name
+        lead.company = lead.company or company
+        lead.details = merge_details(lead.details, details)
+        lead.source = lead.source or source
+        await session.commit()
+        return
+    session.add(
+        Lead(
+            full_name=full_name,
+            email=email,
+            company=company,
+            details=details,
+            source=source,
+            status=LeadStatus.new,
+        )
+    )
+    await session.commit()
+
 def resolve_payment_intent(invoice) -> stripe.PaymentIntent | None:
     if not invoice:
         return None
@@ -211,6 +249,15 @@ async def capture_newsletter_signup(
     signup = NewsletterSignup(email=payload.email, lead_magnet=payload.lead_magnet)
     session.add(signup)
     await session.commit()
+
+    await upsert_lead(
+        session,
+        full_name=payload.email,
+        email=payload.email,
+        company=None,
+        details=f"Newsletter signup\nLead magnet: {payload.lead_magnet or 'None'}",
+        source="newsletter",
+    )
 
     admin_body = "\n".join(
         [
@@ -324,11 +371,44 @@ async def capture_chat_message(
         body=summary,
         reply_to=payload.email,
     )
+    if payload.email:
+        background_tasks.add_task(
+            send_email,
+            to_address=payload.email,
+            subject="We received your message",
+            body="\n".join(
+                [
+                    f"Hi {payload.name},",
+                    "",
+                    "Thanks for reaching out to Carolina Growth.",
+                    "We received your message and will reply soon.",
+                    "",
+                    "— Carolina Growth",
+                ]
+            ),
+        )
     background_tasks.add_task(
         send_pushover,
         title="New website message",
         message=f"{payload.name}: {payload.message[:200]}".strip(),
     )
+
+    if payload.email:
+        await upsert_lead(
+            session,
+            full_name=payload.name,
+            email=payload.email,
+            company=None,
+            details="\n".join(
+                [
+                    "Chat message received",
+                    f"Page: {payload.page_url or 'Unknown'}",
+                    "",
+                    payload.message,
+                ]
+            ),
+            source="chat",
+        )
 
     return {"status": "ok"}
 

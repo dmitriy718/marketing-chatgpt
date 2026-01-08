@@ -168,6 +168,38 @@ async function notifyEmail(lead) {
   });
 }
 
+async function notifyLead(lead) {
+  if (!process.env.SMTP_HOST || !lead.email) {
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: false,
+    auth: process.env.SMTP_USER
+      ? {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD,
+        }
+      : undefined,
+  });
+
+  await transporter.sendMail({
+    from: process.env.SMTP_FROM || process.env.SMTP_USER,
+    to: lead.email,
+    subject: "We received your request",
+    text: [
+      `Hi ${lead.name || "there"},`,
+      "",
+      "Thanks for reaching out to Carolina Growth.",
+      "We received your request and will follow up shortly.",
+      "",
+      "— Carolina Growth",
+    ].join("\n"),
+  });
+}
+
 async function forwardLead(lead) {
   if (leadsApiUrl) {
     try {
@@ -242,6 +274,7 @@ app.post("/lead", async (req, res) => {
     await writeLeads(deduped);
     await appendCsv(lead);
     await notifyEmail(lead);
+    await notifyLead(lead);
     await forwardLead(lead);
     logInfo("Lead captured", { company: lead.company });
   } catch (error) {
