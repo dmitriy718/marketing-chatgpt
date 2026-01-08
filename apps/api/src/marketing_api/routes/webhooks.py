@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from marketing_api.db import models
 from marketing_api.db.session import get_session
+from marketing_api.notifications.email import notify_admin, send_email
 from marketing_api.settings import settings
 
 router = APIRouter(prefix="/webhooks", tags=["webhooks"])
@@ -29,6 +30,12 @@ def merge_details(existing: str | None, new: str) -> str:
     if new in existing:
         return existing
     return f"{existing}\n\n{new}"
+
+
+def format_currency(amount: int | None) -> str:
+    if amount is None:
+        return "Unknown"
+    return f"${amount / 100:,.2f}"
 
 
 async def record_stripe_lead(
@@ -83,6 +90,32 @@ async def handle_payment_intent(session: AsyncSession, data: dict) -> None:
     )
     await record_stripe_lead(session, email=email, name=name, details=details)
 
+    if email:
+        customer_body = "\n".join(
+            [
+                f"Hi {name or 'there'},",
+                "",
+                "Thanks for your payment with Carolina Growth.",
+                f"Amount: {format_currency(amount)}",
+                f"Plan: {plan_label}",
+                "",
+                "We will follow up shortly.",
+            ]
+        )
+        send_email(to_address=email, subject="Payment received", body=customer_body)
+
+    admin_body = "\n".join(
+        [
+            "New Stripe payment",
+            f"Email: {email or 'Unknown'}",
+            f"Name: {name or 'Unknown'}",
+            f"Amount: {format_currency(amount)}",
+            f"Plan: {plan_label}",
+            f"Payment intent: {data.get('id')}",
+        ]
+    )
+    notify_admin(subject="Stripe payment received", body=admin_body, reply_to=email)
+
 
 async def handle_invoice_paid(session: AsyncSession, data: dict) -> None:
     customer_id = data.get("customer")
@@ -113,6 +146,33 @@ async def handle_invoice_paid(session: AsyncSession, data: dict) -> None:
         ]
     )
     await record_stripe_lead(session, email=email, name=name, details=details)
+
+    if email:
+        customer_body = "\n".join(
+            [
+                f"Hi {name or 'there'},",
+                "",
+                "Thanks for your subscription payment with Carolina Growth.",
+                f"Amount: {format_currency(data.get('amount_paid'))}",
+                f"Plan: {plan_label}",
+                "",
+                "We will follow up shortly.",
+            ]
+        )
+        send_email(to_address=email, subject="Subscription payment received", body=customer_body)
+
+    admin_body = "\n".join(
+        [
+            "Stripe subscription payment received",
+            f"Email: {email or 'Unknown'}",
+            f"Name: {name or 'Unknown'}",
+            f"Amount: {format_currency(data.get('amount_paid'))}",
+            f"Plan: {plan_label}",
+            f"Invoice: {data.get('id')}",
+            f"Subscription: {subscription_id or 'n/a'}",
+        ]
+    )
+    notify_admin(subject="Stripe subscription payment", body=admin_body, reply_to=email)
 
 
 @router.post("/stripe", status_code=status.HTTP_200_OK)
