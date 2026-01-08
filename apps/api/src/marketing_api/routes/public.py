@@ -343,7 +343,7 @@ async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict
         customer=customer.id,
         items=[{"price": payload.price_id}],
         payment_behavior="default_incomplete",
-        expand=["latest_invoice", "latest_invoice.payment_intent", "latest_invoice.payment_intents"],
+        expand=["latest_invoice", "latest_invoice.payment_intent"],
         metadata={"plan_label": payload.plan_label or "", "source": "web-checkout"},
     )
     invoice = subscription.latest_invoice
@@ -351,10 +351,7 @@ async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict
     if not payment_intent and invoice:
         invoice_id = invoice.get("id") if isinstance(invoice, dict) else getattr(invoice, "id", None)
         if invoice_id:
-            refreshed = stripe.Invoice.retrieve(
-                invoice_id,
-                expand=["payment_intent", "payment_intents"],
-            )
+            refreshed = stripe.Invoice.retrieve(invoice_id, expand=["payment_intent"])
             payment_intent = resolve_payment_intent(refreshed)
     if not payment_intent:
         raise HTTPException(status_code=500, detail="Stripe payment intent unavailable.")
