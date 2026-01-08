@@ -236,3 +236,14 @@ class BugReport(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     user_agent: Mapped[str | None] = mapped_column(String(255))
     referrer: Mapped[str | None] = mapped_column(String(500))
     context: Mapped[str | None] = mapped_column(Text)
+
+
+class StripeWebhookEvent(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "stripe_webhook_events"
+
+    event_id: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    event_type: Mapped[str] = mapped_column(String(255), nullable=False)
+    livemode: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    event_created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    data_object_id: Mapped[str | None] = mapped_column(String(255))
+    payload: Mapped[str] = mapped_column(Text, nullable=False)

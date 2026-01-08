@@ -7,6 +7,7 @@ from marketing_api.graphql.schema import schema
 from marketing_api.routes.auth import router as auth_router
 from marketing_api.routes.health import router as health_router
 from marketing_api.routes.public import router as public_router
+from marketing_api.routes.webhooks import router as webhooks_router
 from marketing_api.db.session import get_session
 from marketing_api.settings import settings
 
@@ -42,6 +43,7 @@ def create_app() -> FastAPI:
     app.include_router(health_router)
     app.include_router(auth_router)
     app.include_router(public_router)
+    app.include_router(webhooks_router)
     app.include_router(graphql_app, prefix="/graphql")
 
     return app

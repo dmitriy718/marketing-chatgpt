@@ -20,6 +20,7 @@ psycopg = { version = "^3.2.9", extras = ["binary"] }
 alembic = "^1.16.5"
 passlib = { version = "^1.7.4", extras = ["argon2"] }
 python-jose = { version = "^3.5.0", extras = ["cryptography"] }
+stripe = "^14.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.2"
