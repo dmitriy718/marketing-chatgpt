@@ -48,6 +48,7 @@ export function PricingPackageBuilder() {
   const [state, setState] = useState<PackageState>(defaultState);
   const [status, setStatus] = useState<FormState>("idle");
   const [message, setMessage] = useState<string | null>(null);
+  const [invoiceUrl, setInvoiceUrl] = useState<string | null>(null);
 
   const estimate = useMemo(() => {
     const tier = tierPricing[state.tier as keyof typeof tierPricing] ?? tierPricing.growth;
@@ -64,11 +65,16 @@ export function PricingPackageBuilder() {
     };
   }, [state]);
 
+  const depositAmount = useMemo(() => {
+    return Math.round(estimate.monthly * 0.2);
+  }, [estimate.monthly]);
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     setStatus("submitting");
     setMessage(null);
+    setInvoiceUrl(null);
 
     const formData = new FormData(form);
     const payload = {
@@ -92,8 +98,27 @@ export function PricingPackageBuilder() {
         throw new Error(result?.error ?? "Submission failed.");
       }
 
+      const invoiceResponse = await fetch("/api/stripe/invoice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: depositAmount * 100,
+          name: payload.name,
+          email: payload.email,
+          description: `Custom package deposit (20% of estimate). Tier: ${estimate.tierLabel}.`,
+          daysUntilDue: 3,
+        }),
+      });
+
+      const invoicePayload = await invoiceResponse.json().catch(() => ({}));
+      if (!invoiceResponse.ok) {
+        throw new Error(invoicePayload?.error ?? "Invoice creation failed.");
+      }
+      setInvoiceUrl(invoicePayload?.hosted_invoice_url ?? null);
       setStatus("success");
-      setMessage("Thanks! We will send a package recommendation within 48 hours.");
+      setMessage(
+        "Thanks! Your deposit invoice is on the way. We will follow up within 48 hours."
+      );
       trackEvent({
         name: "pricing_submit",
         params: { source: "pricing-builder", tier: state.tier },
@@ -218,6 +243,9 @@ export function PricingPackageBuilder() {
           <p className="mt-2 text-xs text-[var(--muted)]">
             Package: {estimate.tierLabel}
           </p>
+          <p className="mt-2 text-xs text-[var(--muted)]">
+            Estimated deposit: ${depositAmount.toLocaleString()} (20% of the estimate)
+          </p>
         </div>
       </div>
       <form
@@ -226,7 +254,8 @@ export function PricingPackageBuilder() {
       >
         <h3 className="title text-2xl font-semibold">Request a package recommendation</h3>
         <p className="text-sm text-[var(--muted)]">
-          Share your details and we’ll recommend the best-fit package and next steps.
+          Share your details and we’ll recommend the best-fit package and next steps. A 20%
+          deposit invoice is issued to reserve a consultation.
         </p>
         {[
           { label: "Full name", type: "text", name: "name", required: true },
@@ -249,8 +278,18 @@ export function PricingPackageBuilder() {
           className="btn-primary rounded-full px-6 py-3 text-sm font-semibold"
           disabled={status === "submitting"}
         >
-          {status === "submitting" ? "Sending..." : "Send my package"}
+          {status === "submitting" ? "Sending..." : "Send my package + invoice"}
         </button>
+        {invoiceUrl ? (
+          <a
+            className="text-sm font-semibold text-[var(--primary)]"
+            href={invoiceUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Pay the deposit invoice →
+          </a>
+        ) : null}
         {message ? (
           <p
             className={`text-sm ${status === "success" ? "text-[var(--primary)]" : "text-[var(--muted)]"}`}

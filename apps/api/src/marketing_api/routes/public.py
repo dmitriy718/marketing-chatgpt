@@ -1,6 +1,8 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
+
+import stripe
 
 from marketing_api.db.models import BugReport, ChatMessage, Lead, LeadStatus, NewsletterSignup
 from marketing_api.db.session import get_session
@@ -42,6 +44,44 @@ class ChatMessageRequest(BaseModel):
     page_url: str | None = None
     user_agent: str | None = None
     referrer: str | None = None
+
+
+class StripeSubscriptionRequest(BaseModel):
+    price_id: str
+    name: str
+    email: EmailStr
+    plan_label: str | None = None
+
+
+class StripePaymentIntentRequest(BaseModel):
+    amount: int
+    name: str
+    email: EmailStr
+    description: str | None = None
+
+
+class StripeInvoiceRequest(BaseModel):
+    amount: int
+    name: str
+    email: EmailStr
+    description: str | None = None
+    days_until_due: int | None = None
+
+
+def configure_stripe() -> None:
+    if not settings.stripe_secret_key or settings.stripe_secret_key == "sk_test_change_me":
+        raise HTTPException(status_code=500, detail="Stripe is not configured.")
+    stripe.api_key = settings.stripe_secret_key
+
+
+def get_or_create_customer(name: str, email: str):
+    customers = stripe.Customer.list(email=email, limit=1)
+    if customers.data:
+        customer = customers.data[0]
+        if name and not customer.name:
+            stripe.Customer.modify(customer.id, name=name)
+        return customer
+    return stripe.Customer.create(name=name, email=email)
 
 
 @router.post("/leads", status_code=status.HTTP_201_CREATED)
@@ -226,3 +266,68 @@ async def capture_chat_message(
     )
 
     return {"status": "ok"}
+
+
+@router.post("/stripe/subscription")
+async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict[str, str]:
+    configure_stripe()
+    if not payload.price_id:
+        raise HTTPException(status_code=400, detail="Missing price ID.")
+
+    customer = get_or_create_customer(payload.name, payload.email)
+    subscription = stripe.Subscription.create(
+        customer=customer.id,
+        items=[{"price": payload.price_id}],
+        payment_behavior="default_incomplete",
+        expand=["latest_invoice.payment_intent"],
+        metadata={"plan_label": payload.plan_label or ""},
+    )
+    payment_intent = subscription.latest_invoice.payment_intent
+    return {
+        "client_secret": payment_intent.client_secret,
+        "subscription_id": subscription.id,
+    }
+
+
+@router.post("/stripe/payment-intent")
+async def create_stripe_payment_intent(payload: StripePaymentIntentRequest) -> dict[str, str]:
+    configure_stripe()
+    if payload.amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be greater than zero.")
+
+    customer = get_or_create_customer(payload.name, payload.email)
+    intent = stripe.PaymentIntent.create(
+        amount=payload.amount,
+        currency="usd",
+        customer=customer.id,
+        description=payload.description or "Carolina Growth payment",
+        automatic_payment_methods={"enabled": True},
+    )
+    return {"client_secret": intent.client_secret, "payment_intent_id": intent.id}
+
+
+@router.post("/stripe/invoice")
+async def create_stripe_invoice(payload: StripeInvoiceRequest) -> dict[str, str]:
+    configure_stripe()
+    if payload.amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be greater than zero.")
+
+    customer = get_or_create_customer(payload.name, payload.email)
+    stripe.InvoiceItem.create(
+        customer=customer.id,
+        amount=payload.amount,
+        currency="usd",
+        description=payload.description or "Custom package deposit",
+    )
+    invoice = stripe.Invoice.create(
+        customer=customer.id,
+        collection_method="send_invoice",
+        days_until_due=payload.days_until_due or 1,
+        auto_advance=True,
+    )
+    finalized = stripe.Invoice.finalize_invoice(invoice.id)
+    stripe.Invoice.send_invoice(finalized.id)
+    return {
+        "invoice_id": finalized.id,
+        "hosted_invoice_url": finalized.hosted_invoice_url,
+    }

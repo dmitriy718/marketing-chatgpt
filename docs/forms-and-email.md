@@ -21,6 +21,7 @@ Forms using `/api/leads`:
 - Retention + Referral (`apps/web/src/components/RetentionReferralForm.tsx`): Live.
 - Proposal Wizard (`apps/web/src/components/ProposalWizard.tsx`): Live.
 - Pricing Builder (`apps/web/src/components/PricingPackageBuilder.tsx`): Live.
+  Also triggers a Stripe invoice for a 20% deposit (requires Stripe keys).
 - ROI Calculator (`apps/web/src/components/RoiCalculator.tsx`): Live.
 - Revenue Forecast (`apps/web/src/components/RevenueForecastCalculator.tsx`): Live.
 - Best Fit Quiz (`apps/web/src/components/BestFitQuiz.tsx`): Live (if used on any page).

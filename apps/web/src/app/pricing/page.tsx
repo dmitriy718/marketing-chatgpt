@@ -15,6 +15,7 @@ const tiers = [
   {
     name: "Launch",
     price: "$750/mo",
+    planKey: "marketing_launch_monthly",
     summary: "Best for local brands getting serious about acquisition.",
     bullets: [
       "Foundational tracking + analytics",
@@ -26,6 +27,7 @@ const tiers = [
   {
     name: "Momentum",
     price: "$1,500/mo",
+    planKey: "marketing_momentum_monthly",
     summary: "Multi-channel growth with conversion lift baked in.",
     bullets: [
       "SEO + paid search",
@@ -37,6 +39,7 @@ const tiers = [
   {
     name: "Scale",
     price: "$3,000/mo",
+    planKey: "marketing_scale_monthly",
     summary: "Aggressive growth systems for teams ready to scale fast.",
     bullets: [
       "Full funnel acquisition",
@@ -85,6 +88,12 @@ export default function PricingPage() {
               >
                 Book a call
               </Link>
+              <Link
+                href={`/checkout?plan=${tier.planKey}`}
+                className="btn-secondary mt-3 inline-flex w-full justify-center rounded-full px-4 py-2 text-sm font-semibold"
+              >
+                Start subscription
+              </Link>
             </div>
           ))}
         </div>
@@ -98,7 +107,7 @@ export default function PricingPage() {
                 <h2 className="title mt-2 text-2xl font-semibold">Build your own package</h2>
                 <p className="mt-2 text-sm text-[var(--muted)]">
                   Use the builder below to outline scope and priorities. If you choose this route,
-                  we take a $250 deposit to schedule a live consultation and finalize pricing.
+                  we take a 20% deposit to schedule a live consultation and finalize pricing.
                 </p>
               </div>
               <Link

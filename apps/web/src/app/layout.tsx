@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Analytics } from "@/components/Analytics";
+import { PostHogProvider } from "@/components/PostHogProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeScript } from "@/components/ThemeScript";
 import { getSiteSettings } from "@/lib/content";
@@ -64,20 +65,22 @@ export default function RootLayout({
         <ThemeScript />
       </head>
       <body className={`${sora.variable} ${manrope.variable} antialiased`}>
-        <ThemeProvider>
-          <Analytics />
-          <div className="flex min-h-screen flex-col">
-            <a href="#main-content" className="skip-link">
-              Skip to content
-            </a>
-            <SiteHeader />
-            <main id="main-content" className="flex-1">
-              {children}
-            </main>
-            <SiteFooter />
-            <ChatWidget />
-          </div>
-        </ThemeProvider>
+        <PostHogProvider>
+          <ThemeProvider>
+            <Analytics />
+            <div className="flex min-h-screen flex-col">
+              <a href="#main-content" className="skip-link">
+                Skip to content
+              </a>
+              <SiteHeader />
+              <main id="main-content" className="flex-1">
+                {children}
+              </main>
+              <SiteFooter />
+              <ChatWidget />
+            </div>
+          </ThemeProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

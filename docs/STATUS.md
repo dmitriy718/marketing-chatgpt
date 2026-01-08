@@ -9,6 +9,10 @@
 - Rebranded to Carolina Growth with updated domain defaults and logo.
 - Added production/staging deployment assets, nginx/systemd configs, and self-hosted Decap OAuth.
 - Added global error handling with a bug report endpoint and DB storage.
+- Added public chat-style "Message Us" widget with Pushover alerting.
+- Added lead capture, newsletter, and bug report email notifications via SMTP.
+- Deployed leadgen micro-app to `leadgen.carolinagrowth.co`.
+- Added Stripe API endpoints and checkout pages for subscriptions/one-time payments (needs price IDs + env wiring).
 
 ## Implemented Feature List
 1) Growth Audit
@@ -36,6 +40,11 @@
 - `apps/web/content` for CMS JSON content
 - `apps/web/tests/e2e` for Playwright smoke tests
 - `ops` for VPS deployment, nginx, and systemd assets
+- `leadgen` for leadgen app + collector services
+
+## Open Items
+- Configure Stripe price IDs + publishable key in production secrets.
+- Create Stripe products/prices for all packages and verify webhook delivery.
 
 ## E2E + Build Checks
 ```bash

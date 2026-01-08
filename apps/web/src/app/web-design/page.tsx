@@ -16,6 +16,8 @@ const rentalPlans = [
     name: "Starter Rental",
     price: "$149/mo",
     prepay: "$1,488/yr",
+    monthlyPlanKey: "web_design_starter_rental_monthly",
+    annualPlanKey: "web_design_starter_rental_annual",
     summary: "Perfect for small shops that need a polished local presence fast.",
     bullets: [
       "Up to 3 core pages",
@@ -28,6 +30,8 @@ const rentalPlans = [
     name: "Growth Rental",
     price: "$299/mo",
     prepay: "$2,990/yr",
+    monthlyPlanKey: "web_design_growth_rental_monthly",
+    annualPlanKey: "web_design_growth_rental_annual",
     summary: "For teams who want conversion-ready pages and consistent updates.",
     bullets: [
       "Up to 8 pages",
@@ -40,6 +44,8 @@ const rentalPlans = [
     name: "Storefront Rental",
     price: "$499/mo",
     prepay: "$4,990/yr",
+    monthlyPlanKey: "web_design_storefront_rental_monthly",
+    annualPlanKey: "web_design_storefront_rental_annual",
     summary: "A premium rental for bigger catalogs and higher traffic goals.",
     bullets: [
       "Up to 15 pages",
@@ -54,6 +60,7 @@ const purchasePlans = [
   {
     name: "Premium Build",
     price: "$1,800",
+    planKey: "web_design_premium_build",
     summary: "Own your site outright with a fast, modern build.",
     bullets: [
       "Up to 8 pages",
@@ -65,6 +72,7 @@ const purchasePlans = [
   {
     name: "Flagship Build",
     price: "$3,500",
+    planKey: "web_design_flagship_build",
     summary: "Full custom build with deeper content and polish.",
     bullets: [
       "Up to 15 pages",
@@ -158,6 +166,20 @@ export default function WebDesignPage() {
                 >
                   Start rental
                 </Link>
+                <div className="mt-3 grid gap-2">
+                  <Link
+                    href={`/checkout?plan=${plan.monthlyPlanKey}`}
+                    className="btn-secondary inline-flex w-full justify-center rounded-full px-4 py-2 text-sm font-semibold"
+                  >
+                    Pay monthly
+                  </Link>
+                  <Link
+                    href={`/checkout?plan=${plan.annualPlanKey}`}
+                    className="btn-secondary inline-flex w-full justify-center rounded-full px-4 py-2 text-sm font-semibold"
+                  >
+                    Pay annually
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
@@ -191,6 +213,12 @@ export default function WebDesignPage() {
                   className="btn-secondary mt-6 inline-flex w-full justify-center rounded-full px-4 py-2 text-sm font-semibold"
                 >
                   Buy outright
+                </Link>
+                <Link
+                  href={`/checkout?plan=${plan.planKey}`}
+                  className="btn-primary mt-3 inline-flex w-full justify-center rounded-full px-4 py-2 text-sm font-semibold"
+                >
+                  Pay now
                 </Link>
               </div>
             ))}

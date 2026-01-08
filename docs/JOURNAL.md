@@ -56,3 +56,10 @@
 - Replaced Best-Fit Quiz page with Web Design rentals/purchase offer and redirect.
 - Adjusted pricing tiers to local-friendly monthly rates and $250 custom build deposit.
 - Rebranded to Carolina Growth and set domain defaults to carolinagrowth.co.
+
+## 2026-01-08
+- Added SMTP-backed email notifications for leads, newsletter signups, and bug reports.
+- Added Message Us widget with Pushover notifications and DB storage.
+- Deployed leadgen app and collectors to `leadgen.carolinagrowth.co`.
+- Added Stripe subscription, payment-intent, and invoice endpoints.
+- Added Stripe checkout flow for subscriptions and one-time payments (waiting on price IDs).
