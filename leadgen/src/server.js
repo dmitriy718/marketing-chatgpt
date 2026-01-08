@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import nodemailer from "nodemailer";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import { appendCsv, readLeads, writeLeads } from "../utils/storage.js";
 import { dedupeLeads } from "../utils/dedupe.js";
@@ -11,9 +13,13 @@ const port = Number(process.env.PORT || 5050);
 const leadsApiUrl = process.env.LEADS_API_URL;
 const leadsWebhookUrl = process.env.LEADS_WEBHOOK_URL;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const publicDir = path.resolve(__dirname, "..", "public");
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static(publicDir));
 
 function buildDetails(body) {
   const parts = [

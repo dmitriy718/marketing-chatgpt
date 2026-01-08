@@ -1,7 +1,10 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
-const dataDir = path.resolve("leadgen/data");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const dataDir = path.resolve(__dirname, "..", "data");
 const jsonPath = path.join(dataDir, "leads.json");
 const csvPath = path.join(dataDir, "leads.csv");
 
