@@ -110,6 +110,4 @@ Set in `.env.prod`:
 - `GITHUB_CLIENT_SECRET`
 - `OAUTH_ORIGIN=https://carolinagrowth.co`
 
-OAuth service image is pending. Once we confirm a working OAuth container,
-we will re-enable the service in `docker-compose.prod.yml` and wire `/auth`
-back into the nginx config.
+OAuth service is now included via `apps/oauth` and is exposed on `/auth`.

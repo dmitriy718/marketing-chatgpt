@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  async rewrites() {
+    return [{ source: "/admin", destination: "/admin/index.html" }];
+  },
   async headers() {
     return [
       {

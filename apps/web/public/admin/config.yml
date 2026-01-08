@@ -1,8 +1,8 @@
 backend:
   name: github
-  repo: dmitriy718/marketingagency
+  repo: dmitriy718/marketing-chatgpt
   branch: main
-  base_url: https://development.carolinagrowth.co
+  base_url: https://carolinagrowth.co
   auth_endpoint: /auth
 
 local_backend: true
