@@ -19,8 +19,8 @@ const CRM_WEBHOOK_URL = process.env.CRM_WEBHOOK_URL;
 const CRM_WEBHOOK_TOKEN = process.env.CRM_WEBHOOK_TOKEN;
 const RATE_LIMIT_AUTH = process.env.RATE_LIMIT_TOKEN;
 
-function getUtmDetails() {
-  const cookieStore = cookies();
+async function getUtmDetails() {
+  const cookieStore = await cookies();
   const rawUtm = cookieStore.get("cg_utm")?.value;
   const rawRef = cookieStore.get("cg_ref")?.value;
   const details: string[] = [];
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Bot verification failed." }, { status: 400 });
   }
 
-  const utmDetails = getUtmDetails();
+  const utmDetails = await getUtmDetails();
   const entry: LeadPayload = {
     ...body,
     details: utmDetails ? `${body.details}\n\n${utmDetails}` : body.details,
