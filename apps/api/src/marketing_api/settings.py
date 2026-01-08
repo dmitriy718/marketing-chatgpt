@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     session_secret: str = "change_me"
     stripe_secret_key: str = "sk_test_change_me"
     stripe_webhook_secret: str = "whsec_change_me"
+    stripe_api_version: str = "2024-06-20"
     posthog_api_key: str = "phc_change_me"
     posthog_host: str = "https://app.posthog.com"
     turnstile_secret_key: str | None = None

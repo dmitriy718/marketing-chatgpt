@@ -80,6 +80,7 @@ def configure_stripe() -> None:
     if not settings.stripe_secret_key or settings.stripe_secret_key == "sk_test_change_me":
         raise HTTPException(status_code=500, detail="Stripe is not configured.")
     stripe.api_key = settings.stripe_secret_key
+    stripe.api_version = settings.stripe_api_version
 
 
 def verify_turnstile(token: str | None) -> None:
@@ -356,10 +357,6 @@ async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict
             except stripe.error.InvalidRequestError:
                 finalized = stripe.Invoice.retrieve(invoice_id)
             payment_intent = resolve_payment_intent(finalized)
-            if not payment_intent:
-                intents = stripe.PaymentIntent.list(invoice=invoice_id, limit=1)
-                if intents.data:
-                    payment_intent = intents.data[0]
     if not payment_intent:
         raise HTTPException(status_code=500, detail="Stripe payment intent unavailable.")
     return {
