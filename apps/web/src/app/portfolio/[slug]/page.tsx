@@ -5,7 +5,9 @@ import { getPortfolioItems } from "@/lib/content";
 import { buildPageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
-  return getPortfolioItems().map((item) => ({ slug: item.slug }));
+  return getPortfolioItems()
+    .filter((item) => item.slug && item.caseStudy !== false)
+    .map((item) => ({ slug: item.slug as string }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {

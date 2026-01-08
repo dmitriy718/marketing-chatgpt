@@ -3,6 +3,7 @@
     {
       "title": "TradeFlows",
       "slug": "tradeflows",
+      "caseStudy": true,
       "result": "+212% qualified leads",
       "focus": "Lead Gen + SEO",
       "siteUrl": "https://tradeflows.net",
@@ -25,6 +26,7 @@
     {
       "title": "ReturnShield",
       "slug": "returnshield",
+      "caseStudy": true,
       "result": "3.6x ROAS in 90 days",
       "focus": "Paid Media",
       "siteUrl": "https://returnshield.app",
@@ -47,6 +49,7 @@
     {
       "title": "Horizon Credit",
       "slug": "horizon-credit",
+      "caseStudy": true,
       "result": "From cold to waitlist",
       "focus": "Brand + Web Design",
       "siteUrl": "https://horizoncredit.net",
@@ -65,6 +68,17 @@
         "suffix": ""
       },
       "timeframe": "60 days"
+    },
+    {
+      "title": "PostDoctor",
+      "result": "Clinical workflows rebuilt for mobile",
+      "focus": "Healthcare Web Platform",
+      "siteUrl": "https://postdoctor.app"
+    },
+    {
+      "title": "Scopr",
+      "result": "B2B product experience for data teams",
+      "focus": "SaaS Web Design"
     }
   ]
 }

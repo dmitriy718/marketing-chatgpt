@@ -54,10 +54,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
   }));
 
-  const portfolioEntries = getPortfolioItems().map((item) => ({
-    url: `${baseUrl}/portfolio/${item.slug}`,
-    lastModified: new Date(),
-  }));
+  const portfolioEntries = getPortfolioItems()
+    .filter((item) => item.slug && item.caseStudy !== false)
+    .map((item) => ({
+      url: `${baseUrl}/portfolio/${item.slug}`,
+      lastModified: new Date(),
+    }));
 
   return [
     ...staticEntries,

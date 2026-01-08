@@ -22,7 +22,8 @@ export type Service = {
 
 export type PortfolioItem = {
   title: string;
-  slug: string;
+  slug?: string;
+  caseStudy?: boolean;
   result: string;
   focus: string;
   summary?: string | null;

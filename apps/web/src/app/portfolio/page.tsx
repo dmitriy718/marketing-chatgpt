@@ -46,12 +46,14 @@ export default function PortfolioPage() {
               <h2 className="title mt-3 text-xl font-semibold">{item.title}</h2>
               <p className="mt-4 text-sm text-[var(--muted)]">{item.result}</p>
               <div className="mt-6 flex flex-wrap items-center gap-4">
-                <Link
-                  href={`/portfolio/${item.slug}`}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary)]"
-                >
-                  View case study <span aria-hidden>→</span>
-                </Link>
+                {item.slug && item.caseStudy !== false ? (
+                  <Link
+                    href={`/portfolio/${item.slug}`}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary)]"
+                  >
+                    View case study <span aria-hidden>→</span>
+                  </Link>
+                ) : null}
                 {item.siteUrl ? (
                   <a
                     href={item.siteUrl}
