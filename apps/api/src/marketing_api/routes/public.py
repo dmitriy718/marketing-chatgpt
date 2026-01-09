@@ -420,6 +420,14 @@ async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict
         raise HTTPException(status_code=400, detail="Missing price ID.")
 
     customer = get_or_create_customer(payload.name, payload.email)
+    await upsert_lead(
+        session,
+        full_name=payload.name,
+        email=payload.email,
+        company=None,
+        details=f"Stripe checkout started\nPlan: {payload.plan_label or payload.price_id}",
+        source="stripe-checkout",
+    )
     subscription = stripe.Subscription.create(
         customer=customer.id,
         items=[{"price": payload.price_id}],
@@ -452,6 +460,14 @@ async def create_stripe_payment_intent(payload: StripePaymentIntentRequest) -> d
         raise HTTPException(status_code=400, detail="Amount must be greater than zero.")
 
     customer = get_or_create_customer(payload.name, payload.email)
+    await upsert_lead(
+        session,
+        full_name=payload.name,
+        email=payload.email,
+        company=None,
+        details=f"Stripe checkout started\nPlan: {payload.description or 'Custom payment'}",
+        source="stripe-checkout",
+    )
     intent = stripe.PaymentIntent.create(
         amount=payload.amount,
         currency="usd",
@@ -470,6 +486,14 @@ async def create_stripe_invoice(payload: StripeInvoiceRequest) -> dict[str, str]
         raise HTTPException(status_code=400, detail="Amount must be greater than zero.")
 
     customer = get_or_create_customer(payload.name, payload.email)
+    await upsert_lead(
+        session,
+        full_name=payload.name,
+        email=payload.email,
+        company=None,
+        details=f"Stripe invoice requested\n{payload.description or 'Custom package deposit'}",
+        source="stripe-invoice",
+    )
     stripe.InvoiceItem.create(
         customer=customer.id,
         amount=payload.amount,
