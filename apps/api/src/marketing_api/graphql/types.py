@@ -20,21 +20,21 @@ class UserType:
     is_active: bool
 
 
-@strawberry.type
+@strawberry.type(name="CustomerType")
 class CustomerType:
     id: strawberry.ID
     name: str
     industry: str | None
     website: str | None
     status: str
-    owner_user_id: strawberry.ID | None
+    owner_user_id: strawberry.ID | None = strawberry.field(name="owner_user_id")
     created_at: dt.datetime
 
 
-@strawberry.type
+@strawberry.type(name="LeadType")
 class LeadType:
     id: strawberry.ID
-    full_name: str
+    full_name: str = strawberry.field(name="full_name")
     email: str | None
     phone: str | None
     company: str | None
@@ -43,8 +43,8 @@ class LeadType:
     source: str | None
     status: str
     score: int | None
-    assigned_to_user_id: strawberry.ID | None
-    customer_id: strawberry.ID | None
+    assigned_to_user_id: strawberry.ID | None = strawberry.field(name="assigned_to_user_id")
+    customer_id: strawberry.ID | None = strawberry.field(name="customer_id")
     created_at: dt.datetime
 
 
@@ -56,40 +56,40 @@ class PipelineStageType:
     probability: int
 
 
-@strawberry.type
+@strawberry.type(name="DealType")
 class DealType:
     id: strawberry.ID
     name: str
-    customer_id: strawberry.ID
-    stage_id: strawberry.ID | None
+    customer_id: strawberry.ID = strawberry.field(name="customer_id")
+    stage_id: strawberry.ID | None = strawberry.field(name="stage_id")
     value: int | None
-    close_date: dt.date | None
+    close_date: dt.date | None = strawberry.field(name="close_date")
     status: str
 
 
-@strawberry.type
+@strawberry.type(name="ActivityType")
 class ActivityType:
     id: strawberry.ID
     type: str
     status: str
     subject: str
-    due_at: dt.datetime | None
-    assigned_to_user_id: strawberry.ID | None
-    lead_id: strawberry.ID | None
-    contact_id: strawberry.ID | None
-    customer_id: strawberry.ID | None
-    deal_id: strawberry.ID | None
+    due_at: dt.datetime | None = strawberry.field(name="due_at")
+    assigned_to_user_id: strawberry.ID | None = strawberry.field(name="assigned_to_user_id")
+    lead_id: strawberry.ID | None = strawberry.field(name="lead_id")
+    contact_id: strawberry.ID | None = strawberry.field(name="contact_id")
+    customer_id: strawberry.ID | None = strawberry.field(name="customer_id")
+    deal_id: strawberry.ID | None = strawberry.field(name="deal_id")
 
 
-@strawberry.type
+@strawberry.type(name="NoteType")
 class NoteType:
     id: strawberry.ID
     body: str
-    author_user_id: strawberry.ID | None
-    lead_id: strawberry.ID | None
-    contact_id: strawberry.ID | None
-    customer_id: strawberry.ID | None
-    deal_id: strawberry.ID | None
+    author_user_id: strawberry.ID | None = strawberry.field(name="author_user_id")
+    lead_id: strawberry.ID | None = strawberry.field(name="lead_id")
+    contact_id: strawberry.ID | None = strawberry.field(name="contact_id")
+    customer_id: strawberry.ID | None = strawberry.field(name="customer_id")
+    deal_id: strawberry.ID | None = strawberry.field(name="deal_id")
     created_at: dt.datetime
 
 

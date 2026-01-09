@@ -249,4 +249,4 @@ class Mutation:
         return to_pipeline_stage_type(stage)
 
 
-schema = strawberry.Schema(query=Query, mutation=Mutation)
+schema = strawberry.Schema(query=Query, mutation=Mutation, config=strawberry.SchemaConfig(auto_camel_case=False))
