@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     smtp_password: str | None = None
     smtp_from: str | None = None
     admin_email: str | None = None
+    admin_password: str | None = None
     pushover_app_token: str | None = None
     pushover_user_key: str | None = None
     pushover_group_key: str | None = None

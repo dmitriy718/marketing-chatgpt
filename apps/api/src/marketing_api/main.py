@@ -4,6 +4,7 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from strawberry.fastapi import GraphQLRouter
 
+from marketing_api.auth.bootstrap import ensure_admin_user
 from marketing_api.auth.dependencies import extract_bearer_token, resolve_user_from_token
 from marketing_api.graphql.schema import schema
 from marketing_api.limits import limiter
@@ -57,6 +58,16 @@ def create_app() -> FastAPI:
     app.include_router(public_router)
     app.include_router(webhooks_router)
     app.include_router(graphql_app, prefix="/graphql")
+
+    @app.on_event("startup")
+    async def bootstrap_admin() -> None:
+        async for session in get_session():
+            await ensure_admin_user(
+                session,
+                email=settings.admin_email,
+                password=settings.admin_password,
+            )
+            break
 
     return app
 
