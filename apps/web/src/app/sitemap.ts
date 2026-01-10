@@ -38,6 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/content-generator",
     "/free-consultation",
     "/portal",
+    "/tools",
     "/privacy",
     "/terms",
     "/cookies",
