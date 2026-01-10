@@ -67,13 +67,45 @@ test("pricing builder submits", async ({ page }) => {
   await page.getByLabel("Company").fill("Pricing Co");
   await page.getByLabel("Monthly growth budget").fill("$25,000");
 
-  await page.getByRole("button", { name: "Send my package" }).click();
+  await page.getByRole("button", { name: "Send my package + invoice" }).click();
 
   await expect(
     page.getByText(
       "Thanks! Your deposit invoice is on the way. We will follow up within 48 hours."
     )
   ).toBeVisible();
+});
+
+test("best-fit quiz completes and submits", async ({ page }) => {
+  await setupLeadSubmission(page);
+  await page.goto("/best-fit-quiz");
+
+  await expect(page).toHaveURL(/\/web-design/);
+  
+  // Answer all quiz questions
+  const questions = [
+    { button: "Local business" },
+    { button: "Lead generation" },
+    { button: "1-5 employees" },
+    { button: "Under $5,000/mo" },
+  ];
+  
+  for (const question of questions) {
+    await page.getByRole("button", { name: question.button }).first().click();
+    await page.waitForTimeout(500); // Wait for state update
+  }
+
+  // Fill form
+  await page.getByLabel("Full name").fill("Quiz Tester");
+  await page.getByLabel("Email").fill(testEmail);
+  await page.getByLabel("Company").fill("Quiz Co");
+  await page.getByLabel("Monthly growth budget").fill("$5,000");
+
+  await page.getByRole("button", { name: "Email my best-fit plan" }).click();
+
+  await expect(
+    page.getByText("Thanks! We will send the best-fit plan shortly.")
+  ).toBeVisible({ timeout: 20_000 });
 });
 
 test("utm builder generates a link and QR", async ({ page }) => {

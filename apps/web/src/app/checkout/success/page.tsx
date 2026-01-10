@@ -1,6 +1,25 @@
 import { Suspense } from "react";
+import { Metadata } from "next";
 
 import { CheckoutSuccessClient } from "@/components/CheckoutSuccessClient";
+import { buildPageMetadata, getDefaultSeoSettings } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/content";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = getSiteSettings();
+  const seo = getDefaultSeoSettings(settings);
+  
+  return buildPageMetadata({
+    title: "Payment Successful | Welcome to Carolina Growth",
+    description: "Your payment was successful! Welcome to Carolina Growth. Your subscription is now active and our team will be in touch shortly to get started.",
+    path: "/checkout/success",
+    keywords: ["payment success", "subscription activated", "welcome"],
+    robots: {
+      index: false,
+      follow: false,
+    },
+  });
+}
 
 export default function CheckoutSuccessPage() {
   return (
