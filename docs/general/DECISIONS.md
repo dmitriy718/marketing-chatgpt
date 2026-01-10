@@ -31,3 +31,14 @@
 - Added global error handling with bug report capture stored in Postgres.
 - Simplified navigation with grouped tools and new Web Design/Pricing pages.
 - Rebranded to Carolina Growth and secured carolinagrowth.co.
+
+## 2026-01-09
+- Separated Stripe transaction storage into a dedicated database with its own migrations to support reporting and compliance.
+- Enforced transaction persistence (webhook fails fast if Stripe DB is missing or write fails).
+- Added durable lead outbox persistence with file locking for concurrent requests.
+- Introduced a non-public internal API token for trusted calls; removed public-token Turnstile bypass.
+
+## 2026-01-10
+- Standardized Decap OAuth flow on the required handshake message (`authorizing:github`) before redirecting to GitHub.
+- Added OAuth fallback via localStorage + admin page forwarding to handle blocked `window.opener` cases.
+- Disabled Decap `local_backend` in production to avoid subsystem failures.

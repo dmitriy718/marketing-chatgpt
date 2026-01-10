@@ -12,8 +12,12 @@
 - Added public chat-style "Message Us" widget with Pushover alerting.
 - Added lead capture, newsletter, and bug report email notifications via SMTP.
 - Deployed leadgen micro-app to `leadgen.carolinagrowth.co`.
-- Added Stripe API endpoints and checkout pages for subscriptions/one-time payments (needs price IDs + env wiring).
+- Added Stripe API endpoints and checkout pages for subscriptions/one-time payments, including dedicated Stripe transactions DB + migrations.
 - Added Turnstile bot protection hooks and rate limiting on public intake endpoints.
+- Added durable lead outbox handling on web + leadgen with file locks.
+- Added non-public internal token for trusted API calls; removed Turnstile bypass from public token.
+- Fixed Decap CMS OAuth flow and disabled local backend in production.
+- Deployed fixes to VPS and verified core public endpoints.
 
 ## Implemented Feature List
 1) Growth Audit
@@ -44,8 +48,9 @@
 - `leadgen` for leadgen app + collector services
 
 ## Open Items
-- Configure Stripe price IDs + publishable key in production secrets.
-- Create Stripe products/prices for all packages and verify webhook delivery.
+- Configure Stripe price IDs + publishable key in production secrets (if not already set).
+- Configure `STRIPE_DATABASE_URL` in production `.env` (required for Stripe transaction storage).
+- Ensure Stripe allowlist env vars (price IDs) are set for the API service.
 
 ## E2E + Build Checks
 ```bash
@@ -55,3 +60,7 @@ docker compose exec web npm run lint
 docker compose run --rm web npm run build
 docker compose exec web npm run test:e2e
 ```
+
+## Recent E2E Status (VPS)
+- 19 passed / 0 failed on latest VPS run.
+- Report saved to `/opt/marketing/PLAYWRIGHT_REPORT.md` and `/opt/marketing/apps/web/playwright-report/index.html`.

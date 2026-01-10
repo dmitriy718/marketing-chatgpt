@@ -5,7 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import crypto from "crypto";
 
-import { appendCsv, readLeads, writeLeads } from "../utils/storage.js";
+import { appendCsv, appendOutbox, readLeads, updateOutbox, writeLeads } from "../utils/storage.js";
 import { dedupeLeads } from "../utils/dedupe.js";
 import { logError, logInfo } from "../utils/logger.js";
 import { collectGooglePlaces } from "../scripts/sources/googlePlaces.js";
@@ -201,6 +201,7 @@ async function notifyLead(lead) {
 }
 
 async function forwardLead(lead) {
+  await flushOutbox();
   if (leadsApiUrl) {
     try {
       const response = await fetch(leadsApiUrl, {
@@ -219,9 +220,11 @@ async function forwardLead(lead) {
       });
       if (!response.ok) {
         logError("Failed to forward to API", await response.text());
+        await queueLeadForForward(lead, "api");
       }
     } catch (error) {
       logError("API forward failed", error);
+      await queueLeadForForward(lead, "api");
     }
   }
 
@@ -244,6 +247,61 @@ async function forwardLead(lead) {
       logError("Webhook forward failed", error);
     }
   }
+}
+
+async function queueLeadForForward(lead, target) {
+  await appendOutbox({
+    lead,
+    target,
+    attempts: 1,
+    last_attempted_at: new Date().toISOString(),
+  });
+}
+
+async function flushOutbox() {
+  if (!leadsApiUrl) {
+    return;
+  }
+  await updateOutbox(async (outbox) => {
+    if (!Array.isArray(outbox) || outbox.length === 0) {
+      return outbox;
+    }
+    const remaining = [];
+    for (const entry of outbox) {
+      if (!entry?.lead || entry?.target !== "api") {
+        continue;
+      }
+      try {
+        const response = await fetch(leadsApiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: entry.lead.name,
+            email: entry.lead.email,
+            company: entry.lead.company,
+            budget: entry.lead.budget,
+            details: entry.lead.details,
+            source: entry.lead.source,
+          }),
+        });
+        if (!response.ok) {
+          remaining.push({
+            ...entry,
+            attempts: Number(entry.attempts || 0) + 1,
+            last_attempted_at: new Date().toISOString(),
+          });
+        }
+      } catch (error) {
+        logError("Outbox forward failed", error);
+        remaining.push({
+          ...entry,
+          attempts: Number(entry.attempts || 0) + 1,
+          last_attempted_at: new Date().toISOString(),
+        });
+      }
+    }
+    return remaining;
+  });
 }
 
 app.post("/lead", async (req, res) => {

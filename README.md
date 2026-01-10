@@ -65,6 +65,9 @@ npm run build
 npm run test:e2e
 ```
 E2E tests use Playwright and assume the Docker stack (API + web) is running.
+If Turnstile is enabled, set `INTERNAL_API_TOKEN` so trusted test requests can bypass
+bot verification. You can also set `E2E_TEST_EMAIL` to control the recipient for
+email-triggering flows.
 
 ### One-shot startup (local, non-docker)
 ```bash
@@ -84,3 +87,6 @@ Application toolchains will be documented as they are introduced. Initial focus 
 ## Environment
 See `.env.example` for required configuration.
 When running Docker, set `API_INTERNAL_URL` to the API container URL (default `http://api:8000`).
+Production Stripe transaction storage requires `STRIPE_DATABASE_URL` in addition to
+the primary `DATABASE_URL`.
+Trusted server-to-server calls can use `INTERNAL_API_TOKEN` when Turnstile is enabled.

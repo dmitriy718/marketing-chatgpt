@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { trackEvent } from "@/lib/analytics";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { getInternalLeadHeaders } from "@/lib/internalHeaders";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -60,6 +61,7 @@ export function GrowthSprintForm() {
           ...(process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN
             ? { "x-rate-limit-token": process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN }
             : null),
+          ...(getInternalLeadHeaders() ?? null),
         },
         body: JSON.stringify(payload),
       });

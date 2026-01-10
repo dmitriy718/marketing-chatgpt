@@ -1,31 +1,33 @@
 import { NextResponse } from "next/server";
 
 type SubscriptionPayload = {
-  priceId: string;
+  planKey: string;
   name: string;
   email: string;
-  planLabel?: string | null;
 };
 
 const API_URL =
   process.env.API_INTERNAL_URL ?? process.env.API_URL ?? "http://localhost:8001";
+const INTERNAL_TOKEN = process.env.INTERNAL_API_TOKEN;
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as SubscriptionPayload | null;
 
-  if (!body?.priceId || !body?.name || !body?.email) {
+  if (!body?.planKey || !body?.name || !body?.email) {
     return NextResponse.json({ ok: false, error: "Missing required fields." }, { status: 400 });
   }
 
   try {
     const apiResponse = await fetch(`${API_URL}/public/stripe/subscription`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(INTERNAL_TOKEN ? { "x-internal-token": INTERNAL_TOKEN } : null),
+      },
       body: JSON.stringify({
-        price_id: body.priceId,
+        plan_key: body.planKey,
         name: body.name,
         email: body.email,
-        plan_label: body.planLabel ?? null,
       }),
     });
 

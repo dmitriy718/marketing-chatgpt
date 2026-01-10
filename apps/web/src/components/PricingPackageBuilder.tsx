@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { trackEvent } from "@/lib/analytics";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { getInternalLeadHeaders } from "@/lib/internalHeaders";
 
 type PackageState = {
   tier: string;
@@ -102,6 +103,7 @@ export function PricingPackageBuilder() {
           ...(process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN
             ? { "x-rate-limit-token": process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN }
             : null),
+          ...(getInternalLeadHeaders() ?? null),
         },
         body: JSON.stringify(payload),
       });
@@ -115,11 +117,14 @@ export function PricingPackageBuilder() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: depositAmount * 100,
+          tier: state.tier,
+          locations: state.locations,
+          urgency: state.urgency,
+          support: state.support,
           name: payload.name,
           email: payload.email,
-          description: `Custom package deposit (20% of estimate). Tier: ${estimate.tierLabel}.`,
           daysUntilDue: 3,
+          requestId: crypto.randomUUID(),
         }),
       });
 

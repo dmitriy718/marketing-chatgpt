@@ -30,14 +30,19 @@ services:
       SESSION_SECRET: ${SESSION_SECRET:-change_me}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_change_me}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_change_me}
+      STRIPE_DATABASE_URL: ${STRIPE_DATABASE_URL:-}
       POSTHOG_API_KEY: ${POSTHOG_API_KEY:-phc_change_me}
       POSTHOG_HOST: ${POSTHOG_HOST:-https://app.posthog.com}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-}
+      RATE_LIMIT_TOKEN: ${RATE_LIMIT_TOKEN:-}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
       SMTP_FROM: ${SMTP_FROM:-}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:-}
       PUSHOVER_APP_TOKEN: ${PUSHOVER_APP_TOKEN:-}
       PUSHOVER_USER_KEY: ${PUSHOVER_USER_KEY:-}
       PUSHOVER_GROUP_KEY: ${PUSHOVER_GROUP_KEY:-}
@@ -82,8 +87,10 @@ services:
       REVALIDATION_SECRET: ${REVALIDATION_SECRET:-}
       TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-}
       RATE_LIMIT_TOKEN: ${RATE_LIMIT_TOKEN:-}
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:-}
     volumes:
       - ./apps/web:/app
+      - ./apps/web/data:/app/data
       - carolina_growth_web_node_modules:/app/node_modules
     command: >
       npx next dev --webpack --hostname 0.0.0.0 --port ${WEB_PORT:-3001}

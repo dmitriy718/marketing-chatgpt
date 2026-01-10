@@ -6,6 +6,39 @@
     <title>Content Admin</title>
   </head>
   <body>
+    <script>
+      (function () {
+        const storageKey = "decap_oauth";
+        const forwardPayload = (payload) => {
+          if (!payload) {
+            return;
+          }
+          try {
+            window.postMessage(payload, window.location.origin);
+          } catch (error) {
+            // Ignore postMessage failures in debug fallback.
+          }
+          try {
+            localStorage.removeItem(storageKey);
+          } catch (error) {
+            // Ignore storage cleanup failures.
+          }
+        };
+
+        try {
+          forwardPayload(localStorage.getItem(storageKey));
+        } catch (error) {
+          // Ignore storage access failures.
+        }
+
+        window.addEventListener("storage", (event) => {
+          if (event.key !== storageKey) {
+            return;
+          }
+          forwardPayload(event.newValue);
+        });
+      })();
+    </script>
     <script src="https://unpkg.com/decap-cms@^3/dist/decap-cms.js"></script>
   </body>
 </html>

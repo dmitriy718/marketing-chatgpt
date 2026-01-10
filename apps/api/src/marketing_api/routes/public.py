@@ -1,11 +1,12 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import stripe
 import json
-import urllib.parse
-import urllib.request
+import uuid
+import httpx
 
 from marketing_api.db.models import BugReport, ChatMessage, Lead, LeadStatus, NewsletterSignup
 from marketing_api.db.session import get_session
@@ -13,6 +14,7 @@ from marketing_api.limits import limiter
 from marketing_api.notifications.email import notify_admin, send_email
 from marketing_api.notifications.pushover import send_pushover
 from marketing_api.settings import settings
+from marketing_api.stripe_catalog import get_plan, get_pricing_builder_estimate
 
 router = APIRouter(prefix="/public", tags=["public"])
 
@@ -55,25 +57,31 @@ class ChatMessageRequest(BaseModel):
 
 
 class StripeSubscriptionRequest(BaseModel):
-    price_id: str
+    plan_key: str
     name: str
     email: EmailStr
-    plan_label: str | None = None
+    turnstile_token: str | None = None
+    request_id: str | None = None
 
 
 class StripePaymentIntentRequest(BaseModel):
-    amount: int
+    plan_key: str
     name: str
     email: EmailStr
-    description: str | None = None
+    turnstile_token: str | None = None
+    request_id: str | None = None
 
 
 class StripeInvoiceRequest(BaseModel):
-    amount: int
+    tier: str
+    locations: str
+    urgency: str
+    support: str
     name: str
     email: EmailStr
-    description: str | None = None
     days_until_due: int | None = None
+    request_id: str | None = None
+    turnstile_token: str | None = None
 
 
 def configure_stripe() -> None:
@@ -83,27 +91,33 @@ def configure_stripe() -> None:
     stripe.api_version = settings.stripe_api_version
 
 
-def verify_turnstile(token: str | None) -> None:
+async def verify_turnstile(token: str | None) -> None:
     secret = settings.turnstile_secret_key
     if not secret:
         return
     if not token:
         raise HTTPException(status_code=400, detail="Bot verification failed.")
 
-    data = urllib.parse.urlencode({"secret": secret, "response": token}).encode()
-    request = urllib.request.Request(
-        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-        data=data,
-        method="POST",
-    )
     try:
-        with urllib.request.urlopen(request, timeout=5) as response:
-            payload = json.loads(response.read().decode("utf-8"))
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            response = await client.post(
+                "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+                data={"secret": secret, "response": token},
+            )
+            payload = response.json()
     except Exception as exc:
         raise HTTPException(status_code=400, detail="Bot verification failed.") from exc
 
     if not payload.get("success"):
         raise HTTPException(status_code=400, detail="Bot verification failed.")
+
+
+def should_bypass_turnstile(request: Request) -> bool:
+    internal_token = settings.internal_api_token
+    if not internal_token:
+        return False
+    header_token = request.headers.get("x-internal-token")
+    return header_token == internal_token
 
 
 def get_or_create_customer(name: str, email: str):
@@ -133,7 +147,9 @@ async def upsert_lead(
     details: str,
     source: str,
 ) -> None:
-    existing = await session.execute(select(Lead).where(Lead.email == email))
+    existing = await session.execute(
+        select(Lead).where(Lead.email == email).order_by(Lead.created_at.desc()).limit(1)
+    )
     lead = existing.scalar_one_or_none()
     if lead:
         lead.full_name = lead.full_name or full_name
@@ -183,7 +199,8 @@ async def capture_lead(
     background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
-    verify_turnstile(payload.turnstile_token)
+    if not should_bypass_turnstile(request):
+        await verify_turnstile(payload.turnstile_token)
     lead = Lead(
         full_name=payload.name,
         email=payload.email,
@@ -245,7 +262,8 @@ async def capture_newsletter_signup(
     background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
-    verify_turnstile(payload.turnstile_token)
+    if not should_bypass_turnstile(request):
+        await verify_turnstile(payload.turnstile_token)
     signup = NewsletterSignup(email=payload.email, lead_magnet=payload.lead_magnet)
     session.add(signup)
     await session.commit()
@@ -299,7 +317,8 @@ async def capture_bug_report(
     background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
-    verify_turnstile(payload.turnstile_token)
+    if not should_bypass_turnstile(request):
+        await verify_turnstile(payload.turnstile_token)
     report = BugReport(
         message=payload.message,
         stack=payload.stack,
@@ -343,7 +362,8 @@ async def capture_chat_message(
     background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
-    verify_turnstile(payload.turnstile_token)
+    if not should_bypass_turnstile(request):
+        await verify_turnstile(payload.turnstile_token)
     message = ChatMessage(
         name=payload.name,
         email=payload.email,
@@ -414,10 +434,21 @@ async def capture_chat_message(
 
 
 @router.post("/stripe/subscription")
-async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict[str, str]:
+@limiter.limit("6/minute")
+async def create_stripe_subscription(
+    request: Request,
+    payload: StripeSubscriptionRequest,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, str]:
     configure_stripe()
-    if not payload.price_id:
-        raise HTTPException(status_code=400, detail="Missing price ID.")
+    if not should_bypass_turnstile(request):
+        await verify_turnstile(payload.turnstile_token)
+
+    plan = get_plan(payload.plan_key)
+    if not plan or plan.mode != "subscription":
+        raise HTTPException(status_code=400, detail="Invalid subscription plan.")
+    if not plan.price_id:
+        raise HTTPException(status_code=400, detail="Pricing is not configured.")
 
     customer = get_or_create_customer(payload.name, payload.email)
     await upsert_lead(
@@ -425,15 +456,17 @@ async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict
         full_name=payload.name,
         email=payload.email,
         company=None,
-        details=f"Stripe checkout started\nPlan: {payload.plan_label or payload.price_id}",
+        details=f"Stripe checkout started\nPlan: {plan.label}",
         source="stripe-checkout",
     )
+    request_id = payload.request_id or uuid.uuid4().hex
     subscription = stripe.Subscription.create(
         customer=customer.id,
-        items=[{"price": payload.price_id}],
+        items=[{"price": plan.price_id}],
         payment_behavior="default_incomplete",
         expand=["latest_invoice", "latest_invoice.payment_intent"],
-        metadata={"plan_label": payload.plan_label or "", "source": "web-checkout"},
+        metadata={"plan_key": plan.key, "plan_label": plan.label, "source": "web-checkout", "request_id": request_id},
+        idempotency_key=f"subscription_{request_id}",
     )
     invoice = subscription.latest_invoice
     payment_intent = resolve_payment_intent(invoice)
@@ -454,9 +487,20 @@ async def create_stripe_subscription(payload: StripeSubscriptionRequest) -> dict
 
 
 @router.post("/stripe/payment-intent")
-async def create_stripe_payment_intent(payload: StripePaymentIntentRequest) -> dict[str, str]:
+@limiter.limit("6/minute")
+async def create_stripe_payment_intent(
+    request: Request,
+    payload: StripePaymentIntentRequest,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, str]:
     configure_stripe()
-    if payload.amount <= 0:
+    if not should_bypass_turnstile(request):
+        await verify_turnstile(payload.turnstile_token)
+
+    plan = get_plan(payload.plan_key)
+    if not plan or plan.mode != "one_time":
+        raise HTTPException(status_code=400, detail="Invalid one-time plan.")
+    if plan.amount <= 0:
         raise HTTPException(status_code=400, detail="Amount must be greater than zero.")
 
     customer = get_or_create_customer(payload.name, payload.email)
@@ -465,25 +509,45 @@ async def create_stripe_payment_intent(payload: StripePaymentIntentRequest) -> d
         full_name=payload.name,
         email=payload.email,
         company=None,
-        details=f"Stripe checkout started\nPlan: {payload.description or 'Custom payment'}",
+        details=f"Stripe checkout started\nPlan: {plan.label}",
         source="stripe-checkout",
     )
+    request_id = payload.request_id or uuid.uuid4().hex
     intent = stripe.PaymentIntent.create(
-        amount=payload.amount,
+        amount=plan.amount,
         currency="usd",
         customer=customer.id,
-        description=payload.description or "Carolina Growth payment",
-        metadata={"plan_label": payload.description or "", "source": "web-checkout"},
+        description=plan.label,
+        metadata={"plan_key": plan.key, "plan_label": plan.label, "source": "web-checkout", "request_id": request_id},
         automatic_payment_methods={"enabled": True},
+        idempotency_key=f"payment_intent_{request_id}",
     )
     return {"client_secret": intent.client_secret, "payment_intent_id": intent.id}
 
 
 @router.post("/stripe/invoice")
-async def create_stripe_invoice(payload: StripeInvoiceRequest) -> dict[str, str]:
+@limiter.limit("4/minute")
+async def create_stripe_invoice(
+    request: Request,
+    payload: StripeInvoiceRequest,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, str]:
     configure_stripe()
-    if payload.amount <= 0:
+    if not should_bypass_turnstile(request):
+        await verify_turnstile(payload.turnstile_token)
+
+    tier_label, monthly = get_pricing_builder_estimate(
+        tier=payload.tier,
+        locations=payload.locations,
+        urgency=payload.urgency,
+        support=payload.support,
+    )
+    amount_cents = round(monthly * 0.2 * 100)
+    if amount_cents <= 0:
         raise HTTPException(status_code=400, detail="Amount must be greater than zero.")
+
+    request_id = payload.request_id or uuid.uuid4().hex
+    description = f"Custom package deposit (20% of estimate). Tier: {tier_label}."
 
     customer = get_or_create_customer(payload.name, payload.email)
     await upsert_lead(
@@ -491,22 +555,24 @@ async def create_stripe_invoice(payload: StripeInvoiceRequest) -> dict[str, str]
         full_name=payload.name,
         email=payload.email,
         company=None,
-        details=f"Stripe invoice requested\n{payload.description or 'Custom package deposit'}",
+        details=f"Stripe invoice requested\n{description}",
         source="stripe-invoice",
     )
     stripe.InvoiceItem.create(
         customer=customer.id,
-        amount=payload.amount,
+        amount=amount_cents,
         currency="usd",
-        description=payload.description or "Custom package deposit",
-        metadata={"plan_label": payload.description or "", "source": "web-checkout"},
+        description=description,
+        metadata={"plan_label": description, "source": "web-checkout", "request_id": request_id},
+        idempotency_key=f"invoice_item_{request_id}",
     )
     invoice = stripe.Invoice.create(
         customer=customer.id,
         collection_method="send_invoice",
         days_until_due=payload.days_until_due or 1,
         auto_advance=True,
-        metadata={"plan_label": payload.description or "", "source": "web-checkout"},
+        metadata={"plan_label": description, "source": "web-checkout", "request_id": request_id},
+        idempotency_key=f"invoice_{request_id}",
     )
     finalized = stripe.Invoice.finalize_invoice(invoice.id)
     stripe.Invoice.send_invoice(finalized.id)

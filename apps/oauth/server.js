@@ -7,7 +7,53 @@ const app = express();
 const port = Number(process.env.OAUTH_PORT || 9999);
 const clientId = process.env.GITHUB_CLIENT_ID || "";
 const clientSecret = process.env.GITHUB_CLIENT_SECRET || "";
-const origin = process.env.OAUTH_ORIGIN || "https://carolinagrowth.co";
+const defaultOrigin = process.env.OAUTH_ORIGIN || "https://carolinagrowth.co";
+const allowedOrigins = (process.env.OAUTH_ALLOWED_ORIGINS || defaultOrigin)
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+const cookieDomain = process.env.OAUTH_COOKIE_DOMAIN || "";
+
+function isAllowedOrigin(origin) {
+  return allowedOrigins.includes(origin);
+}
+
+function resolveOrigin(requestedOrigin) {
+  if (requestedOrigin && isAllowedOrigin(requestedOrigin)) {
+    return requestedOrigin;
+  }
+  return defaultOrigin;
+}
+
+function originFromReferer(referer) {
+  if (!referer) {
+    return "";
+  }
+  try {
+    return new URL(referer).origin;
+  } catch (error) {
+    return "";
+  }
+}
+
+function resolveCookieDomain(origin) {
+  if (cookieDomain) {
+    return cookieDomain;
+  }
+  try {
+    const hostname = new URL(origin).hostname;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return "";
+    }
+    const parts = hostname.split(".");
+    if (parts.length >= 2) {
+      return `.${parts.slice(-2).join(".")}`;
+    }
+  } catch (error) {
+    return "";
+  }
+  return "";
+}
 
 function buildState() {
   return crypto.randomBytes(16).toString("hex");
@@ -15,14 +61,22 @@ function buildState() {
 
 app.get("/auth", (req, res) => {
   const provider = req.query.provider || "github";
+  const requestedOrigin = req.query.origin;
+  const refererOrigin = originFromReferer(req.get("referer"));
+  const originOverride = requestedOrigin || refererOrigin;
   if (provider !== "github") {
     return res.status(400).send("Unsupported provider");
+  }
+  if (originOverride && !isAllowedOrigin(originOverride)) {
+    return res.status(400).send("Unsupported origin");
   }
   if (!clientId || !clientSecret) {
     return res.status(500).send("Missing GitHub OAuth credentials");
   }
 
   const state = buildState();
+  const origin = resolveOrigin(originOverride);
+  const domain = resolveCookieDomain(origin);
   res.setHeader(
     "Set-Cookie",
     cookie.serialize("oauth_state", state, {
@@ -31,6 +85,18 @@ app.get("/auth", (req, res) => {
       sameSite: "lax",
       path: "/",
       maxAge: 300,
+      ...(domain ? { domain } : {}),
+    })
+  );
+  res.append(
+    "Set-Cookie",
+    cookie.serialize("oauth_origin", origin, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 300,
+      ...(domain ? { domain } : {}),
     })
   );
 
@@ -42,7 +108,30 @@ app.get("/auth", (req, res) => {
     state,
     allow_signup: "true",
   });
-  return res.redirect(`https://github.com/login/oauth/authorize?${params.toString()}`);
+  const authUrl = `https://github.com/login/oauth/authorize?${params.toString()}`;
+
+  res.setHeader("Content-Type", "text/html");
+  return res.send(`<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8" /></head>
+  <body>
+    <script>
+      const payload = 'authorizing:github';
+      const targetOrigin = '${origin}';
+      try {
+        if (window.opener) {
+          window.opener.postMessage(payload, targetOrigin);
+        }
+      } catch (error) {
+        // Ignore postMessage failures; redirect still proceeds.
+      }
+      window.location.href = '${authUrl}';
+    </script>
+    <noscript>
+      <a href="${authUrl}">Continue to GitHub</a>
+    </noscript>
+  </body>
+</html>`);
 });
 
 app.get("/auth/callback", async (req, res) => {
@@ -50,6 +139,7 @@ app.get("/auth/callback", async (req, res) => {
   const state = req.query.state;
   const cookies = cookie.parse(req.headers.cookie || "");
   const expectedState = cookies.oauth_state;
+  const origin = resolveOrigin(cookies.oauth_origin);
 
   if (!code || !state || state !== expectedState) {
     return res.status(400).send("Invalid OAuth state");
@@ -89,8 +179,30 @@ app.get("/auth/callback", async (req, res) => {
     <script>
       const message = ${JSON.stringify(message)};
       const payload = 'authorization:github:success:' + JSON.stringify(message);
-      window.opener.postMessage(payload, '${origin}');
-      window.close();
+      const targetOrigin = '${origin}';
+      const storageKey = 'decap_oauth';
+      let sent = false;
+
+      try {
+        localStorage.setItem(storageKey, payload);
+      } catch (error) {
+        // Ignore storage failures; postMessage is still attempted.
+      }
+
+      try {
+        if (window.opener) {
+          window.opener.postMessage(payload, targetOrigin);
+          sent = true;
+        }
+      } catch (error) {
+        sent = false;
+      }
+
+      if (sent) {
+        window.close();
+      } else {
+        window.location.href = targetOrigin + '/admin/';
+      }
     </script>
   </body>
 </html>`);

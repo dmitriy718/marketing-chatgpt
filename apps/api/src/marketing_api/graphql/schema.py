@@ -1,6 +1,7 @@
 import uuid
 
 import strawberry
+from strawberry.schema.config import StrawberryConfig
 from graphql.error import GraphQLError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -249,4 +250,8 @@ class Mutation:
         return to_pipeline_stage_type(stage)
 
 
-schema = strawberry.Schema(query=Query, mutation=Mutation, config=strawberry.SchemaConfig(auto_camel_case=False))
+schema = strawberry.Schema(
+    query=Query,
+    mutation=Mutation,
+    config=StrawberryConfig(auto_camel_case=False),
+)

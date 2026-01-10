@@ -2,11 +2,12 @@ import enum
 import uuid
 from datetime import date, datetime
 
-from sqlalchemy import Boolean, Date, DateTime, Enum, ForeignKey, String, Text
+from sqlalchemy import Boolean, Date, DateTime, Enum, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from marketing_api.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
+from marketing_api.db.stripe_base import StripeBase
 
 
 class LeadStatus(str, enum.Enum):
@@ -247,6 +248,27 @@ class StripeWebhookEvent(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     event_created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     data_object_id: Mapped[str | None] = mapped_column(String(255))
     payload: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class StripeTransaction(StripeBase, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "stripe_transactions"
+    __table_args__ = (
+        UniqueConstraint("stripe_object_id", "object_type", name="uq_stripe_transactions_object"),
+    )
+
+    stripe_object_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    object_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    status: Mapped[str | None] = mapped_column(String(120))
+    amount: Mapped[int | None] = mapped_column()
+    currency: Mapped[str | None] = mapped_column(String(12))
+    customer_id: Mapped[str | None] = mapped_column(String(120))
+    customer_email: Mapped[str | None] = mapped_column(String(255))
+    description: Mapped[str | None] = mapped_column(String(255))
+    metadata_json: Mapped[str | None] = mapped_column(Text)
+    event_id: Mapped[str | None] = mapped_column(String(255))
+    event_type: Mapped[str | None] = mapped_column(String(255))
+    livemode: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    event_created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class ChatMessage(Base, UUIDPrimaryKeyMixin, TimestampMixin):

@@ -115,10 +115,9 @@ export function CheckoutClient() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            priceId: plan.priceId,
+            planKey: plan.key,
             name,
             email,
-            planLabel: plan.label,
           }),
         });
         const payload = await response.json().catch(() => ({}));
@@ -131,10 +130,9 @@ export function CheckoutClient() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            amount: plan.amount,
+            planKey: plan.key,
             name,
             email,
-            description: plan.label,
           }),
         });
         const payload = await response.json().catch(() => ({}));

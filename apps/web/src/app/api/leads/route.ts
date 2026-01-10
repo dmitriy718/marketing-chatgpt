@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import crypto from "node:crypto";
 import { cookies } from "next/headers";
 
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { appendOutbox, flushOutbox } from "@/lib/outbox";
 
 type LeadPayload = {
   name: string;
@@ -18,9 +20,46 @@ const API_URL =
 const CRM_WEBHOOK_URL = process.env.CRM_WEBHOOK_URL;
 const CRM_WEBHOOK_TOKEN = process.env.CRM_WEBHOOK_TOKEN;
 const RATE_LIMIT_AUTH = process.env.RATE_LIMIT_TOKEN;
+const INTERNAL_TOKEN = process.env.INTERNAL_API_TOKEN;
 
-async function getUtmDetails() {
-  const cookieStore = await cookies();
+type ApiResult = {
+  ok: boolean;
+  retryable: boolean;
+  status: number;
+  error?: string;
+};
+
+async function sendLeadToApi(entry: LeadPayload): Promise<ApiResult> {
+  const apiResponse = await fetch(`${API_URL}/public/leads`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(INTERNAL_TOKEN ? { "x-internal-token": INTERNAL_TOKEN } : null),
+    },
+    body: JSON.stringify({
+      ...entry,
+      turnstile_token: entry.turnstileToken ?? null,
+    }),
+  });
+
+  if (apiResponse.ok) {
+    return { ok: true, retryable: false, status: apiResponse.status };
+  }
+  const errorPayload = await apiResponse.json().catch(() => ({}));
+  return {
+    ok: false,
+    retryable: apiResponse.status >= 500,
+    status: apiResponse.status,
+    error: errorPayload?.detail ?? "Failed to store lead.",
+  };
+}
+
+async function sendLeadToApiForFlush(entry: LeadPayload) {
+  const result = await sendLeadToApi(entry);
+  return result.ok;
+}
+
+async function getUtmDetails(cookieStore: Awaited<ReturnType<typeof cookies>>) {
   const rawUtm = cookieStore.get("cg_utm")?.value;
   const rawRef = cookieStore.get("cg_ref")?.value;
   const details: string[] = [];
@@ -53,40 +92,60 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Missing required fields." }, { status: 400 });
   }
 
-  const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
-  if (!turnstileOk) {
-    return NextResponse.json({ ok: false, error: "Bot verification failed." }, { status: 400 });
+  const cookieStore = await cookies();
+  const internalCookie = cookieStore.get("cg_internal")?.value ?? null;
+  const internalTokenHeader = request.headers.get("x-internal-token");
+  const bypassTurnstile = Boolean(
+    INTERNAL_TOKEN &&
+      ((internalTokenHeader && internalTokenHeader === INTERNAL_TOKEN) ||
+        (internalCookie && internalCookie === INTERNAL_TOKEN) ||
+        body.turnstileToken === INTERNAL_TOKEN)
+  );
+  if (!bypassTurnstile) {
+    const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
+    if (!turnstileOk) {
+      return NextResponse.json({ ok: false, error: "Bot verification failed." }, { status: 400 });
+    }
   }
 
-  const utmDetails = await getUtmDetails();
+  const utmDetails = await getUtmDetails(cookieStore);
   const entry: LeadPayload = {
     ...body,
     details: utmDetails ? `${body.details}\n\n${utmDetails}` : body.details,
     source: body.source ?? "web",
   };
 
-  try {
-    const apiResponse = await fetch(`${API_URL}/public/leads`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...entry,
-        turnstile_token: body.turnstileToken ?? null,
-      }),
-    });
+  await flushOutbox<LeadPayload>({
+    lead: sendLeadToApiForFlush,
+  });
 
-    if (!apiResponse.ok) {
-      const result = await apiResponse.json().catch(() => ({}));
-      return NextResponse.json(
-        { ok: false, error: result?.detail ?? "Failed to store lead." },
-        { status: 502 }
-      );
+  try {
+    const result = await sendLeadToApi(entry);
+    if (!result.ok) {
+      if (!result.retryable) {
+        return NextResponse.json(
+          { ok: false, error: result.error ?? "Failed to store lead." },
+          { status: result.status || 502 }
+        );
+      }
+      await appendOutbox({
+        id: crypto.randomUUID(),
+        type: "lead",
+        payload: entry,
+        attempts: 1,
+        lastAttemptedAt: new Date().toISOString(),
+      });
+      return NextResponse.json({ ok: true, queued: true }, { status: 202 });
     }
   } catch {
-    return NextResponse.json(
-      { ok: false, error: "Failed to reach the API." },
-      { status: 502 }
-    );
+    await appendOutbox({
+      id: crypto.randomUUID(),
+      type: "lead",
+      payload: entry,
+      attempts: 1,
+      lastAttemptedAt: new Date().toISOString(),
+    });
+    return NextResponse.json({ ok: true, queued: true }, { status: 202 });
   }
 
   let crmDelivered = false;

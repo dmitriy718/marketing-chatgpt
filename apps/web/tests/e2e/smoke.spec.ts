@@ -1,4 +1,39 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+
+const testEmail = process.env.E2E_TEST_EMAIL || "qa@carolinagrowth.co";
+const internalToken = process.env.INTERNAL_API_TOKEN?.trim();
+const baseUrl =
+  process.env.PLAYWRIGHT_BASE_URL ??
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  "http://localhost:3001";
+const cookieDomain = new URL(baseUrl).hostname;
+
+async function setupLeadSubmission(page) {
+  await page.addInitScript((token) => {
+    window.turnstile = {
+      render: (_element, options) => {
+        const fallbackToken = "e2e-turnstile-token";
+        setTimeout(() => options.callback(token ?? fallbackToken), 0);
+        return "e2e-turnstile-widget";
+      },
+    };
+  }, internalToken ?? null);
+
+  if (internalToken) {
+    await page.addInitScript((token) => {
+      (window as Window & { __internalApiToken?: string }).__internalApiToken = token;
+    }, internalToken);
+    await page.setExtraHTTPHeaders({ "x-internal-token": internalToken });
+    await page.context().addCookies([
+      {
+        name: "cg_internal",
+        value: internalToken,
+        domain: cookieDomain,
+        path: "/",
+      },
+    ]);
+  }
+}
 
 test("home page loads key sections", async ({ page }) => {
   await page.goto("/");
@@ -94,9 +129,10 @@ test("retention referral page loads", async ({ page }) => {
 test("best-fit quiz page loads", async ({ page }) => {
   await page.goto("/best-fit-quiz");
 
+  await expect(page).toHaveURL(/\/web-design/);
   await expect(
     page.getByRole("heading", {
-      name: "Get matched to the right growth plan in 60 seconds.",
+      name: "Premium web design for local South Carolina businesses.",
     })
   ).toBeVisible();
 });
@@ -134,20 +170,20 @@ test("landing templates page loads", async ({ page }) => {
 test("pricing builder page loads", async ({ page }) => {
   await page.goto("/pricing-builder");
 
+  await expect(page).toHaveURL(/\/pricing/);
   await expect(
     page.getByRole("heading", {
-      name: "Build the right package and budget range for your growth plan.",
+      name: "Clear price points and a custom build option.",
     })
   ).toBeVisible();
 });
 
 test("growth sprint form submits", async ({ page }) => {
+  await setupLeadSubmission(page);
   await page.goto("/growth-sprint");
 
   await page.getByLabel("Full name", { exact: true }).fill("E2E Tester");
-  await page
-    .getByLabel("Email", { exact: true })
-    .fill(`e2e-${Date.now()}@example.com`);
+  await page.getByLabel("Email", { exact: true }).fill(testEmail);
   await page.getByLabel("Company", { exact: true }).fill("Test Company");
   await page.getByLabel("Website", { exact: true }).fill("https://example.com");
   await page.getByLabel("Target start date", { exact: true }).fill("Next month");

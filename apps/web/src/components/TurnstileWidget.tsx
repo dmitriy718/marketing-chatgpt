@@ -38,6 +38,12 @@ export function TurnstileWidget({ onVerify, onError, onExpire }: TurnstileWidget
       return;
     }
 
+    const internalToken = (window as Window & { __internalApiToken?: string }).__internalApiToken;
+    if (internalToken) {
+      onVerify(internalToken);
+      return;
+    }
+
     const renderWidget = () => {
       if (!window.turnstile || !containerRef.current || widgetIdRef.current) {
         return;

@@ -70,6 +70,7 @@ If SMTP is missing, forms still store data but email notifications are skipped.
 Turnstile is enforced when `TURNSTILE_SECRET_KEY` and `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
 are configured. Public API endpoints also use rate limiting on the API and nginx
 to reduce abuse.
+Trusted server-to-server calls can use `INTERNAL_API_TOKEN` when Turnstile is enabled.
 
 ## Pushover
 

@@ -1,0 +1,55 @@
+# Server Documentation
+## Internal/Technical Documentation
+
+This section contains technical documentation for server-side features, APIs, and internal systems that clients don't need to know about.
+
+## API Documentation
+
+### Public Endpoints
+- [Lead Capture API](./api/lead-capture.md)
+- [Newsletter API](./api/newsletter.md)
+- [Chat API](./api/chat.md)
+- [Stripe Integration](./api/stripe.md)
+- [SEO Tools API](./api/seo-tools.md)
+- [Content Generation API](./api/content-generation.md)
+- [Email Automation API](./api/email-automation.md)
+
+### Authentication
+- [JWT Authentication](./auth/jwt.md)
+- [Role-Based Access Control](./auth/rbac.md)
+- [Internal API Tokens](./auth/internal-tokens.md)
+
+### Database
+- [Database Models](./database/models.md)
+- [Migrations](./database/migrations.md)
+- [Stripe Database](./database/stripe-db.md)
+
+## Features
+
+### Round 1 Features
+- [SEO Auditor Implementation](./features/seo-auditor.md)
+- [AI Chatbot Implementation](./features/ai-chatbot.md)
+- [Content Generator Implementation](./features/content-generator.md)
+- [Email Automation Implementation](./features/email-automation.md)
+- [Client Portal Implementation](./features/client-portal.md)
+
+### Round 2 Features
+- [Competitor Comparison Implementation](./features/competitor-comparison.md)
+- [Readiness Assessment Implementation](./features/readiness-assessment.md)
+- [Intelligence Report Implementation](./features/intelligence-report.md)
+- [Lead Potential Calculator Implementation](./features/lead-potential-calculator.md)
+- [Consultation Scheduler Implementation](./features/consultation-scheduler.md)
+
+## Infrastructure
+
+- [Docker Setup](./infrastructure/docker.md)
+- [Database Setup](./infrastructure/database.md)
+- [Deployment](./infrastructure/deployment.md)
+- [Monitoring](./infrastructure/monitoring.md)
+
+## Security
+
+- [Rate Limiting](./security/rate-limiting.md)
+- [Turnstile Integration](./security/turnstile.md)
+- [Input Validation](./security/validation.md)
+- [Error Handling](./security/error-handling.md)
