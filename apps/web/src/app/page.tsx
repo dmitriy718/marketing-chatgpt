@@ -47,7 +47,7 @@ export default function Home() {
               primaryLabel="Schedule a Strategy Call"
               primaryHref="/contact?utm_source=site&utm_medium=cta&utm_campaign=hero"
               secondaryLabel="View Portfolio"
-              secondaryHref="/portfolio"
+              secondaryHref="/portfolio?utm_source=site&utm_medium=cta&utm_campaign=hero"
             />
             <div className="flex flex-wrap gap-6 text-sm text-[var(--muted)]">
               <span>+42% avg. pipeline lift</span>
