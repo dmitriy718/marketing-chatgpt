@@ -36,21 +36,46 @@ export function buildPageMetadata(params: {
   title: string;
   description: string;
   path: string;
+  keywords?: string[];
+  image?: string;
+  type?: "website" | "article" | "product";
+  publishedTime?: string;
+  modifiedTime?: string;
 }) {
   const baseUrl = getBaseUrl();
   const url = `${baseUrl}${params.path}`;
+  const ogImage = params.image || `${baseUrl}/logo.svg`;
+  
   return {
     title: params.title,
     description: params.description,
+    keywords: params.keywords,
     alternates: { canonical: url },
     openGraph: {
       title: params.title,
       description: params.description,
       url,
+      type: params.type || "website",
+      images: [{ url: ogImage, alt: params.title }],
+      ...(params.publishedTime && { publishedTime: params.publishedTime }),
+      ...(params.modifiedTime && { modifiedTime: params.modifiedTime }),
     },
     twitter: {
+      card: "summary_large_image",
       title: params.title,
       description: params.description,
+      images: [ogImage],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   };
 }
@@ -118,12 +143,80 @@ export function buildArticleSchema(post: BlogPost, settings: SeoSettings) {
     author: {
       "@type": "Organization",
       name: post.author ?? settings.siteName,
+      url: settings.baseUrl,
     },
     datePublished: post.publishedAt ?? undefined,
-    mainEntityOfPage: `${settings.baseUrl}/blog/${post.slug}`,
+    dateModified: post.publishedAt ?? undefined,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${settings.baseUrl}/blog/${post.slug}`,
+    },
     publisher: {
       "@type": "Organization",
       name: settings.siteName,
+      url: settings.baseUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: `${settings.baseUrl}/logo.svg`,
+      },
+    },
+    image: post.image ? `${settings.baseUrl}${post.image}` : undefined,
+  };
+}
+
+export function buildBreadcrumbSchema(items: Array<{ name: string; url: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+export function buildFAQSchema(faqs: Array<{ question: string; answer: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+}
+
+export function buildLocalBusinessSchema(settings: SeoSettings) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${settings.baseUrl}#organization`,
+    name: settings.siteName,
+    description: settings.defaultDescription,
+    url: settings.baseUrl,
+    telephone: undefined, // Add if available
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "US",
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+    priceRange: "$$",
+    serviceArea: {
+      "@type": "GeoCircle",
+      geoMidpoint: {
+        "@type": "GeoCoordinates",
+        latitude: undefined, // Add if available
+        longitude: undefined, // Add if available
+      },
     },
   };
 }

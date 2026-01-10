@@ -26,7 +26,11 @@ export function SiteFooter() {
           <p className="font-semibold">Explore</p>
           <div className="mt-3 flex flex-col gap-2 text-[var(--muted)]">
             {primaryNavLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-[var(--foreground)]">
+              <Link 
+                key={link.href} 
+                href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=footer`}
+                className="hover:text-[var(--foreground)]"
+              >
                 {link.label}
               </Link>
             ))}
@@ -36,7 +40,11 @@ export function SiteFooter() {
           <p className="font-semibold">Tools</p>
           <div className="mt-3 grid grid-cols-2 gap-2 text-[var(--muted)]">
             {toolLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-[var(--foreground)]">
+              <Link 
+                key={link.href} 
+                href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=footer-tools`}
+                className="hover:text-[var(--foreground)]"
+              >
                 {link.label}
               </Link>
             ))}
@@ -46,7 +54,11 @@ export function SiteFooter() {
           <p className="font-semibold">Company</p>
           <div className="mt-3 flex flex-col gap-2 text-[var(--muted)]">
             {companyLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-[var(--foreground)]">
+              <Link 
+                key={link.href} 
+                href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=footer-company`}
+                className="hover:text-[var(--foreground)]"
+              >
                 {link.label}
               </Link>
             ))}
@@ -54,7 +66,11 @@ export function SiteFooter() {
           <p className="mt-6 font-semibold">Legal</p>
           <div className="mt-3 flex flex-col gap-2 text-[var(--muted)]">
             {footerLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-[var(--foreground)]">
+              <Link 
+                key={link.href} 
+                href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=footer-legal`}
+                className="hover:text-[var(--foreground)]"
+              >
                 {link.label}
               </Link>
             ))}

@@ -99,7 +99,7 @@ export default function Home() {
               <h2 className="title mt-3 text-3xl font-semibold">Built for every stage of growth.</h2>
             </div>
             <Link
-              href="/services"
+              href="/services?utm_source=site&utm_medium=link&utm_campaign=home-services"
               className="btn-secondary rounded-full px-5 py-2 text-sm font-semibold"
             >
               Explore services
@@ -109,7 +109,7 @@ export default function Home() {
             {services.map((service) => (
               <Link
                 key={service.slug}
-                href={`/services/${service.slug}`}
+                href={`/services/${service.slug}?utm_source=site&utm_medium=link&utm_campaign=home-service-card`}
                 className="group rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 transition hover:-translate-y-1 hover:shadow-xl"
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--muted)]">
@@ -189,7 +189,7 @@ export default function Home() {
               </p>
               <h2 className="title mt-3 text-3xl font-semibold">Proof of momentum.</h2>
             </div>
-            <Link href="/portfolio" className="text-sm font-semibold text-[var(--primary)]">
+            <Link href="/portfolio?utm_source=site&utm_medium=link&utm_campaign=home-portfolio" className="text-sm font-semibold text-[var(--primary)]">
               View all case studies →
             </Link>
           </div>

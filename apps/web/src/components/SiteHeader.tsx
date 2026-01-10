@@ -61,7 +61,7 @@ export function SiteHeader() {
                 {primaryNavLinks.map((link) => (
                   <Link
                     key={link.href}
-                    href={link.href}
+                    href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=mobile-nav`}
                     className="hover:text-[var(--foreground)]"
                     onClick={() => closeDetails(mobileRef)}
                   >
@@ -76,7 +76,7 @@ export function SiteHeader() {
                     {toolLinks.map((link) => (
                       <Link
                         key={link.href}
-                        href={link.href}
+                        href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=mobile-tools`}
                         className="hover:text-[var(--foreground)]"
                         onClick={() => closeDetails(mobileRef)}
                       >
@@ -99,7 +99,7 @@ export function SiteHeader() {
           {primaryNavLinks.map((link) => (
             <Link
               key={link.href}
-              href={link.href}
+              href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=navigation`}
               className="text-sm font-medium transition hover:text-[var(--foreground)]"
             >
               {link.label}
@@ -113,7 +113,7 @@ export function SiteHeader() {
               {toolLinks.map((link) => (
                 <Link
                   key={link.href}
-                  href={link.href}
+                  href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=navigation-tools`}
                   className="hover:text-[var(--foreground)]"
                   onClick={() => closeDetails(toolsRef)}
                 >
