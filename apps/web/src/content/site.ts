@@ -6,10 +6,17 @@ export const primaryNavLinks = [
   { href: "/portfolio", label: "Portfolio" },
   { href: "/blog", label: "Insights" },
   { href: "/about", label: "About" },
+  { href: "/free-consultation", label: "Free Consultation" },
   { href: "/contact", label: "Contact" },
+  { href: "/portal", label: "Client Portal" },
 ];
 
 export const toolLinks = [
+  { href: "/competitor-comparison", label: "Competitor Comparison" },
+  { href: "/marketing-readiness", label: "Readiness Assessment" },
+  { href: "/lead-potential", label: "Lead Potential Calculator" },
+  { href: "/content-generator", label: "AI Content Generator" },
+  { href: "/seo-audit", label: "SEO Auditor" },
   { href: "/growth-audit", label: "Audit" },
   { href: "/roi-calculator", label: "ROI Calculator" },
   { href: "/growth-sprint", label: "4-Week Sprint" },

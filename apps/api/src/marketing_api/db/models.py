@@ -280,3 +280,22 @@ class ChatMessage(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     page_url: Mapped[str | None] = mapped_column(String(500))
     user_agent: Mapped[str | None] = mapped_column(String(255))
     referrer: Mapped[str | None] = mapped_column(String(500))
+    is_ai_response: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    chat_session_id: Mapped[str | None] = mapped_column(String(255), index=True)
+    ai_response_text: Mapped[str | None] = mapped_column(Text)
+
+
+class SeoAudit(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "seo_audits"
+
+    url: Mapped[str] = mapped_column(String(500), nullable=False, index=True)
+    email: Mapped[str | None] = mapped_column(String(255), index=True)
+    score: Mapped[int | None] = mapped_column()
+    findings_json: Mapped[str | None] = mapped_column(Text)
+
+class CompetitorComparison(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "competitor_comparisons"
+
+    user_url: Mapped[str] = mapped_column(String(500), nullable=False)
+    email: Mapped[str | None] = mapped_column(String(255), index=True)
+    comparison_json: Mapped[str] = mapped_column(Text, nullable=False)

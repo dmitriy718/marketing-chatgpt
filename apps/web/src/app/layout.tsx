@@ -2,7 +2,7 @@ import { Manrope, Sora } from "next/font/google";
 
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { ChatWidget } from "@/components/ChatWidget";
+import { ChatWidgetEnhanced } from "@/components/ChatWidgetEnhanced";
 import { Analytics } from "@/components/Analytics";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -79,7 +79,7 @@ export default function RootLayout({
                 {children}
               </main>
               <SiteFooter />
-              <ChatWidget />
+              <ChatWidgetEnhanced />
             </div>
           </ThemeProvider>
         </PostHogProvider>

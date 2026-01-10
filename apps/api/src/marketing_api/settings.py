@@ -57,6 +57,7 @@ class Settings(BaseSettings):
     pushover_app_token: str | None = None
     pushover_user_key: str | None = None
     pushover_group_key: str | None = None
+    openai_api_key: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=(str(ROOT_DIR / ".env"), ".env"), extra="ignore"

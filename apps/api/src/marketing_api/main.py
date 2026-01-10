@@ -9,8 +9,17 @@ from marketing_api.auth.dependencies import extract_bearer_token, resolve_user_f
 from marketing_api.graphql.schema import schema
 from marketing_api.limits import limiter
 from marketing_api.routes.auth import router as auth_router
+from marketing_api.routes.chat_ai import router as chat_ai_router
+from marketing_api.routes.competitor import router as competitor_router
+from marketing_api.routes.consultation import router as consultation_router
+from marketing_api.routes.content import router as content_router
+from marketing_api.routes.email_automation import router as email_automation_router
 from marketing_api.routes.health import router as health_router
+from marketing_api.routes.intelligence import router as intelligence_router
+from marketing_api.routes.lead_potential import router as lead_potential_router
 from marketing_api.routes.public import router as public_router
+from marketing_api.routes.readiness import router as readiness_router
+from marketing_api.routes.seo import router as seo_router
 from marketing_api.routes.webhooks import router as webhooks_router
 from marketing_api.db.session import get_session
 from marketing_api.settings import settings
@@ -56,6 +65,15 @@ def create_app() -> FastAPI:
     app.include_router(health_router)
     app.include_router(auth_router)
     app.include_router(public_router)
+    app.include_router(chat_ai_router)
+    app.include_router(competitor_router)
+    app.include_router(consultation_router)
+    app.include_router(content_router)
+    app.include_router(email_automation_router)
+    app.include_router(intelligence_router)
+    app.include_router(lead_potential_router)
+    app.include_router(readiness_router)
+    app.include_router(seo_router)
     app.include_router(webhooks_router)
     app.include_router(graphql_app, prefix="/graphql")
 
@@ -68,6 +86,24 @@ def create_app() -> FastAPI:
                 password=settings.admin_password,
             )
             break
+
+    # Background task for email automation (runs every 5 minutes)
+    @app.on_event("startup")
+    async def start_email_scheduler() -> None:
+        import asyncio
+        from marketing_api.routes.email_automation import process_email_queue
+
+        async def run_scheduler():
+            while True:
+                try:
+                    async for session in get_session():
+                        await process_email_queue(session)
+                        break
+                except Exception:
+                    pass  # Log error but continue
+                await asyncio.sleep(300)  # 5 minutes
+
+        asyncio.create_task(run_scheduler())
 
     return app
 
