@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { trackEvent } from "@/lib/analytics";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { getInternalLeadHeaders } from "@/lib/internalHeaders";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -141,7 +142,8 @@ export function BestFitQuiz() {
     };
 
     try {
-      if (turnstileEnabled && !turnstileToken) {
+      const hasInternalToken = Boolean(getInternalLeadHeaders());
+      if (turnstileEnabled && !turnstileToken && !hasInternalToken) {
         throw new Error("Please complete the bot check.");
       }
 
@@ -152,6 +154,7 @@ export function BestFitQuiz() {
           ...(process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN
             ? { "x-rate-limit-token": process.env.NEXT_PUBLIC_RATE_LIMIT_TOKEN }
             : null),
+          ...(getInternalLeadHeaders() ?? null),
         },
         body: JSON.stringify(payload),
       });

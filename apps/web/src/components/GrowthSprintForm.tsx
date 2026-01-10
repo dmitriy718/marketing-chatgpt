@@ -50,7 +50,8 @@ export function GrowthSprintForm() {
     };
 
     try {
-      if (turnstileEnabled && !turnstileToken) {
+      const hasInternalToken = Boolean(getInternalLeadHeaders());
+      if (turnstileEnabled && !turnstileToken && !hasInternalToken) {
         throw new Error("Please complete the bot check.");
       }
 
