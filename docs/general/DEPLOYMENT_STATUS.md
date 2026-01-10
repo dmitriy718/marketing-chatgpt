@@ -64,9 +64,14 @@ curl https://carolinagrowth.co/health
 ## Known Issues
 
 ### SSH Authentication
-- **Issue**: Password authentication failing
-- **Workaround**: May need SSH key authentication
-- **Status**: Site appears operational despite SSH issue
+- **Issue**: Password authentication failing with sshpass
+- **Attempted**: Using `sshpass -f vpspass.txt` with correct syntax
+- **Status**: SSH connection denied, but site is operational
+- **Possible Causes**: 
+  - SSH key authentication required
+  - Password authentication disabled on server
+  - Username format issue
+- **Workaround**: Manual SSH access may be needed for deployment
 
 ## Next Steps
 
