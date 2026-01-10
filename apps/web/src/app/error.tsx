@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { ErrorNotice } from "@/components/ErrorNotice";
+import { trackError } from "@/lib/posthog";
 
 export default function ErrorPage({
   error,
@@ -9,6 +11,15 @@ export default function ErrorPage({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    // Track error to PostHog
+    trackError(error, {
+      component: "ErrorPage",
+      page: typeof window !== "undefined" ? window.location.pathname : "unknown",
+      digest: error.digest,
+    });
+  }, [error]);
+
   return (
     <section className="px-6 py-16">
       <div className="mx-auto w-full max-w-4xl">

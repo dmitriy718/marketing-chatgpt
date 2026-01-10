@@ -8,6 +8,7 @@ from marketing_api.auth.bootstrap import ensure_admin_user
 from marketing_api.auth.dependencies import extract_bearer_token, resolve_user_from_token
 from marketing_api.graphql.schema import schema
 from marketing_api.limits import limiter
+from marketing_api.middleware.posthog import PostHogMiddleware
 from marketing_api.routes.auth import router as auth_router
 from marketing_api.routes.chat_ai import router as chat_ai_router
 from marketing_api.routes.competitor import router as competitor_router
@@ -46,6 +47,10 @@ def create_app() -> FastAPI:
     )
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+    
+    # PostHog middleware for error tracking and performance monitoring
+    app.add_middleware(PostHogMiddleware)
+    
     app.add_middleware(
         CORSMiddleware,
         allow_origins=build_cors_origins(),

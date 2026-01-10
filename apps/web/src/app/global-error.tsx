@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { ErrorNotice } from "@/components/ErrorNotice";
+import { trackError } from "@/lib/posthog";
 
 import "./globals.css";
 
@@ -11,6 +13,15 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    // Track error to PostHog
+    trackError(error, {
+      component: "GlobalError",
+      page: typeof window !== "undefined" ? window.location.pathname : "unknown",
+      digest: error.digest,
+    });
+  }, [error]);
+
   return (
     <html lang="en">
       <body className="antialiased">

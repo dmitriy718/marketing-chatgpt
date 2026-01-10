@@ -47,6 +47,10 @@ This section contains technical documentation for server-side features, APIs, an
 - [Deployment](./infrastructure/deployment.md)
 - [Monitoring](./infrastructure/monitoring.md)
 
+## Monitoring
+
+- [PostHog Monitoring & Error Tracking](./monitoring/posthog.md)
+
 ## Security
 
 - [Rate Limiting](./security/rate-limiting.md)

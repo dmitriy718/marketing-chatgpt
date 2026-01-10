@@ -38,15 +38,15 @@ This document tracks items, resources, or information that we need but don't cur
 
 ### Monitoring
 - ✅ Pushover for alerts
-- ⚠️ Application performance monitoring (APM)
-  - **Status**: Not set up
-  - **Priority**: Medium
-  - **Note**: Would help identify performance issues
+- ✅ Application performance monitoring (APM)
+  - **Status**: PostHog performance monitoring set up
+  - **Priority**: Complete
+  - **Note**: Tracks API response times and frontend performance
 
-- ⚠️ Error tracking service (Sentry, etc.)
-  - **Status**: Basic error handling, no external service
-  - **Priority**: Low
-  - **Note**: Current error handling may be sufficient
+- ✅ Error tracking service
+  - **Status**: PostHog error tracking implemented
+  - **Priority**: Complete
+  - **Note**: Tracks frontend exceptions and API errors
 
 ## Documentation
 
