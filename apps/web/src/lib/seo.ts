@@ -73,9 +73,9 @@ export function buildPageMetadata(params: {
         index: true,
         follow: true,
         "max-video-preview": -1,
-        "max-image-preview": "large" as const,
+        "max-image-preview": "large",
         "max-snippet": -1,
-      },
+      } as const,
     },
   };
 }
