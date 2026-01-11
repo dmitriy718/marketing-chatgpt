@@ -334,7 +334,7 @@ class EmailSubscriber(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     status: Mapped[str] = mapped_column(String(50), server_default="active", nullable=False)
     tags: Mapped[str | None] = mapped_column(String(500))
-    subscribed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=sa.func.now())
+    subscribed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=sa.text("now()"))
 
 
 class EmailSend(Base, UUIDPrimaryKeyMixin, TimestampMixin):
