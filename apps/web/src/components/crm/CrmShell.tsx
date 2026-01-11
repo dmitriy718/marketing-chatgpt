@@ -12,6 +12,8 @@ const navLinks = [
   { href: "/crm/deals", label: "Deals" },
   { href: "/crm/pipeline", label: "Pipeline" },
   { href: "/crm/activities", label: "Timeline" },
+  { href: "/crm/consultations", label: "Consultations" },
+  { href: "/crm/email-automation", label: "Email Automation" },
   { href: "/crm/reports", label: "Reports" },
 ];
 

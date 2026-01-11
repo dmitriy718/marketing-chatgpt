@@ -13,8 +13,10 @@ from marketing_api.routes.auth import router as auth_router
 from marketing_api.routes.chat_ai import router as chat_ai_router
 from marketing_api.routes.competitor import router as competitor_router
 from marketing_api.routes.consultation import router as consultation_router
+from marketing_api.routes.consultation_admin import router as consultation_admin_router
 from marketing_api.routes.content import router as content_router
 from marketing_api.routes.email_automation import router as email_automation_router
+from marketing_api.routes.email_admin import router as email_admin_router
 from marketing_api.routes.health import router as health_router
 from marketing_api.routes.intelligence import router as intelligence_router
 from marketing_api.routes.lead_potential import router as lead_potential_router
@@ -73,8 +75,10 @@ def create_app() -> FastAPI:
     app.include_router(chat_ai_router)
     app.include_router(competitor_router)
     app.include_router(consultation_router)
+    app.include_router(consultation_admin_router)
     app.include_router(content_router)
     app.include_router(email_automation_router)
+    app.include_router(email_admin_router)
     app.include_router(intelligence_router)
     app.include_router(lead_potential_router)
     app.include_router(readiness_router)

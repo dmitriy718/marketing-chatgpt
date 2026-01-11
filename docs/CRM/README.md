@@ -12,9 +12,11 @@ The Carolina Growth CRM is an internal system for managing leads, customers, dea
 3. [Customer Management](./customers.md)
 4. [Deals & Pipeline](./deals.md)
 5. [Activities & Tasks](./activities.md)
-6. [Reports & Analytics](./reports.md)
-7. [User Management](./users.md)
-8. [GraphQL API](./graphql-api.md)
+6. [Consultations](./consultations.md) - Calendar and booking management
+7. [Email Automation](./email-automation.md) - Campaign and subscriber management
+8. [Reports & Analytics](./reports.md)
+9. [User Management](./users.md)
+10. [GraphQL API](./graphql-api.md)
 
 ## System Architecture
 

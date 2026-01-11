@@ -54,6 +54,33 @@ This section contains technical documentation for server-side features, APIs, an
 
 - [PostHog Monitoring & Error Tracking](./monitoring/posthog.md)
 
+## Admin Interfaces
+
+- **Email Automation Admin** (`/crm/email-automation`) - Manage email campaigns, sequences, and subscribers
+- **Consultation Calendar** (`/crm/consultations`) - View and manage consultation bookings with calendar interface
+
+## API Endpoints
+
+### Email Automation Admin
+- `GET /admin/email/campaigns` - List all campaigns
+- `POST /admin/email/campaigns` - Create campaign
+- `PUT /admin/email/campaigns/{id}` - Update campaign
+- `DELETE /admin/email/campaigns/{id}` - Delete campaign
+- `GET /admin/email/campaigns/{id}/sequences` - List sequences for campaign
+- `POST /admin/email/sequences` - Create sequence
+- `GET /admin/email/subscribers` - List subscribers
+- `GET /admin/email/analytics` - Get email analytics
+- `GET /admin/email/form-sources` - Get form sources for mapping
+
+### Consultation Admin
+- `GET /admin/consultation/bookings` - List bookings
+- `POST /admin/consultation/bookings` - Create booking
+- `PUT /admin/consultation/bookings/{id}` - Update booking
+- `DELETE /admin/consultation/bookings/{id}` - Delete booking
+- `GET /admin/consultation/availability` - Get available time slots
+
+All admin endpoints require JWT authentication.
+
 ## Security
 
 - [Rate Limiting](./security/rate-limiting.md)

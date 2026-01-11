@@ -345,3 +345,16 @@ class EmailSend(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     opened_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     clicked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class ConsultationBooking(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "consultation_bookings"
+
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    email: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    phone: Mapped[str | None] = mapped_column(String(50))
+    company: Mapped[str | None] = mapped_column(String(255))
+    scheduled_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+    duration_minutes: Mapped[int] = mapped_column(Integer, server_default="30", nullable=False)
+    status: Mapped[str] = mapped_column(String(50), server_default="pending", nullable=False)
+    notes: Mapped[str | None] = mapped_column(Text())
