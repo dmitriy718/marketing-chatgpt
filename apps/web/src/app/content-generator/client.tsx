@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { verifyTurnstileToken } from "@/lib/turnstile";
 
 type ContentType = "blog_post" | "social_media" | "email_campaign";
 type Tone = "professional" | "casual" | "friendly";
