@@ -63,7 +63,10 @@ This runbook provides step-by-step instructions for deploying the Carolina Growt
 
 ### Step 1: Connect to VPS
 ```bash
-sshpass -f vpspass.txt ssh -o StrictHostKeyChecking=no root@74.208.153.193
+# Use SSH key authentication (recommended) or password file (never commit passwords to git)
+ssh -o StrictHostKeyChecking=no root@74.208.153.193
+# OR with password file (if using sshpass):
+# sshpass -f <password-file> ssh -o StrictHostKeyChecking=no root@74.208.153.193
 cd /opt/marketing
 ```
 
@@ -137,7 +140,10 @@ docker compose -f docker-compose.prod.yml logs web --tail 50
 
 ### Step 1: Connect to VPS
 ```bash
-sshpass -f vpspass.txt ssh -o StrictHostKeyChecking=no root@74.208.153.193
+# Use SSH key authentication (recommended) or password file (never commit passwords to git)
+ssh -o StrictHostKeyChecking=no root@74.208.153.193
+# OR with password file (if using sshpass):
+# sshpass -f <password-file> ssh -o StrictHostKeyChecking=no root@74.208.153.193
 cd /opt/marketing
 ```
 
