@@ -1,0 +1,154 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
+import { primaryNavLinks, toolLinks } from "@/content/site";
+import { ThemeToggle } from "@/components/ThemeToggle";
+
+/**
+ * DEVELOPMENT NAVIGATION - Different style for dev site
+ * This component is ONLY used on development.carolinagrowth.co
+ * DO NOT use this on production - use SiteHeader.tsx instead
+ */
+export function SiteHeaderDev() {
+  const mobileRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    function handleClick(event: MouseEvent) {
+      const target = event.target as Node;
+      if (mobileRef.current?.open && !mobileRef.current.contains(target)) {
+        mobileRef.current.open = false;
+      }
+    }
+
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const closeDetails = (ref: React.RefObject<HTMLDetailsElement | null>) => {
+    if (ref.current?.open) {
+      ref.current.open = false;
+    }
+  };
+
+  return (
+    <header className="sticky top-0 z-50 border-b-2 border-[var(--accent)] bg-[color:var(--background)]/95 backdrop-blur-lg shadow-lg">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-6 py-4 md:flex-row md:items-center md:justify-between md:gap-0">
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 whitespace-nowrap">
+            <Image
+              src="/logo.svg"
+              alt="Carolina Growth"
+              width={28}
+              height={28}
+              className="h-7 w-7"
+              priority
+            />
+            <span className="text-xl font-bold tracking-tight text-[var(--foreground)]">
+              Carolina Growth
+            </span>
+            <span className="rounded-full bg-[var(--accent)] px-2 py-0.5 text-xs font-semibold text-[var(--background)]">
+              DEV
+            </span>
+          </Link>
+          <div className="ml-auto flex items-center gap-3 md:hidden">
+            <details ref={mobileRef}>
+              <summary
+                className="cursor-pointer text-xs font-semibold uppercase tracking-[0.25em] text-[var(--foreground)]"
+                aria-label="Open navigation menu"
+              >
+                Menu
+              </summary>
+              <div className="glass absolute right-6 mt-3 flex w-48 flex-col gap-3 rounded-2xl p-3 text-sm text-[var(--muted)] border-2 border-[var(--accent)]">
+                <details className="rounded-xl border-2 border-[var(--accent)] px-3 py-2">
+                  <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.25em] text-[var(--foreground)]">
+                    <Link
+                      href="/services?utm_source=site&utm_medium=link&utm_campaign=mobile-nav"
+                      className="hover:text-[var(--foreground)]"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Services
+                    </Link>
+                  </summary>
+                  <div className="mt-3 flex flex-col gap-2 text-sm text-[var(--muted)]">
+                    {toolLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=mobile-tools`}
+                        className="hover:text-[var(--foreground)]"
+                        onClick={() => closeDetails(mobileRef)}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                </details>
+                {primaryNavLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=mobile-nav`}
+                    className="hover:text-[var(--foreground)]"
+                    onClick={() => closeDetails(mobileRef)}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <div className="pt-2 text-[0.7rem] uppercase tracking-[0.2em] text-[var(--muted)]">
+                  Theme
+                </div>
+                <div className="flex items-center justify-start">
+                  <ThemeToggle />
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+        <nav className="hidden items-center gap-4 text-sm font-semibold text-[var(--muted)] md:ml-10 md:flex">
+          <div className="relative group">
+            <Link
+              href="/services?utm_source=site&utm_medium=link&utm_campaign=navigation"
+              className="text-sm font-semibold transition hover:text-[var(--foreground)] px-3 py-2 rounded-lg hover:bg-[var(--surface-soft)]"
+            >
+              Services
+            </Link>
+            <div className="absolute left-0 top-full mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto z-50">
+              <div className="glass flex w-48 flex-col gap-2 rounded-2xl p-3 text-sm text-[var(--muted)] border-2 border-[var(--accent)]">
+                {toolLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=navigation-tools`}
+                    className="hover:text-[var(--foreground)] px-2 py-1 rounded hover:bg-[var(--surface-soft)]"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+          {primaryNavLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=navigation`}
+              className="text-sm font-semibold transition hover:text-[var(--foreground)] px-3 py-2 rounded-lg hover:bg-[var(--surface-soft)]"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="flex items-center gap-5 md:ml-6">
+          <Link
+            href="/contact?utm_source=site&utm_medium=nav&utm_campaign=header"
+            className="btn-primary w-full rounded-lg px-5 py-2.5 text-sm font-semibold md:w-auto shadow-md hover:shadow-lg transition-shadow"
+          >
+            Book a Call
+          </Link>
+          <div className="hidden items-center gap-3 md:flex">
+            <ThemeToggle />
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
