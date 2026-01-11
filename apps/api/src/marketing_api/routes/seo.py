@@ -54,10 +54,11 @@ def analyze_seo(html: str, url: str) -> dict:
 
     # Check meta description
     meta_desc = soup.find("meta", attrs={"name": "description"})
-    if not meta_desc or not meta_desc.get("content") or len(meta_desc.get("content", "").strip()) < 120):
+    meta_content = meta_desc.get("content", "") if meta_desc else ""
+    if not meta_desc or not meta_content or len(meta_content.strip()) < 120:
         findings.append({"type": "error", "category": "meta", "message": "Missing or too short meta description (recommended: 120-160 characters)"})
         score -= 10
-    elif len(meta_desc.get("content", "")) > 160:
+    elif len(meta_content) > 160:
         findings.append({"type": "warning", "category": "meta", "message": "Meta description is too long (recommended: 120-160 characters)"})
         score -= 5
     else:
