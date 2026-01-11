@@ -38,11 +38,11 @@ function DashboardContent() {
   useEffect(() => {
     if (!token) return;
 
-    crmGraphQL<{ data: DashboardData }>(dashboardQuery, token)
+    crmGraphQL<DashboardData>(dashboardQuery, token)
       .then((result) => {
         if (result.errors) {
           setError(result.errors[0]?.message || "Failed to load dashboard");
-        } else {
+        } else if (result.data) {
           setData(result.data);
         }
       })
