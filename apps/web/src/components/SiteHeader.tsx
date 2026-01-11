@@ -102,24 +102,11 @@ export function SiteHeader() {
           <div ref={toolsRef} className="relative group">
             <Link
               href="/services?utm_source=site&utm_medium=link&utm_campaign=navigation"
-              className="text-sm font-medium transition hover:text-[var(--foreground)] cursor-pointer"
-              onMouseEnter={() => {
-                if (toolsRef.current) {
-                  const details = toolsRef.current.querySelector('details');
-                  if (details) details.open = true;
-                }
-              }}
-              onMouseLeave={() => {
-                if (toolsRef.current) {
-                  const details = toolsRef.current.querySelector('details');
-                  if (details) details.open = false;
-                }
-              }}
+              className="text-sm font-medium transition hover:text-[var(--foreground)]"
             >
               Services
             </Link>
-            <details className="absolute left-0 top-full mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity pointer-events-none group-hover:pointer-events-auto">
-              <summary className="hidden"></summary>
+            <div className="absolute left-0 top-full mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto z-50">
               <div className="glass flex w-48 flex-col gap-2 rounded-2xl p-3 text-sm text-[var(--muted)]">
                 {toolLinks.map((link) => (
                   <Link
@@ -131,7 +118,7 @@ export function SiteHeader() {
                   </Link>
                 ))}
               </div>
-            </details>
+            </div>
           </div>
           {primaryNavLinks.map((link) => (
             <Link
