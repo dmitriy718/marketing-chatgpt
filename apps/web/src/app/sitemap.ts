@@ -41,6 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/tools",
     "/privacy",
     "/terms",
+    "/legal",
     "/cookies",
     "/accessibility",
   ];
