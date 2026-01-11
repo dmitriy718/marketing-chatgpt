@@ -28,7 +28,7 @@ export default function LegalPage() {
           {/* Terms of Service */}
           <div>
             <h2 className="title text-2xl font-semibold">Terms of Service</h2>
-            <p className="mt-2 text-sm text-[var(--muted)]">Last updated: January 15, 2026</p>
+            <p className="mt-2 text-sm text-[var(--muted)]">Last updated: January 11, 2026</p>
             <div className="mt-6 space-y-4 text-sm text-[var(--muted)]">
               <div>
                 <p className="font-semibold text-[var(--foreground)]">1. Acceptance of Terms</p>
@@ -99,7 +99,7 @@ export default function LegalPage() {
           {/* Privacy Policy */}
           <div>
             <h2 className="title text-2xl font-semibold">Privacy Policy</h2>
-            <p className="mt-2 text-sm text-[var(--muted)]">Last updated: January 15, 2026</p>
+            <p className="mt-2 text-sm text-[var(--muted)]">Last updated: January 11, 2026</p>
             <div className="mt-6 space-y-4 text-sm text-[var(--muted)]">
               <div>
                 <p className="font-semibold text-[var(--foreground)]">Information We Collect</p>

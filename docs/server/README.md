@@ -5,6 +5,9 @@ This section contains technical documentation for server-side features, APIs, an
 
 ## API Documentation
 
+### REST API
+- [REST API Documentation](./api/rest-api.md) - Comprehensive REST API reference
+
 ### Public Endpoints
 - [Lead Capture API](./api/lead-capture.md)
 - [Newsletter API](./api/newsletter.md)
