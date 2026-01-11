@@ -98,7 +98,7 @@ export function SiteHeader() {
           </div>
         </div>
         <nav className="hidden items-center gap-6 text-sm font-medium text-[var(--muted)] md:ml-10 md:flex">
-          <div ref={toolsRef} className="relative group">
+          <div className="relative group">
             <Link
               href="/services?utm_source=site&utm_medium=link&utm_campaign=navigation"
               className="text-sm font-medium transition hover:text-[var(--foreground)]"
