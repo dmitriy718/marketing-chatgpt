@@ -308,3 +308,40 @@ class GeneratedContent(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     content_type: Mapped[str] = mapped_column(String(50), nullable=False)
     prompt: Mapped[str] = mapped_column(Text, nullable=False)
     generated_text: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class EmailCampaign(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "email_campaigns"
+
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    type: Mapped[str] = mapped_column(String(50), nullable=False)
+    status: Mapped[str] = mapped_column(String(50), server_default="draft", nullable=False)
+
+
+class EmailSequence(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "email_sequences"
+
+    campaign_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False)
+    step_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    delay_days: Mapped[int] = mapped_column(Integer, server_default="0", nullable=False)
+    subject: Mapped[str] = mapped_column(String(255), nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class EmailSubscriber(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "email_subscribers"
+
+    email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
+    status: Mapped[str] = mapped_column(String(50), server_default="active", nullable=False)
+    tags: Mapped[str | None] = mapped_column(String(500))
+    subscribed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class EmailSend(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "email_sends"
+
+    subscriber_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("email_subscribers.id", ondelete="CASCADE"), nullable=False, index=True)
+    sequence_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("email_sequences.id", ondelete="CASCADE"), nullable=False, index=True)
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    opened_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    clicked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
