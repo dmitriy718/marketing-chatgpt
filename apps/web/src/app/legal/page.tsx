@@ -39,7 +39,22 @@ export default function LegalPage() {
               <div>
                 <p className="font-semibold text-[var(--foreground)]">2. Services</p>
                 <p className="mt-1">
-                  Carolina Growth provides marketing, growth, and web design services. Specific scopes, timelines, deliverables, and payment terms are detailed in individual statements of work (SOW) or service agreements. All services are subject to the terms outlined in the applicable SOW.
+                  Carolina Growth provides marketing, growth, and web design services, including but not limited to:
+                </p>
+                <ul className="mt-1 ml-4 list-disc space-y-1 text-xs">
+                  <li>SEO optimization and website audits</li>
+                  <li>Content marketing and AI-powered content generation</li>
+                  <li>Web design and development</li>
+                  <li>Marketing automation and email campaigns</li>
+                  <li>Competitive analysis and intelligence reports</li>
+                  <li>Lead generation and conversion optimization</li>
+                  <li>Free marketing tools and assessments</li>
+                </ul>
+                <p className="mt-2">
+                  Specific scopes, timelines, deliverables, and payment terms are detailed in individual statements of work (SOW) or service agreements. All services are subject to the terms outlined in the applicable SOW.
+                </p>
+                <p className="mt-2 text-xs">
+                  <strong>Free Tools:</strong> Our free marketing tools (SEO Auditor, Content Generator, etc.) are provided "as-is" for informational purposes. Results are estimates and should not be considered professional advice without consultation.
                 </p>
               </div>
               <div>
@@ -89,31 +104,69 @@ export default function LegalPage() {
               <div>
                 <p className="font-semibold text-[var(--foreground)]">Information We Collect</p>
                 <p className="mt-1">
-                  We collect information you provide directly (name, email, company, phone), information collected automatically (IP address, browser type, usage data), and information from third parties (analytics services, payment processors).
+                  We collect information you provide directly (name, email, company, phone, website URLs for analysis), information collected automatically (IP address, browser type, usage data, device information), and information from third parties (analytics services like PostHog, payment processors like Stripe, AI services like OpenAI for content generation).
+                </p>
+                <p className="mt-2 text-xs">
+                  <strong>New Features:</strong> When you use our SEO Auditor, Competitor Comparison, Content Generator, or other tools, we collect the URLs and data you provide to generate reports and recommendations. This data is stored securely and used only to provide the requested services.
                 </p>
               </div>
               <div>
                 <p className="font-semibold text-[var(--foreground)]">How We Use Information</p>
                 <p className="mt-1">
-                  We use collected information to provide and improve our services, process payments, communicate with you, send marketing communications (with your consent), and comply with legal obligations.
+                  We use collected information to:
                 </p>
+                <ul className="mt-1 ml-4 list-disc space-y-1 text-xs">
+                  <li>Provide and improve our services (SEO audits, content generation, competitive analysis)</li>
+                  <li>Process payments and manage subscriptions</li>
+                  <li>Communicate with you about your account and services</li>
+                  <li>Send marketing communications (with your consent)</li>
+                  <li>Generate AI-powered content and recommendations</li>
+                  <li>Analyze website usage to improve our tools</li>
+                  <li>Comply with legal obligations</li>
+                </ul>
               </div>
               <div>
                 <p className="font-semibold text-[var(--foreground)]">Information Sharing</p>
                 <p className="mt-1">
-                  We do not sell your personal information. We may share information with service providers (payment processors, email services, analytics), when required by law, or to protect our rights and safety.
+                  We do not sell your personal information. We may share information with:
+                </p>
+                <ul className="mt-1 ml-4 list-disc space-y-1 text-xs">
+                  <li><strong>Service Providers:</strong> Payment processors (Stripe), email services (IONOS SMTP), analytics (PostHog), AI services (OpenAI for content generation)</li>
+                  <li><strong>Legal Requirements:</strong> When required by law or to protect our rights and safety</li>
+                  <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
+                </ul>
+                <p className="mt-2 text-xs">
+                  <strong>AI Services:</strong> When you use our Content Generator, your prompts and topics may be sent to OpenAI to generate content. OpenAI's privacy policy applies to this data.
                 </p>
               </div>
               <div>
                 <p className="font-semibold text-[var(--foreground)]">Data Security</p>
                 <p className="mt-1">
-                  We implement appropriate technical and organizational measures to protect your data. However, no method of transmission over the internet is 100% secure.
+                  We implement appropriate technical and organizational measures to protect your data, including encryption in transit (HTTPS), secure database storage, access controls, and regular security updates. However, no method of transmission over the internet is 100% secure.
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-[var(--foreground)]">Data Retention</p>
+                <p className="mt-1">
+                  We retain your data for as long as necessary to provide our services and comply with legal obligations. SEO audit results and generated content may be cached for up to 30 days to improve service performance. You can request deletion of your data at any time.
                 </p>
               </div>
               <div>
                 <p className="font-semibold text-[var(--foreground)]">Your Rights</p>
                 <p className="mt-1">
-                  You have the right to access, update, delete, or restrict processing of your personal information. You may also opt-out of marketing communications at any time.
+                  You have the right to:
+                </p>
+                <ul className="mt-1 ml-4 list-disc space-y-1 text-xs">
+                  <li>Access your personal information</li>
+                  <li>Update or correct your information</li>
+                  <li>Delete your information (subject to legal requirements)</li>
+                  <li>Restrict processing of your information</li>
+                  <li>Data portability (receive your data in a portable format)</li>
+                  <li>Opt-out of marketing communications at any time</li>
+                  <li>Object to processing based on legitimate interests</li>
+                </ul>
+                <p className="mt-2 text-xs">
+                  To exercise these rights, contact us at help@carolinagrowth.co
                 </p>
               </div>
             </div>
