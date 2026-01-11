@@ -45,8 +45,8 @@ export function SiteHeaderDev() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-[var(--accent)]/10 via-[var(--background)] to-[var(--accent)]/10 border-b border-[var(--accent)]/30">
-      <div className="mx-auto w-full max-w-7xl">
+    <header className="sticky top-0 z-50 bg-gradient-to-r from-[var(--accent)]/10 via-[var(--background)] to-[var(--accent)]/10 border-b border-[var(--accent)]/30 overflow-visible">
+      <div className="mx-auto w-full max-w-7xl relative">
         {/* Top bar with logo and CTA */}
         <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border)]/50">
           <Link href="/" className="flex items-center gap-2 whitespace-nowrap group">
@@ -122,10 +122,10 @@ export function SiteHeaderDev() {
         </div>
 
         {/* Horizontal navigation bar */}
-        <nav className="hidden md:flex items-center justify-center gap-1 px-6 py-2 overflow-x-auto">
+        <nav className="hidden md:flex items-center justify-center gap-1 px-6 py-2 overflow-x-auto relative">
           <div
             ref={servicesRef}
-            className="relative"
+            className="relative z-50"
             onMouseEnter={() => setServicesOpen(true)}
             onMouseLeave={() => setServicesOpen(false)}
           >
@@ -139,7 +139,7 @@ export function SiteHeaderDev() {
               </svg>
             </Link>
             {servicesOpen && (
-              <div className="absolute left-0 top-full mt-1 w-80 rounded-lg border-2 border-[var(--accent)] bg-[var(--background)] p-4 shadow-2xl z-50">
+              <div className="absolute left-0 top-full mt-2 w-80 rounded-lg border-2 border-[var(--accent)] bg-[var(--background)] p-4 shadow-2xl z-[100]">
                 <div className="grid grid-cols-2 gap-3">
                   {toolLinks.map((link) => (
                     <Link
