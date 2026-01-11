@@ -370,7 +370,8 @@ async def handle_stripe_webhook(
             detail="Stripe transaction storage unavailable.",
         )
     payload = await request.body()
-    sig_header = request.headers.get("stripe-signature")
+    # Try both lowercase and original case for stripe-signature header
+    sig_header = request.headers.get("stripe-signature") or request.headers.get("Stripe-Signature")
 
     stripe.api_key = settings.stripe_secret_key
 
