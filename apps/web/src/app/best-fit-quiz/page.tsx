@@ -4,9 +4,6 @@ import { buildPageMetadata, getDefaultSeoSettings } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "Best Fit Quiz | Find Your Perfect Marketing Package",
     description: "Take our quick quiz to find the perfect marketing package for your business. Answer a few questions and get personalized recommendations based on your needs and goals.",

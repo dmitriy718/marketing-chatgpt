@@ -4,9 +4,6 @@ import { buildPageMetadata, buildLocalBusinessSchema, getDefaultSeoSettings } fr
 import { getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "Free Competitive Intelligence Report | Analyze Any Competitor Website",
     description: "Generate a comprehensive competitive intelligence report for any website. Get SWOT analysis, market positioning insights, content strategy analysis, and actionable recommendations to outperform competitors.",

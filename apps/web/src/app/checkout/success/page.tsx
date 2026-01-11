@@ -6,9 +6,6 @@ import { buildPageMetadata, getDefaultSeoSettings } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "Payment Successful | Welcome to Carolina Growth",
     description: "Your payment was successful! Welcome to Carolina Growth. Your subscription is now active and our team will be in touch shortly to get started.",

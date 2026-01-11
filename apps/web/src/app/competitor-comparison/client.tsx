@@ -7,7 +7,7 @@ type ComparisonResult = {
   user: {
     url: string;
     score: number;
-    summary: any;
+    summary: Record<string, unknown>;
   };
   competitors: Array<{
     url: string;
@@ -22,7 +22,7 @@ type ComparisonResult = {
     gaps: Array<{
       metric: string;
       urgency: string;
-      [key: string]: any;
+      [key: string]: unknown;
     }>;
     recommendation: string;
   };
@@ -106,7 +106,7 @@ export function CompetitorComparisonPageClient() {
         <div className="mb-8">
           <h1 className="title text-4xl font-semibold">Competitor Comparison Tool</h1>
           <p className="mt-4 text-lg text-[var(--muted)]">
-            Compare your website's SEO performance against up to 5 competitors. Get actionable insights on where you're winning and where you need to improve.
+            Compare your website&apos;s SEO performance against up to 5 competitors. Get actionable insights on where you&apos;re winning and where you need to improve.
           </p>
         </div>
 

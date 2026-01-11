@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
 
-const API_URL =
-  process.env.API_INTERNAL_URL ?? process.env.API_URL ?? "http://localhost:8001";
-
 type LoginPayload = {
   email: string;
   password: string;

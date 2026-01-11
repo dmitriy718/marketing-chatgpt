@@ -6,9 +6,6 @@ import { buildPageMetadata, getDefaultSeoSettings } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "Checkout | Complete Your Purchase",
     description: "Complete your Carolina Growth subscription purchase. Secure payment processing with Stripe. Choose your marketing package and start growing today.",
