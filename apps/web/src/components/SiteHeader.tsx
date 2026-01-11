@@ -58,19 +58,15 @@ export function SiteHeader() {
                 Menu
               </summary>
               <div className="glass absolute right-6 mt-3 flex w-48 flex-col gap-3 rounded-2xl p-3 text-sm text-[var(--muted)]">
-                {primaryNavLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=mobile-nav`}
-                    className="hover:text-[var(--foreground)]"
-                    onClick={() => closeDetails(mobileRef)}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
                 <details className="rounded-xl border border-[var(--border)] px-3 py-2">
                   <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.25em] text-[var(--foreground)]">
-                    Services
+                    <Link
+                      href="/services?utm_source=site&utm_medium=link&utm_campaign=mobile-nav"
+                      className="hover:text-[var(--foreground)]"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Services
+                    </Link>
                   </summary>
                   <div className="mt-3 flex flex-col gap-2 text-sm text-[var(--muted)]">
                     {toolLinks.map((link) => (
@@ -85,6 +81,16 @@ export function SiteHeader() {
                     ))}
                   </div>
                 </details>
+                {primaryNavLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=mobile-nav`}
+                    className="hover:text-[var(--foreground)]"
+                    onClick={() => closeDetails(mobileRef)}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
                 <div className="pt-2 text-[0.7rem] uppercase tracking-[0.2em] text-[var(--muted)]">
                   Theme
                 </div>
@@ -96,18 +102,18 @@ export function SiteHeader() {
           </div>
         </div>
         <nav className="hidden items-center gap-6 text-sm font-medium text-[var(--muted)] md:ml-10 md:flex">
-          {primaryNavLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=navigation`}
-              className="text-sm font-medium transition hover:text-[var(--foreground)]"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <details ref={toolsRef} className="relative">
-            <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-[var(--foreground)]">
-              Services
+          <details ref={toolsRef} className="relative group">
+            <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-[var(--foreground)] flex items-center gap-1">
+              <Link
+                href="/services?utm_source=site&utm_medium=link&utm_campaign=navigation"
+                className="hover:text-[var(--foreground)]"
+                onClick={(e) => {
+                  // Allow link to work, but also toggle dropdown
+                  e.stopPropagation();
+                }}
+              >
+                Services
+              </Link>
             </summary>
             <div className="glass absolute left-0 mt-3 flex w-48 flex-col gap-2 rounded-2xl p-3 text-sm text-[var(--muted)]">
               {toolLinks.map((link) => (
@@ -122,6 +128,15 @@ export function SiteHeader() {
               ))}
             </div>
           </details>
+          {primaryNavLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=navigation`}
+              className="text-sm font-medium transition hover:text-[var(--foreground)]"
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
         <div className="flex items-center gap-5 md:ml-6">
           <Link

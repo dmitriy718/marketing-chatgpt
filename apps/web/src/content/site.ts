@@ -1,5 +1,4 @@
 export const primaryNavLinks = [
-  { href: "/services", label: "Services" },
   { href: "/local-seo", label: "Local SEO" },
   { href: "/web-design", label: "Web Design" },
   { href: "/pricing", label: "Pricing" },
