@@ -17,6 +17,23 @@
 
 ## Recent Deployment
 
+### Duplicate Email Issue - Permanently Fixed - January 11, 2026
+- **Date**: 2026-01-11
+- **Changes**: 
+  - Fixed duplicate email issue in leads table permanently
+  - Cleaned up 14 duplicate leads for qa@carolinagrowth.co
+  - Created unique index: `uq_leads_email_not_null`
+  - Constraint now prevents future duplicates at database level
+  - Migration marked as complete
+  - Added cleanup script for future use
+- **Status**: ✅ **DEPLOYED AND OPERATIONAL**
+- **Verification**: 
+  - ✅ All duplicate emails cleaned
+  - ✅ Unique index created and active
+  - ✅ Constraint tested and working
+  - ✅ Migration marked complete
+  - ✅ Code deployed to VPS and GitHub
+
 ### Critical Fixes - January 11, 2026
 - **Date**: 2026-01-11
 - **Changes**: 
