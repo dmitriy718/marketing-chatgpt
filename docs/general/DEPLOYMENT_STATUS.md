@@ -17,14 +17,24 @@
 
 ## Recent Deployment
 
-### PostHog Monitoring Setup
+### Critical Fixes - January 11, 2026
 - **Date**: 2026-01-11
-- **Changes**: PostHog error tracking and performance monitoring
-- **Status**: Code pushed to GitHub
+- **Changes**: 
+  - Fixed 502 Bad Gateway by restarting web container
+  - Fixed all TypeScript build errors:
+    - CRM GraphQL client type mismatch
+    - BlogPost image property type error
+    - Missing UTM campaign types (footer, navigation, portfolio, share)
+  - Updated all documentation dates from 2026-01-15 to 2026-01-11
+  - Fixed duplicate Services link in navigation
+  - Created comprehensive legal page
+- **Status**: ✅ **DEPLOYED AND OPERATIONAL**
 - **Verification**: 
-  - ✅ Website responding
+  - ✅ Website responding (200 OK)
   - ✅ API health endpoint working
-  - ⚠️ SSH authentication issue (manual deployment may be needed)
+  - ✅ Web container running
+  - ✅ All build errors resolved
+  - ✅ Code deployed to VPS
 
 ## Manual Deployment Steps
 
@@ -57,7 +67,10 @@ curl https://carolinagrowth.co/health
 
 - [x] Website loads (https://carolinagrowth.co)
 - [x] API health endpoint responds
-- [ ] Services restarted (manual verification needed)
+- [x] Services restarted and running
+- [x] All build errors fixed
+- [x] Code deployed to VPS
+- [x] Documentation dates corrected
 - [ ] PostHog events flowing (check PostHog dashboard)
 - [ ] No errors in logs (check docker logs)
 
