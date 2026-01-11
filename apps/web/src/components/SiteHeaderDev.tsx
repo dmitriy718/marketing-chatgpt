@@ -115,7 +115,17 @@ export function SiteHeaderDev() {
       <div className="mx-auto w-full max-w-7xl relative">
         {/* Top bar with logo and CTA */}
         <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border)]/50">
-          <Link href="/" className="flex items-center gap-2 whitespace-nowrap group">
+          <Link 
+            href="/" 
+            className="flex items-center gap-2 whitespace-nowrap group"
+            onClick={(e) => {
+              // If we're already on the home page, scroll to top instead of navigating
+              if (window.location.pathname === "/") {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+          >
             <Image
               src="/logo.svg"
               alt="Carolina Growth"
