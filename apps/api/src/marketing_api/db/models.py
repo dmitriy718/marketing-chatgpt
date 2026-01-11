@@ -2,7 +2,7 @@ import enum
 import uuid
 from datetime import date, datetime
 
-from sqlalchemy import Boolean, Date, DateTime, Enum, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, Date, DateTime, Enum, ForeignKey, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -334,7 +334,7 @@ class EmailSubscriber(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     status: Mapped[str] = mapped_column(String(50), server_default="active", nullable=False)
     tags: Mapped[str | None] = mapped_column(String(500))
-    subscribed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=sa.text("now()"))
+    subscribed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
 class EmailSend(Base, UUIDPrimaryKeyMixin, TimestampMixin):
