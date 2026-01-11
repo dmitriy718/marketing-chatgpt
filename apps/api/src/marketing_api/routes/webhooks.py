@@ -369,9 +369,14 @@ async def handle_stripe_webhook(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Stripe transaction storage unavailable.",
         )
+    # Read raw body bytes - critical for Stripe signature verification
     payload = await request.body()
     # Try both lowercase and original case for stripe-signature header
     sig_header = request.headers.get("stripe-signature") or request.headers.get("Stripe-Signature")
+    
+    # Log for debugging (remove in production if needed)
+    if not sig_header:
+        logger.warning("Missing stripe-signature header. Available headers: %s", list(request.headers.keys()))
 
     stripe.api_key = settings.stripe_secret_key
 
