@@ -146,7 +146,12 @@ async def process_email_queue(session: AsyncSession) -> None:
                         )
                         session.add(email_send)
                         await session.commit()
-                    except Exception:
+                    except Exception as exc:
                         # Log error but continue
+                        logger.error(
+                            "Failed to send email to %s in sequence %s: %s",
+                            subscriber.email,
+                            sequence.id,
+                            str(exc),
+                        )
                         await session.rollback()
-                        pass

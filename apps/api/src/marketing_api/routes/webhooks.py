@@ -23,7 +23,8 @@ async def get_customer_details(customer_id: str | None) -> tuple[str | None, str
         return None, None
     try:
         customer = stripe.Customer.retrieve(customer_id)
-    except Exception:
+    except Exception as exc:
+        logger.warning("Failed to retrieve Stripe customer %s: %s", customer_id, str(exc))
         return None, None
     return customer.get("email"), customer.get("name")
 
@@ -374,8 +375,8 @@ async def handle_stripe_webhook(
     # Try both lowercase and original case for stripe-signature header
     sig_header = request.headers.get("stripe-signature") or request.headers.get("Stripe-Signature")
     
-    # Log for debugging (remove in production if needed)
-    if not sig_header:
+    # Log for debugging (only in non-production)
+    if not sig_header and settings.app_env != "production":
         logger.warning("Missing stripe-signature header. Available headers: %s", list(request.headers.keys()))
 
     stripe.api_key = settings.stripe_secret_key
