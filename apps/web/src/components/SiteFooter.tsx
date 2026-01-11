@@ -63,8 +63,13 @@ export function SiteFooter() {
               </Link>
             ))}
           </div>
-          <p className="mt-6 font-semibold">Legal</p>
-          <div className="mt-3 flex flex-col gap-2 text-[var(--muted)]">
+          <div className="mt-6 flex flex-col gap-2 text-[var(--muted)]">
+            <Link 
+              href="/legal?utm_source=site&utm_medium=link&utm_campaign=footer-legal"
+              className="font-semibold hover:text-[var(--foreground)]"
+            >
+              Legal
+            </Link>
             {footerLinks.map((link) => (
               <Link 
                 key={link.href} 
