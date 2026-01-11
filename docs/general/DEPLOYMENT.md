@@ -11,10 +11,11 @@
 
 1. **Pull Latest Code**
    ```bash
-   ssh DimaZag7188!@74.208.153.193
+   ssh <username>@74.208.153.193
    cd /opt/marketing
    git pull origin main
    ```
+   **Note**: Use SSH key authentication or password file (never commit passwords to git)
 
 2. **Restart Services**
    ```bash

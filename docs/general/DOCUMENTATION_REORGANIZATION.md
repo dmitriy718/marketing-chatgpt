@@ -101,7 +101,7 @@ Created comprehensive tracking document for:
 
 Due to SSH authentication issues, manual deployment needed:
 
-1. SSH to VPS: `ssh DimaZag7188!@74.208.153.193`
+1. SSH to VPS: `ssh <username>@74.208.153.193` (use SSH keys or password file, never commit passwords)
 2. Navigate: `cd /opt/marketing`
 3. Pull: `git pull origin main`
 4. Restart: `docker-compose -f docker-compose.prod.yml restart web api`

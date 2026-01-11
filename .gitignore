@@ -3,6 +3,9 @@ secrets/*.env
 secrets/*.dec
 secrets/*.txt
 secrets/*.key
+vpspass.txt
+*pass*.txt
+*password*.txt
 __pycache__/
 *.pyc
 node_modules/

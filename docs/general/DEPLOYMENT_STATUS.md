@@ -42,7 +42,7 @@ If automated deployment fails, use these steps:
 
 ```bash
 # SSH to VPS (may need to use SSH key instead of password)
-ssh DimaZag7188!@74.208.153.193
+ssh <username>@74.208.153.193
 
 # Navigate to project
 cd /opt/marketing
