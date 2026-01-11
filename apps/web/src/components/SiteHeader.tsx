@@ -8,15 +8,12 @@ import { primaryNavLinks, toolLinks } from "@/content/site";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function SiteHeader() {
-  const toolsRef = useRef<HTMLDetailsElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
   const mobileRef = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
       const target = event.target as Node;
-      if (toolsRef.current?.open && !toolsRef.current.contains(target)) {
-        toolsRef.current.open = false;
-      }
       if (mobileRef.current?.open && !mobileRef.current.contains(target)) {
         mobileRef.current.open = false;
       }
@@ -102,32 +99,40 @@ export function SiteHeader() {
           </div>
         </div>
         <nav className="hidden items-center gap-6 text-sm font-medium text-[var(--muted)] md:ml-10 md:flex">
-          <details ref={toolsRef} className="relative group">
-            <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-[var(--foreground)] flex items-center gap-1">
-              <Link
-                href="/services?utm_source=site&utm_medium=link&utm_campaign=navigation"
-                className="hover:text-[var(--foreground)]"
-                onClick={(e) => {
-                  // Allow link to work, but also toggle dropdown
-                  e.stopPropagation();
-                }}
-              >
-                Services
-              </Link>
-            </summary>
-            <div className="glass absolute left-0 mt-3 flex w-48 flex-col gap-2 rounded-2xl p-3 text-sm text-[var(--muted)]">
-              {toolLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=navigation-tools`}
-                  className="hover:text-[var(--foreground)]"
-                  onClick={() => closeDetails(toolsRef)}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </details>
+          <div ref={toolsRef} className="relative group">
+            <Link
+              href="/services?utm_source=site&utm_medium=link&utm_campaign=navigation"
+              className="text-sm font-medium transition hover:text-[var(--foreground)] cursor-pointer"
+              onMouseEnter={() => {
+                if (toolsRef.current) {
+                  const details = toolsRef.current.querySelector('details');
+                  if (details) details.open = true;
+                }
+              }}
+              onMouseLeave={() => {
+                if (toolsRef.current) {
+                  const details = toolsRef.current.querySelector('details');
+                  if (details) details.open = false;
+                }
+              }}
+            >
+              Services
+            </Link>
+            <details className="absolute left-0 top-full mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity pointer-events-none group-hover:pointer-events-auto">
+              <summary className="hidden"></summary>
+              <div className="glass flex w-48 flex-col gap-2 rounded-2xl p-3 text-sm text-[var(--muted)]">
+                {toolLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=navigation-tools`}
+                    className="hover:text-[var(--foreground)]"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </details>
+          </div>
           {primaryNavLinks.map((link) => (
             <Link
               key={link.href}
