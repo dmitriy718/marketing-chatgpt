@@ -39,12 +39,8 @@ function DashboardContent() {
     if (!token) return;
 
     crmGraphQL<DashboardData>(dashboardQuery, token)
-      .then((result) => {
-        if (result.errors) {
-          setError(result.errors[0]?.message || "Failed to load dashboard");
-        } else if (result.data) {
-          setData(result.data);
-        }
+      .then((data) => {
+        setData(data);
       })
       .catch((err) => {
         setError(err instanceof Error ? err.message : "Failed to load dashboard");

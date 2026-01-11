@@ -30,7 +30,11 @@ export type UtmCampaign =
   | "blog" 
   | "newsletter"
   | "promotion"
-  | "default";
+  | "default"
+  | "footer"
+  | "navigation"
+  | "portfolio"
+  | "share";
 
 /**
  * Build a URL with UTM parameters

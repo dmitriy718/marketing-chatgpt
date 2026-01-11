@@ -180,7 +180,8 @@ export function buildArticleSchema(post: BlogPost, settings: SeoSettings) {
         url: `${settings.baseUrl}/logo.svg`,
       },
     },
-    image: post.image ? `${settings.baseUrl}${post.image}` : undefined,
+    // Note: BlogPost type doesn't include image, but schema allows it
+    image: undefined,
   };
 }
 

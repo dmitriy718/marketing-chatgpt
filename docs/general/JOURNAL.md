@@ -125,13 +125,13 @@
 - Updated web Stripe API routes to pass plan keys, builder state, and internal token header.
 - Passed Stripe price IDs into API containers via docker-compose for allowlist validation.
 
-## 2026-01-15
+## 2026-01-11
 - Verified `carolina_growth_stripe` database exists on VPS and set `STRIPE_DATABASE_URL` in `/opt/marketing/.env`.
 - Set a fresh `INTERNAL_API_TOKEN` on VPS and restarted API + web services.
 - Ran Stripe migrations with `alembic_stripe.ini` on the VPS.
 - Deployed Stripe hardening changes to VPS (allowlist, server-calculated amounts, idempotency).
 
-## 2026-01-15
+## 2026-01-11
 - Fixed Turnstile verification to use async HTTP (httpx) instead of blocking urllib to prevent event loop blocking.
 - Added outbox/queue durability to chat submissions matching leads implementation for API downtime resilience.
 - Added idempotency keys to Stripe subscription and payment-intent endpoints using request_id parameter.
@@ -139,7 +139,7 @@
 - Updated comprehensive review reports marking all identified issues as fixed.
 - Completed thorough code review: verified error handling, transaction management, and security practices.
 
-## 2026-01-15 (Evening) - Top 5 Features Implementation
+## 2026-01-11 (Evening) - Top 5 Features Implementation
 - **Feature 1: Website SEO Auditor** ✅
   - Created SEO audit tool with BeautifulSoup4 analysis
   - Database model `SeoAudit` with 30-day caching
@@ -178,7 +178,7 @@
 - Dependencies updated: beautifulsoup4, lxml, openai
 - Comprehensive documentation in `JOB_COMPLETE_REVIEW.md`
 
-## 2026-01-15 (Evening) - Round 2: "Eager to Join" Features
+## 2026-01-11 (Evening) - Round 2: "Eager to Join" Features
 - **Feature 1: Competitor Comparison Tool** ✅
   - Side-by-side comparison vs up to 3 competitors
   - Gap analysis showing where user is falling behind
