@@ -299,3 +299,12 @@ class CompetitorComparison(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     user_url: Mapped[str] = mapped_column(String(500), nullable=False)
     email: Mapped[str | None] = mapped_column(String(255), index=True)
     comparison_json: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class GeneratedContent(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "generated_content"
+
+    email: Mapped[str | None] = mapped_column(String(255), index=True)
+    content_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    prompt: Mapped[str] = mapped_column(Text, nullable=False)
+    generated_text: Mapped[str] = mapped_column(Text, nullable=False)
