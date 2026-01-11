@@ -22,6 +22,8 @@ export function SiteHeaderDev() {
   const mobileRef = useRef<HTMLDetailsElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
   const servicesLinkRef = useRef<HTMLAnchorElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ left: 0, top: 0 });
 
@@ -31,7 +33,12 @@ export function SiteHeaderDev() {
       if (mobileRef.current?.open && !mobileRef.current.contains(target)) {
         mobileRef.current.open = false;
       }
-      if (servicesRef.current && !servicesRef.current.contains(target)) {
+      if (
+        servicesRef.current &&
+        !servicesRef.current.contains(target) &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(target)
+      ) {
         setServicesOpen(false);
       }
     }
@@ -46,15 +53,55 @@ export function SiteHeaderDev() {
       }
     }
 
+    function handleMouseEnter() {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+      setServicesOpen(true);
+    }
+
+    function handleMouseLeave() {
+      // Add delay before closing to allow mouse to move to dropdown
+      closeTimeoutRef.current = setTimeout(() => {
+        setServicesOpen(false);
+      }, 200); // 200ms delay
+    }
+
     document.addEventListener("mousedown", handleClick);
     window.addEventListener("scroll", updateDropdownPosition);
     window.addEventListener("resize", updateDropdownPosition);
     updateDropdownPosition();
 
+    // Add mouse enter/leave handlers to both trigger and dropdown
+    const servicesElement = servicesRef.current;
+    const dropdownElement = dropdownRef.current;
+
+    if (servicesElement) {
+      servicesElement.addEventListener("mouseenter", handleMouseEnter);
+      servicesElement.addEventListener("mouseleave", handleMouseLeave);
+    }
+
+    if (dropdownElement) {
+      dropdownElement.addEventListener("mouseenter", handleMouseEnter);
+      dropdownElement.addEventListener("mouseleave", handleMouseLeave);
+    }
+
     return () => {
       document.removeEventListener("mousedown", handleClick);
       window.removeEventListener("scroll", updateDropdownPosition);
       window.removeEventListener("resize", updateDropdownPosition);
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+      if (servicesElement) {
+        servicesElement.removeEventListener("mouseenter", handleMouseEnter);
+        servicesElement.removeEventListener("mouseleave", handleMouseLeave);
+      }
+      if (dropdownElement) {
+        dropdownElement.removeEventListener("mouseenter", handleMouseEnter);
+        dropdownElement.removeEventListener("mouseleave", handleMouseLeave);
+      }
     };
   }, [servicesOpen]);
 
@@ -143,12 +190,7 @@ export function SiteHeaderDev() {
 
         {/* Horizontal navigation bar */}
         <nav className="hidden md:flex items-center justify-center gap-1 px-6 py-2">
-          <div
-            ref={servicesRef}
-            className="relative"
-            onMouseEnter={() => setServicesOpen(true)}
-            onMouseLeave={() => setServicesOpen(false)}
-          >
+          <div ref={servicesRef} className="relative">
             <Link
               ref={servicesLinkRef}
               href="/services?utm_source=site&utm_medium=link&utm_campaign=navigation"
@@ -161,10 +203,11 @@ export function SiteHeaderDev() {
             </Link>
             {servicesOpen && (
               <div
+                ref={dropdownRef}
                 className="fixed w-80 rounded-lg border-2 border-[var(--accent)] bg-[var(--background)] p-4 shadow-2xl z-[9999]"
                 style={{
                   left: `${dropdownPosition.left}px`,
-                  top: `${dropdownPosition.top}px`,
+                  top: `${Math.max(dropdownPosition.top, 0)}px`, // Ensure it doesn't go above viewport
                 }}
               >
                 <div className="grid grid-cols-2 gap-3">
