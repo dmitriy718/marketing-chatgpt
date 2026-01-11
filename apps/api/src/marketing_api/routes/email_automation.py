@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import datetime, timedelta, timezone
 from typing import Literal
 
@@ -15,6 +16,7 @@ from marketing_api.routes.public import should_bypass_turnstile, verify_turnstil
 from marketing_api.settings import settings
 
 router = APIRouter(prefix="/public/email", tags=["email-automation"])
+logger = logging.getLogger(__name__)
 
 
 class SubscribeRequest(BaseModel):
