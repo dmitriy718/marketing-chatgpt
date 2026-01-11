@@ -3,6 +3,13 @@
 
 ## Recently Completed ✅
 
+### Duplicate Email Issue - PERMANENTLY FIXED
+- ✅ All duplicate emails cleaned from leads table
+- ✅ Unique index created: `uq_leads_email_not_null`
+- ✅ Constraint prevents future duplicates at database level
+- ✅ Migration marked as complete
+- ✅ Script created for future cleanup if needed (`scripts/fix_duplicate_emails.py`)
+
 ### Email Automation Admin Interface
 - ✅ Complete admin interface for managing email campaigns, sequences, and subscribers
 - ✅ Analytics dashboard for email performance
