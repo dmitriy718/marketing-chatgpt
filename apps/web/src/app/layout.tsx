@@ -1,8 +1,7 @@
 import { Manrope, Sora } from "next/font/google";
 
 import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteHeaderDev } from "@/components/SiteHeaderDev";
+import { HeaderSelector } from "@/components/HeaderSelector";
 import { ChatWidgetEnhanced } from "@/components/ChatWidgetEnhanced";
 import { Analytics } from "@/components/Analytics";
 import { PostHogProvider } from "@/components/PostHogProvider";
@@ -75,11 +74,7 @@ export default function RootLayout({
               <a href="#main-content" className="skip-link">
                 Skip to content
               </a>
-              {process.env.NEXT_PUBLIC_SITE_URL?.includes('development.carolinagrowth.co') ? (
-                <SiteHeaderDev />
-              ) : (
-                <SiteHeader />
-              )}
+              <HeaderSelector />
               <main id="main-content" className="flex-1">
                 {children}
               </main>
