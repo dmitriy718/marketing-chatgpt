@@ -125,7 +125,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<BlogP
           {/* Strong CTA Section */}
           <div className="mt-12 rounded-3xl border-2 border-[var(--accent)] bg-gradient-to-br from-[var(--accent)]/10 via-[var(--surface-soft)] to-[var(--accent)]/5 p-8 text-center">
             <h2 className="title text-2xl font-semibold text-[var(--foreground)]">
-              Ready to Fix Your Conversion Leaks?
+              {post.slug === "fix-conversion-leaks"
+                ? "Ready to Fix Your Conversion Leaks?"
+                : "Ready to Build Your 2025 Growth Stack?"}
             </h2>
             <p className="mt-4 text-base text-[var(--muted)] max-w-2xl mx-auto">
               {post.slug === "fix-conversion-leaks"
