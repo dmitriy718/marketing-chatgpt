@@ -8,15 +8,14 @@ import { primaryNavLinks, toolLinks } from "@/content/site";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 /**
- * DEVELOPMENT NAVIGATION - Experimental horizontal bar style
- * This component is ONLY used on development.carolinagrowth.co
- * DO NOT use this on production - use SiteHeader.tsx instead
- * 
- * This is a COMPLETELY DIFFERENT navigation style:
+ * PRODUCTION NAVIGATION - Modern horizontal bar style
+ * This is the main navigation component for carolinagrowth.co
+ *
+ * Features:
  * - Horizontal top bar with full-width background
  * - Mega-menu style dropdown for Services
  * - Compact logo and links
- * - Different visual hierarchy
+ * - Modern visual hierarchy
  */
 export function SiteHeaderDev() {
   const mobileRef = useRef<HTMLDetailsElement>(null);
@@ -127,9 +126,6 @@ export function SiteHeaderDev() {
             />
             <span className="text-lg font-bold tracking-tight text-[var(--foreground)]">
               Carolina Growth
-            </span>
-            <span className="ml-2 rounded bg-[var(--accent)] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--background)]">
-              DEV
             </span>
           </Link>
           <div className="flex items-center gap-4">
