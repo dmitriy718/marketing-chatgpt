@@ -41,10 +41,33 @@ export function buildPageMetadata(params: {
   type?: "website" | "article" | "product";
   publishedTime?: string;
   modifiedTime?: string;
+  robots?: {
+    index?: boolean;
+    follow?: boolean;
+    googleBot?: {
+      index?: boolean;
+      follow?: boolean;
+      "max-video-preview"?: number;
+      "max-image-preview"?: "large" | "standard" | "none";
+      "max-snippet"?: number;
+    };
+  };
 }) {
   const baseUrl = getBaseUrl();
   const url = `${baseUrl}${params.path}`;
   const ogImage = params.image || `${baseUrl}/logo.svg`;
+  
+  const defaultRobots = {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large" as const,
+      "max-snippet": -1,
+    } as const,
+  };
   
   return {
     title: params.title,
@@ -66,17 +89,14 @@ export function buildPageMetadata(params: {
       description: params.description,
       images: [ogImage],
     },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      } as const,
-    },
+    robots: params.robots ? {
+      ...defaultRobots,
+      ...params.robots,
+      googleBot: params.robots.googleBot ? {
+        ...defaultRobots.googleBot,
+        ...params.robots.googleBot,
+      } : defaultRobots.googleBot,
+    } : defaultRobots,
   };
 }
 
