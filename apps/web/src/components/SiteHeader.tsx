@@ -8,7 +8,6 @@ import { primaryNavLinks, toolLinks } from "@/content/site";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function SiteHeader() {
-  const toolsRef = useRef<HTMLDivElement>(null);
   const mobileRef = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
