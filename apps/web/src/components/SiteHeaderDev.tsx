@@ -21,7 +21,9 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 export function SiteHeaderDev() {
   const mobileRef = useRef<HTMLDetailsElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
+  const servicesLinkRef = useRef<HTMLAnchorElement>(null);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ left: 0, top: 0 });
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
@@ -34,9 +36,27 @@ export function SiteHeaderDev() {
       }
     }
 
+    function updateDropdownPosition() {
+      if (servicesLinkRef.current && servicesOpen) {
+        const rect = servicesLinkRef.current.getBoundingClientRect();
+        setDropdownPosition({
+          left: rect.left + rect.width / 2 - 160, // Center the 320px (w-80) dropdown
+          top: rect.bottom + 8,
+        });
+      }
+    }
+
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
+    window.addEventListener("scroll", updateDropdownPosition);
+    window.addEventListener("resize", updateDropdownPosition);
+    updateDropdownPosition();
+
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      window.removeEventListener("scroll", updateDropdownPosition);
+      window.removeEventListener("resize", updateDropdownPosition);
+    };
+  }, [servicesOpen]);
 
   const closeDetails = (ref: React.RefObject<HTMLDetailsElement | null>) => {
     if (ref.current?.open) {
@@ -122,14 +142,15 @@ export function SiteHeaderDev() {
         </div>
 
         {/* Horizontal navigation bar */}
-        <nav className="hidden md:flex items-center justify-center gap-1 px-6 py-2 overflow-x-auto relative">
+        <nav className="hidden md:flex items-center justify-center gap-1 px-6 py-2">
           <div
             ref={servicesRef}
-            className="relative z-50"
+            className="relative"
             onMouseEnter={() => setServicesOpen(true)}
             onMouseLeave={() => setServicesOpen(false)}
           >
             <Link
+              ref={servicesLinkRef}
               href="/services?utm_source=site&utm_medium=link&utm_campaign=navigation"
               className="inline-flex items-center gap-1 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
             >
@@ -139,13 +160,20 @@ export function SiteHeaderDev() {
               </svg>
             </Link>
             {servicesOpen && (
-              <div className="absolute left-0 top-full mt-2 w-80 rounded-lg border-2 border-[var(--accent)] bg-[var(--background)] p-4 shadow-2xl z-[100]">
+              <div
+                className="fixed w-80 rounded-lg border-2 border-[var(--accent)] bg-[var(--background)] p-4 shadow-2xl z-[9999]"
+                style={{
+                  left: `${dropdownPosition.left}px`,
+                  top: `${dropdownPosition.top}px`,
+                }}
+              >
                 <div className="grid grid-cols-2 gap-3">
                   {toolLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={`${link.href}${link.href.includes('?') ? '&' : '?'}utm_source=site&utm_medium=link&utm_campaign=navigation-tools`}
                       className="text-xs font-semibold text-[var(--muted)] hover:text-[var(--accent)] transition-colors py-1 border-b border-[var(--border)]/30 last:border-0"
+                      onClick={() => setServicesOpen(false)}
                     >
                       {link.label}
                     </Link>
