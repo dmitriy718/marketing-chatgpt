@@ -120,7 +120,7 @@ export function SiteHeaderDev() {
             className="flex items-center gap-2 whitespace-nowrap group"
             onClick={(e) => {
               // If we're already on the home page, scroll to top instead of navigating
-              if (window.location.pathname === "/") {
+              if (typeof window !== "undefined" && window.location.pathname === "/") {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }
