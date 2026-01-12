@@ -1,44 +1,151 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Carolina Growth logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" role="img" aria-label="Carolina Growth logo">
   <!-- White background -->
-  <rect width="160" height="160" fill="#ffffff"/>
+  <rect width="400" height="200" fill="#ffffff"/>
   
-  <!-- Stylized thick 'C' shape in dark blue - open on the right, rounded ends -->
-  <path d="M 80 20 
-           C 50 20, 20 50, 20 80
-           C 20 110, 50 140, 80 140
-           C 100 140, 120 130, 130 120" 
+  <!-- North Carolina outline (dark blue, upper left) -->
+  <path d="M 50 30 
+           L 80 25 
+           L 100 20 
+           L 120 25 
+           L 140 30 
+           L 150 40 
+           L 155 55 
+           L 150 70 
+           L 145 85 
+           L 140 100 
+           L 135 110 
+           L 130 120 
+           L 125 130 
+           L 120 140 
+           L 115 150 
+           L 110 160 
+           L 100 165 
+           L 90 165 
+           L 80 160 
+           L 70 155 
+           L 60 150 
+           L 55 140 
+           L 50 130 
+           L 45 120 
+           L 40 110 
+           L 35 100 
+           L 30 85 
+           L 30 70 
+           L 35 55 
+           L 40 40 
+           Z" 
         fill="none" 
         stroke="#0f5e9c" 
-        stroke-width="12" 
-        stroke-linecap="round"
+        stroke-width="3" 
         stroke-linejoin="round"/>
   
-  <!-- Upward trending bright green growth line with arrow -->
-  <g transform="translate(80, 80)">
-    <!-- Jagged growth line - starts inside C, extends upward and out -->
-    <path d="M -50 30 
-             L -40 20 
-             L -30 25 
-             L -20 10 
-             L -10 15 
-             L 0 5 
-             L 10 0 
-             L 20 -5 
-             L 30 -10 
-             L 40 -15 
-             L 50 -20" 
+  <!-- South Carolina filled (vibrant green, lower right) -->
+  <path d="M 250 100 
+           L 280 95 
+           L 310 100 
+           L 330 110 
+           L 340 125 
+           L 345 140 
+           L 340 155 
+           L 330 170 
+           L 315 180 
+           L 295 185 
+           L 275 180 
+           L 260 170 
+           L 250 155 
+           L 245 140 
+           L 245 125 
+           Z" 
+        fill="#17b890" 
+        stroke="#17b890" 
+        stroke-width="2"/>
+  
+  <!-- Two-toned upward-trending arrow (jagged/stair-step pattern) -->
+  <!-- Green band (wider, lower edge) -->
+  <path d="M 20 160 
+           L 40 150 
+           L 60 140 
+           L 80 130 
+           L 100 120 
+           L 120 110 
+           L 140 100 
+           L 160 90 
+           L 180 80 
+           L 200 70 
+           L 220 60 
+           L 240 50 
+           L 260 40 
+           L 280 30 
+           L 300 20 
+           L 320 15 
+           L 340 10 
+           L 360 8 
+           L 380 5" 
+        fill="none" 
+        stroke="#17b890" 
+        stroke-width="8" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  
+  <!-- Blue band (narrower, upper edge) -->
+  <path d="M 20 160 
+           L 40 150 
+           L 60 140 
+           L 80 130 
+           L 100 120 
+           L 120 110 
+           L 140 100 
+           L 160 90 
+           L 180 80 
+           L 200 70 
+           L 220 60 
+           L 240 50 
+           L 260 40 
+           L 280 30 
+           L 300 20 
+           L 320 15 
+           L 340 10 
+           L 360 8 
+           L 380 5" 
+        fill="none" 
+        stroke="#0f5e9c" 
+        stroke-width="4" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  
+  <!-- Arrowhead (two-toned) -->
+  <g transform="translate(380, 5)">
+    <!-- Green arrowhead base -->
+    <path d="M 0 0 L 15 -5 L 0 -10" 
           fill="none" 
           stroke="#17b890" 
-          stroke-width="7" 
+          stroke-width="8" 
           stroke-linecap="round" 
           stroke-linejoin="round"/>
-    
-    <!-- Arrowhead at the end pointing top-right, breaking out of C -->
-    <path d="M 45 -18 L 50 -20 L 45 -22" 
+    <!-- Blue arrowhead tip -->
+    <path d="M 0 0 L 15 -5 L 0 -10" 
           fill="none" 
-          stroke="#17b890" 
-          stroke-width="7" 
+          stroke="#0f5e9c" 
+          stroke-width="4" 
           stroke-linecap="round" 
           stroke-linejoin="round"/>
   </g>
+  
+  <!-- Text: CAROLINA GROWTH -->
+  <text x="200" y="175" 
+        font-family="system-ui, -apple-system, sans-serif" 
+        font-size="28" 
+        font-weight="700" 
+        text-anchor="middle" 
+        fill="#0f5e9c" 
+        letter-spacing="2">CAROLINA GROWTH</text>
+  
+  <!-- Text: .co -->
+  <text x="200" y="195" 
+        font-family="system-ui, -apple-system, sans-serif" 
+        font-size="18" 
+        font-weight="700" 
+        text-anchor="middle" 
+        fill="#0f5e9c" 
+        letter-spacing="1">.CO</text>
 </svg>
