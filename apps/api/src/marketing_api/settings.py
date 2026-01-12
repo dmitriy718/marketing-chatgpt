@@ -69,8 +69,17 @@ class Settings(BaseSettings):
     def model_post_init(self, __context):
         """Post-initialization to support alternative env var names."""
         # Support both POSTHOG_PERSONAL_API_KEY and POSTHOG_PERSONAL_KEY
-        if not self.posthog_personal_api_key and self.posthog_personal_key:
-            self.posthog_personal_api_key = self.posthog_personal_key
+        # Check environment variable directly if not set via Pydantic
+        if not self.posthog_personal_api_key:
+            # First check if posthog_personal_key was set by Pydantic
+            personal_key = getattr(self, "posthog_personal_key", None)
+            if personal_key:
+                object.__setattr__(self, "posthog_personal_api_key", personal_key)
+            else:
+                # Fallback: check environment variable directly
+                env_key = os.getenv("POSTHOG_PERSONAL_KEY") or os.getenv("POSTHOG_PERSONAL_API_KEY")
+                if env_key:
+                    object.__setattr__(self, "posthog_personal_api_key", env_key)
 
 
 settings = Settings()
