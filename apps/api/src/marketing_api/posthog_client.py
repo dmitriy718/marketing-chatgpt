@@ -20,13 +20,16 @@ def get_posthog_client() -> Posthog | None:
     if _posthog_client is not None:
         return _posthog_client
 
-    if not settings.posthog_api_key or settings.posthog_api_key == "phc_change_me":
+    # Use personal API key if available, otherwise fallback to project API key
+    api_key_to_use = settings.posthog_personal_api_key or settings.posthog_api_key
+
+    if not api_key_to_use or api_key_to_use == "phc_change_me":
         logger.warning("PostHog API key not configured, skipping PostHog initialization")
         return None
 
     try:
         _posthog_client = Posthog(
-            api_key=settings.posthog_api_key,
+            api_key=api_key_to_use,
             host=settings.posthog_host,
         )
         return _posthog_client
