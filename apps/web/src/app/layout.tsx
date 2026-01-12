@@ -41,6 +41,11 @@ export const metadata = {
     template: `%s | ${siteName}`,
   },
   description: defaultDescription,
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   openGraph: {
     title: `${siteName} | ${siteTagline}`,
     description: defaultDescription,

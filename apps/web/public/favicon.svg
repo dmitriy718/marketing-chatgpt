@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Carolina Growth favicon">
+  <!-- White background for favicon -->
+  <rect width="64" height="64" fill="#ffffff"/>
+  
+  <!-- Stylized 'C' shape in dark blue -->
+  <path d="M 32 8 
+           A 24 24 0 0 1 32 56
+           A 24 24 0 0 1 32 8
+           M 32 14
+           A 18 18 0 0 0 32 50
+           A 18 18 0 0 0 32 14" 
+        fill="#0f5e9c" 
+        stroke="#0f5e9c" 
+        stroke-width="1"/>
+  
+  <!-- Upward trending green growth line with arrow -->
+  <g transform="translate(32, 32)">
+    <!-- Growth line path - simplified for small size -->
+    <path d="M -20 12 
+             L -16 8 
+             L -12 10 
+             L -8 4 
+             L -4 6 
+             L 0 2 
+             L 4 0 
+             L 8 -2 
+             L 12 -4 
+             L 16 -6 
+             L 20 -8" 
+          fill="none" 
+          stroke="#17b890" 
+          stroke-width="2.5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+    
+    <!-- Arrowhead at the end -->
+    <path d="M 18 -7 L 20 -8 L 18 -9" 
+          fill="none" 
+          stroke="#17b890" 
+          stroke-width="2.5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+  </g>
+</svg>
