@@ -31,7 +31,10 @@
 - ✅ Optimized aggregation queries
 
 ### CDN Setup
-- ✅ Static asset caching in Nginx
+- ✅ Static asset caching in Nginx (HTTP and HTTPS)
+  - **Status**: Complete - CDN-like caching configured for both HTTP and HTTPS server blocks
+  - **Priority**: Complete
+  - **Note**: 30-day cache for static assets (images, CSS, JS, fonts), 365-day cache for Next.js static files, with proper Cache-Control headers
 - ✅ Long-term cache headers
 - ✅ Next.js static file optimization
 
@@ -138,10 +141,10 @@ This document tracks items, resources, or information that we need but don't cur
   - **Priority**: Low (until traffic grows)
   - **Note**: Plan for when needed
 
-- ⚠️ CDN for static assets
-  - **Status**: Not configured
-  - **Priority**: Low
-  - **Note**: Would improve performance
+- ✅ CDN for static assets
+  - **Status**: Complete - Static asset caching configured in Nginx for both HTTP and HTTPS
+  - **Priority**: Complete
+  - **Note**: 30-day cache for static assets, 365-day cache for Next.js static files, with proper Cache-Control headers
 
 ## Features
 
