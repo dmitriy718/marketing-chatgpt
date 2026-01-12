@@ -2,20 +2,20 @@
   <!-- White background -->
   <rect width="160" height="160" fill="#ffffff"/>
   
-  <!-- Stylized 'C' shape in dark blue -->
+  <!-- Stylized thick 'C' shape in dark blue - open on the right, rounded ends -->
   <path d="M 80 20 
-           A 60 60 0 0 1 80 140
-           A 60 60 0 0 1 80 20
-           M 80 35
-           A 45 45 0 0 0 80 125
-           A 45 45 0 0 0 80 35" 
-        fill="#0f5e9c" 
+           C 50 20, 20 50, 20 80
+           C 20 110, 50 140, 80 140
+           C 100 140, 120 130, 130 120" 
+        fill="none" 
         stroke="#0f5e9c" 
-        stroke-width="2"/>
+        stroke-width="12" 
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
   
-  <!-- Upward trending green growth line with arrow -->
+  <!-- Upward trending bright green growth line with arrow -->
   <g transform="translate(80, 80)">
-    <!-- Growth line path - jagged upward trend -->
+    <!-- Jagged growth line - starts inside C, extends upward and out -->
     <path d="M -50 30 
              L -40 20 
              L -30 25 
@@ -29,15 +29,15 @@
              L 50 -20" 
           fill="none" 
           stroke="#17b890" 
-          stroke-width="6" 
+          stroke-width="7" 
           stroke-linecap="round" 
           stroke-linejoin="round"/>
     
-    <!-- Arrowhead at the end -->
+    <!-- Arrowhead at the end pointing top-right, breaking out of C -->
     <path d="M 45 -18 L 50 -20 L 45 -22" 
           fill="none" 
           stroke="#17b890" 
-          stroke-width="6" 
+          stroke-width="7" 
           stroke-linecap="round" 
           stroke-linejoin="round"/>
   </g>

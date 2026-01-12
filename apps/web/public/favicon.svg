@@ -2,20 +2,20 @@
   <!-- White background for favicon -->
   <rect width="64" height="64" fill="#ffffff"/>
   
-  <!-- Stylized 'C' shape in dark blue -->
+  <!-- Stylized thick 'C' shape in dark blue - open on the right -->
   <path d="M 32 8 
-           A 24 24 0 0 1 32 56
-           A 24 24 0 0 1 32 8
-           M 32 14
-           A 18 18 0 0 0 32 50
-           A 18 18 0 0 0 32 14" 
-        fill="#0f5e9c" 
+           C 18 8, 8 18, 8 32
+           C 8 46, 18 56, 32 56
+           C 40 56, 48 52, 52 48" 
+        fill="none" 
         stroke="#0f5e9c" 
-        stroke-width="1"/>
+        stroke-width="6" 
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
   
-  <!-- Upward trending green growth line with arrow -->
+  <!-- Upward trending bright green growth line with arrow -->
   <g transform="translate(32, 32)">
-    <!-- Growth line path - simplified for small size -->
+    <!-- Jagged growth line - starts inside C, extends upward and out -->
     <path d="M -20 12 
              L -16 8 
              L -12 10 
@@ -29,15 +29,15 @@
              L 20 -8" 
           fill="none" 
           stroke="#17b890" 
-          stroke-width="2.5" 
+          stroke-width="3" 
           stroke-linecap="round" 
           stroke-linejoin="round"/>
     
-    <!-- Arrowhead at the end -->
+    <!-- Arrowhead at the end pointing top-right -->
     <path d="M 18 -7 L 20 -8 L 18 -9" 
           fill="none" 
           stroke="#17b890" 
-          stroke-width="2.5" 
+          stroke-width="3" 
           stroke-linecap="round" 
           stroke-linejoin="round"/>
   </g>
