@@ -21,9 +21,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Missing message." }, { status: 400 });
   }
 
-  const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
-  if (!turnstileOk) {
-    return NextResponse.json({ ok: false, error: "Bot verification failed." }, { status: 400 });
+  // Allow bypass with internal token for E2E tests
+  const internalToken = request.headers.get("x-internal-token");
+  const shouldBypass = INTERNAL_TOKEN && internalToken === INTERNAL_TOKEN;
+  
+  if (!shouldBypass) {
+    const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
+    if (!turnstileOk) {
+      return NextResponse.json({ ok: false, error: "Bot verification failed." }, { status: 400 });
+    }
   }
 
   try {

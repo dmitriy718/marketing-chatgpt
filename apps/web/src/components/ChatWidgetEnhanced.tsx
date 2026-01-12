@@ -39,6 +39,12 @@ export function ChatWidgetEnhanced() {
   const handleAiMessage = async (text: string) => {
     if (!text.trim()) return;
 
+    // Check for Turnstile token if enabled
+    if (turnstileEnabled && !turnstileToken) {
+      setError("Please complete the bot check.");
+      return;
+    }
+
     const userMsg: Message = {
       id: Date.now().toString(),
       text: text.trim(),
@@ -48,6 +54,7 @@ export function ChatWidgetEnhanced() {
     setMessages((prev) => [...prev, userMsg]);
     setMessage("");
     setStatus("ai-responding");
+    setError(null);
 
     try {
       const response = await fetch("/api/chat/ai", {
@@ -271,7 +278,7 @@ export function ChatWidgetEnhanced() {
               />
             </div>
 
-            {turnstileEnabled && mode === "human" && (
+            {turnstileEnabled && (
               <div className="mt-3">
                 <TurnstileWidget
                   onVerify={(token) => setTurnstileToken(token)}
