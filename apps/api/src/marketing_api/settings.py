@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     stripe_web_design_premium_build_price_id: str | None = None
     stripe_web_design_flagship_build_price_id: str | None = None
     posthog_api_key: str = "phc_change_me"
+    posthog_personal_api_key: str | None = None
     posthog_host: str = "https://app.posthog.com"
     turnstile_secret_key: str | None = None
     rate_limit_token: str | None = None

@@ -14,6 +14,7 @@ from marketing_api.limits import limiter
 from marketing_api.notifications.email import notify_admin, send_email
 from marketing_api.routes.public import should_bypass_turnstile, verify_turnstile
 from marketing_api.routes.seo import analyze_seo
+from marketing_api.posthog_client import capture_feature_usage
 
 async def fetch_url(url: str) -> tuple[str, int]:
     """Fetch URL and return HTML content and status code."""

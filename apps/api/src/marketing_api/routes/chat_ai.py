@@ -11,6 +11,7 @@ from marketing_api.db.models import ChatMessage
 from marketing_api.db.session import get_session
 from marketing_api.limits import limiter
 from marketing_api.routes.public import should_bypass_turnstile, verify_turnstile
+from marketing_api.posthog_client import capture_feature_usage
 from marketing_api.settings import settings
 
 router = APIRouter(prefix="/public/chat", tags=["chat-ai"])

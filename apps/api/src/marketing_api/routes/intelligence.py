@@ -9,6 +9,7 @@ from marketing_api.limits import limiter
 from marketing_api.notifications.email import notify_admin, send_email
 from marketing_api.routes.public import should_bypass_turnstile, verify_turnstile, upsert_lead
 from marketing_api.routes.seo import analyze_seo, fetch_url
+from marketing_api.posthog_client import capture_feature_usage
 
 router = APIRouter(prefix="/public/intelligence", tags=["intelligence"])
 
@@ -138,6 +139,16 @@ KEY RECOMMENDATIONS
             subject="New competitive intelligence report request",
             body=f"Email: {payload.email}\nURL: {url_str}",
             reply_to=payload.email,
+        )
+        
+        # Track feature usage
+        capture_feature_usage(
+            feature="competitive_intelligence",
+            user_id=payload.email,
+            metadata={
+                "url": url_str,
+                "seo_score": report["seo_score"],
+            },
         )
         
         return report

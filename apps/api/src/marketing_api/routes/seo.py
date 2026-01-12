@@ -14,6 +14,7 @@ from marketing_api.db.session import get_session
 from marketing_api.limits import limiter
 from marketing_api.notifications.email import notify_admin, send_email
 from marketing_api.routes.public import should_bypass_turnstile
+from marketing_api.posthog_client import capture_feature_usage
 from marketing_api.settings import settings
 
 router = APIRouter(prefix="/public/seo", tags=["seo"])
@@ -213,6 +214,16 @@ For a comprehensive SEO strategy, contact Carolina Growth.
                 body=report_body,
             )
 
+            # Track feature usage
+            capture_feature_usage(
+                feature="seo_auditor",
+                user_id=payload.email or "anonymous",
+                metadata={
+                    "url": url_str,
+                    "score": analysis["score"],
+                },
+            )
+            
             await notify_admin(
                 subject="New SEO audit request",
                 body=f"Email: {payload.email}\nURL: {url_str}\nScore: {analysis['score']}/100",

@@ -9,6 +9,7 @@ import uuid
 import httpx
 
 from marketing_api.db.models import BugReport, ChatMessage, Lead, LeadStatus, NewsletterSignup
+from marketing_api.posthog_client import capture_conversion, capture_feature_usage, identify_user
 from marketing_api.db.session import get_session
 from marketing_api.limits import limiter
 from marketing_api.notifications.email import notify_admin, send_email

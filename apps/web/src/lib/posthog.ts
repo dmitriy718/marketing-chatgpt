@@ -81,3 +81,87 @@ export function trackFeatureUsage(
     ...metadata,
   });
 }
+
+/**
+ * Identify user in PostHog
+ */
+export function identifyUser(
+  userId: string,
+  properties?: Record<string, unknown>
+) {
+  if (typeof window === "undefined" || !posthog?.__loaded) {
+    return;
+  }
+
+  posthog.identify(userId, properties);
+}
+
+/**
+ * Set user properties
+ */
+export function setUserProperties(properties: Record<string, unknown>) {
+  if (typeof window === "undefined" || !posthog?.__loaded) {
+    return;
+  }
+
+  posthog.setPersonProperties(properties);
+}
+
+/**
+ * Track conversion events (leads, signups, purchases)
+ */
+export function trackConversion(
+  conversionType: string,
+  value?: number,
+  metadata?: Record<string, unknown>
+) {
+  if (typeof window === "undefined" || !posthog?.__loaded) {
+    return;
+  }
+
+  posthog.capture("conversion", {
+    conversion_type: conversionType,
+    value: value || null,
+    ...metadata,
+  });
+}
+
+/**
+ * Track form submissions
+ */
+export function trackFormSubmission(
+  formName: string,
+  success: boolean,
+  metadata?: Record<string, unknown>
+) {
+  if (typeof window === "undefined" || !posthog?.__loaded) {
+    return;
+  }
+
+  posthog.capture("form_submitted", {
+    form_name: formName,
+    success,
+    ...metadata,
+  });
+}
+
+/**
+ * Track page engagement (time on page, scroll depth, etc.)
+ */
+export function trackPageEngagement(
+  page: string,
+  timeOnPage: number,
+  scrollDepth?: number,
+  metadata?: Record<string, unknown>
+) {
+  if (typeof window === "undefined" || !posthog?.__loaded) {
+    return;
+  }
+
+  posthog.capture("page_engagement", {
+    page,
+    time_on_page: timeOnPage,
+    scroll_depth: scrollDepth || null,
+    ...metadata,
+  });
+}

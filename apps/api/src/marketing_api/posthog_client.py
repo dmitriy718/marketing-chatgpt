@@ -35,6 +35,42 @@ def get_posthog_client() -> Posthog | None:
         return None
 
 
+def identify_user(
+    distinct_id: str,
+    properties: dict[str, Any] | None = None,
+) -> None:
+    """Identify a user with properties."""
+    client = get_posthog_client()
+    if not client:
+        return
+
+    try:
+        client.identify(
+            distinct_id=distinct_id,
+            properties=properties or {},
+        )
+    except Exception as exc:
+        logger.error("Failed to identify user in PostHog: %s", exc)
+
+
+def set_user_properties(
+    distinct_id: str,
+    properties: dict[str, Any],
+) -> None:
+    """Set user properties."""
+    client = get_posthog_client()
+    if not client:
+        return
+
+    try:
+        client.identify(
+            distinct_id=distinct_id,
+            properties=properties,
+        )
+    except Exception as exc:
+        logger.error("Failed to set user properties in PostHog: %s", exc)
+
+
 def capture_event(
     distinct_id: str,
     event: str,
@@ -145,6 +181,52 @@ def capture_performance(
     capture_event(
         distinct_id=distinct_id,
         event="api_performance",
+        properties=properties,
+    )
+
+
+def capture_feature_usage(
+    feature: str,
+    user_id: str | None = None,
+    metadata: dict[str, Any] | None = None,
+) -> None:
+    """Capture feature usage event."""
+    distinct_id = user_id or "anonymous"
+    properties: dict[str, Any] = {
+        "feature": feature,
+    }
+
+    if metadata:
+        properties.update(metadata)
+
+    capture_event(
+        distinct_id=distinct_id,
+        event="feature_used",
+        properties=properties,
+    )
+
+
+def capture_conversion(
+    conversion_type: str,
+    user_id: str | None = None,
+    value: float | None = None,
+    metadata: dict[str, Any] | None = None,
+) -> None:
+    """Capture conversion event (leads, signups, purchases, etc.)."""
+    distinct_id = user_id or "anonymous"
+    properties: dict[str, Any] = {
+        "conversion_type": conversion_type,
+    }
+
+    if value is not None:
+        properties["value"] = value
+
+    if metadata:
+        properties.update(metadata)
+
+    capture_event(
+        distinct_id=distinct_id,
+        event="conversion",
         properties=properties,
     )
 
