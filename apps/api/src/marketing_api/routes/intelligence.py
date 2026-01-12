@@ -8,7 +8,7 @@ from marketing_api.db.session import get_session
 from marketing_api.limits import limiter
 from marketing_api.notifications.email import notify_admin, send_email
 from marketing_api.routes.public import should_bypass_turnstile, verify_turnstile, upsert_lead
-from marketing_api.routes.seo import analyze_seo
+from marketing_api.routes.seo import analyze_seo, fetch_url
 
 router = APIRouter(prefix="/public/intelligence", tags=["intelligence"])
 
