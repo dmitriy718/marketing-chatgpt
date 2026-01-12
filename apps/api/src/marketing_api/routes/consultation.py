@@ -45,7 +45,7 @@ async def book_consultation(
     )
     
     # Send confirmation to client
-    await send_email(
+    send_email(
         to_address=payload.email,
         subject="Consultation Request Received - Carolina Growth",
         body=f"""
@@ -70,7 +70,7 @@ Carolina Growth Team
     )
     
     # Notify admin
-    await notify_admin(
+    notify_admin(
         subject="New Consultation Request - HIGH PRIORITY",
         body=f"""
 New consultation request received:

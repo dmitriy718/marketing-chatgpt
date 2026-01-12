@@ -214,13 +214,13 @@ Key Gaps Identified:
 
             report_body += "\n\nGet a free consultation to close these gaps and beat your competitors.\nBook a call: https://carolinagrowth.co/contact"
 
-            await send_email(
+            send_email(
                 to_address=payload.email,
                 subject=f"Competitor Comparison: You're {'Behind' if comparison['comparison']['your_score'] < comparison['comparison']['avg_competitor_score'] else 'Ahead'}",
                 body=report_body,
             )
 
-            await notify_admin(
+            notify_admin(
                 subject="New competitor comparison request",
                 body=f"Email: {payload.email}\nUser site: {user_url_str}\nScore: {comparison['comparison']['your_score']}/100",
                 reply_to=payload.email,

@@ -129,13 +129,13 @@ KEY RECOMMENDATIONS
         
         report_body += "\n\nWant a comprehensive competitive analysis?\nBook a free consultation: https://carolinagrowth.co/contact"
         
-        await send_email(
+        send_email(
             to_address=payload.email,
             subject=f"Competitive Intelligence Report: {url_str}",
             body=report_body,
         )
         
-        await notify_admin(
+        notify_admin(
             subject="New competitive intelligence report request",
             body=f"Email: {payload.email}\nURL: {url_str}",
             reply_to=payload.email,

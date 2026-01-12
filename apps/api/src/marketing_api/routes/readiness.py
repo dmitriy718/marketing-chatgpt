@@ -203,13 +203,13 @@ Key Areas to Improve:
 
         report_body += "\n\nReady to improve your marketing readiness?\nBook a free strategy session: https://carolinagrowth.co/contact"
 
-        await send_email(
+        send_email(
             to_address=payload.email,
             subject=f"Your Marketing Readiness: {assessment['score']}% - {assessment['level']}",
             body=report_body,
         )
 
-        await notify_admin(
+        notify_admin(
             subject="New marketing readiness assessment",
             body=f"Email: {payload.email}\nScore: {assessment['score']}%\nLevel: {assessment['level']}",
             reply_to=payload.email,

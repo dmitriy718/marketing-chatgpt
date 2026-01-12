@@ -134,7 +134,7 @@ async def process_email_queue(session: AsyncSession) -> None:
                 if should_send:
                     # Send email
                     try:
-                        await send_email(
+                        send_email(
                             to_address=subscriber.email,
                             subject=sequence.subject,
                             body=sequence.body,

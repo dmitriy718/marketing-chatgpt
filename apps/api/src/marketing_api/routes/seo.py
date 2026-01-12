@@ -208,7 +208,7 @@ Summary:
 For a comprehensive SEO strategy, contact Carolina Growth.
 """
 
-            await send_email(
+            send_email(
                 to_address=payload.email,
                 subject=f"SEO Audit Report for {urlparse(url_str).netloc}",
                 body=report_body,
@@ -224,7 +224,7 @@ For a comprehensive SEO strategy, contact Carolina Growth.
                 },
             )
             
-            await notify_admin(
+            notify_admin(
                 subject="New SEO audit request",
                 body=f"Email: {payload.email}\nURL: {url_str}\nScore: {analysis['score']}/100",
                 reply_to=payload.email,

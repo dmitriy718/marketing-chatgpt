@@ -132,13 +132,13 @@ Ready to unlock this potential?
 Book a free strategy session: https://carolinagrowth.co/contact
 """
         
-        await send_email(
+        send_email(
             to_address=payload.email,
             subject=f"Your Lead Generation Potential: ${result['improvement']['revenue_increase']:,.0f}/month",
             body=report_body,
         )
         
-        await notify_admin(
+        notify_admin(
             subject="New lead potential calculation",
             body=f"Email: {payload.email}\nPotential increase: ${result['improvement']['revenue_increase']:,.0f}/month",
             reply_to=payload.email,
