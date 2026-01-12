@@ -127,7 +127,7 @@ export function SiteHeaderDev() {
             }}
           >
             <Image
-              src="/logo.svg"
+              src="/logo.png"
               alt="Carolina Growth"
               width={24}
               height={24}

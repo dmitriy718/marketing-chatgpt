@@ -10,7 +10,7 @@ export function SiteFooter() {
         <div>
           <div className="flex items-center gap-3">
             <Image
-              src="/logo.svg"
+              src="/logo.png"
               alt="Carolina Growth"
               width={28}
               height={28}

@@ -42,9 +42,9 @@ export const metadata = {
   },
   description: defaultDescription,
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
   openGraph: {
     title: `${siteName} | ${siteTagline}`,

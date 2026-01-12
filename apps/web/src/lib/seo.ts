@@ -55,7 +55,7 @@ export function buildPageMetadata(params: {
 }) {
   const baseUrl = getBaseUrl();
   const url = `${baseUrl}${params.path}`;
-  const ogImage = params.image || `${baseUrl}/logo.svg`;
+  const ogImage = params.image || `${baseUrl}/logo.png`;
   
   const defaultRobots = {
     index: true,
@@ -177,7 +177,7 @@ export function buildArticleSchema(post: BlogPost, settings: SeoSettings) {
       url: settings.baseUrl,
       logo: {
         "@type": "ImageObject",
-        url: `${settings.baseUrl}/logo.svg`,
+        url: `${settings.baseUrl}/logo.png`,
       },
     },
     // Note: BlogPost type doesn't include image, but schema allows it

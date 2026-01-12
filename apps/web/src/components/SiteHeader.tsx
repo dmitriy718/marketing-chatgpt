@@ -34,7 +34,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3 whitespace-nowrap">
             <Image
-              src="/logo.svg"
+              src="/logo.png"
               alt="Carolina Growth"
               width={28}
               height={28}
