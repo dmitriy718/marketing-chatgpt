@@ -142,7 +142,6 @@ async def get_ai_chat_response(
     needs_escalation = any(keyword in payload.message.lower() for keyword in escalation_keywords)
     
     # Track feature usage
-    from marketing_api.posthog_client import capture_feature_usage
     capture_feature_usage(
         feature="ai_chatbot",
         user_id=payload.email or "anonymous",
