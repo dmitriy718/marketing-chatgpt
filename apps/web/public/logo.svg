@@ -1,18 +1,57 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Carolina Growth logo">
   <defs>
-    <linearGradient id="cg-gradient" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="cg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#17b890" />
+      <stop offset="50%" stop-color="#13a080" />
       <stop offset="100%" stop-color="#0f5e9c" />
     </linearGradient>
+    <linearGradient id="cg-gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1dd4a4" />
+      <stop offset="100%" stop-color="#17b890" />
+    </linearGradient>
   </defs>
-  <rect width="160" height="160" rx="36" fill="url(#cg-gradient)" />
-  <path
-    d="M42 98C58 74 80 60 112 52C108 78 92 102 66 116"
-    fill="none"
-    stroke="#ffffff"
-    stroke-width="12"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
-  <circle cx="115" cy="50" r="9" fill="#ffffff" />
+  
+  <!-- Background with rounded corners -->
+  <rect width="160" height="160" rx="32" fill="url(#cg-gradient)" />
+  
+  <!-- Growth arrow/trend line - represents upward growth -->
+  <g transform="translate(20, 100)">
+    <!-- Base line -->
+    <line x1="0" y1="40" x2="120" y2="40" 
+          stroke="rgba(255,255,255,0.2)" 
+          stroke-width="3" 
+          stroke-linecap="round"/>
+    
+    <!-- Growth curve -->
+    <path d="M 0 40 Q 30 35, 60 20 T 120 0" 
+          fill="none" 
+          stroke="#ffffff" 
+          stroke-width="8" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+    
+    <!-- Arrowhead at top -->
+    <path d="M 110 5 L 120 0 L 110 -5" 
+          fill="none" 
+          stroke="#ffffff" 
+          stroke-width="8" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+    
+    <!-- Growth sparkles/indicators -->
+    <circle cx="30" cy="25" r="3" fill="url(#cg-gradient-light)" opacity="0.9"/>
+    <circle cx="60" cy="10" r="2.5" fill="url(#cg-gradient-light)" opacity="0.8"/>
+    <circle cx="90" cy="5" r="2" fill="url(#cg-gradient-light)" opacity="0.7"/>
+  </g>
+  
+  <!-- Stylized "CG" monogram in the center -->
+  <g transform="translate(80, 80)" opacity="0.15">
+    <text x="0" y="0" 
+          font-family="system-ui, -apple-system, sans-serif" 
+          font-size="72" 
+          font-weight="700" 
+          text-anchor="middle" 
+          dominant-baseline="central" 
+          fill="#ffffff">CG</text>
+  </g>
 </svg>
