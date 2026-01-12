@@ -1,6 +1,7 @@
 """PostHog client for error tracking and analytics."""
 
 import logging
+import os
 from typing import Any
 
 from posthog import Posthog
@@ -21,7 +22,13 @@ def get_posthog_client() -> Posthog | None:
         return _posthog_client
 
     # Use personal API key if available, otherwise fallback to project API key
-    api_key_to_use = settings.posthog_personal_api_key or settings.posthog_api_key
+    # Check both settings and environment variables for maximum compatibility
+    personal_key = (
+        settings.posthog_personal_api_key
+        or os.getenv("POSTHOG_PERSONAL_API_KEY")
+        or os.getenv("POSTHOG_PERSONAL_KEY")
+    )
+    api_key_to_use = personal_key or settings.posthog_api_key
 
     if not api_key_to_use or api_key_to_use == "phc_change_me":
         logger.warning("PostHog API key not configured, skipping PostHog initialization")
@@ -31,6 +38,10 @@ def get_posthog_client() -> Posthog | None:
         _posthog_client = Posthog(
             api_key=api_key_to_use,
             host=settings.posthog_host,
+        )
+        logger.info(
+            "PostHog client initialized with %s key",
+            "personal" if personal_key else "project",
         )
         return _posthog_client
     except Exception as exc:
