@@ -43,7 +43,14 @@ class Settings(BaseSettings):
     stripe_web_design_flagship_build_price_id: str | None = None
     posthog_api_key: str = "phc_change_me"
     posthog_personal_api_key: str | None = None
+    posthog_personal_key: str | None = None  # Alternative name support
     posthog_host: str = "https://app.posthog.com"
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Support both POSTHOG_PERSONAL_API_KEY and POSTHOG_PERSONAL_KEY
+        if not self.posthog_personal_api_key and self.posthog_personal_key:
+            self.posthog_personal_api_key = self.posthog_personal_key
     turnstile_secret_key: str | None = None
     rate_limit_token: str | None = None
     internal_api_token: str | None = None
@@ -63,6 +70,12 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=(str(ROOT_DIR / ".env"), ".env"), extra="ignore"
     )
+    
+    def model_post_init(self, __context):
+        """Post-initialization to support alternative env var names."""
+        # Support both POSTHOG_PERSONAL_API_KEY and POSTHOG_PERSONAL_KEY
+        if not self.posthog_personal_api_key and self.posthog_personal_key:
+            self.posthog_personal_api_key = self.posthog_personal_key
 
 
 settings = Settings()
