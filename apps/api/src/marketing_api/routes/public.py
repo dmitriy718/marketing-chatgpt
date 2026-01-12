@@ -430,6 +430,31 @@ async def capture_chat_message(
             ),
             source="chat",
         )
+        
+        # Track conversion and feature usage in PostHog
+        identify_user(
+            distinct_id=payload.email,
+            properties={
+                "name": payload.name,
+                "email": payload.email,
+            },
+        )
+        capture_conversion(
+            conversion_type="chat_lead",
+            user_id=payload.email,
+            metadata={
+                "source": "chat",
+                "page_url": payload.page_url,
+            },
+        )
+        capture_feature_usage(
+            feature="chat_widget",
+            user_id=payload.email,
+            metadata={
+                "message_length": len(payload.message),
+                "page_url": payload.page_url,
+            },
+        )
 
     return {"status": "ok"}
 
