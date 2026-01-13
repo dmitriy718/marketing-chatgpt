@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
@@ -26,6 +28,8 @@ from marketing_api.routes.seo import router as seo_router
 from marketing_api.routes.webhooks import router as webhooks_router
 from marketing_api.db.session import get_session
 from marketing_api.settings import settings
+
+logger = logging.getLogger(__name__)
 
 
 def build_cors_origins() -> list[str]:
@@ -103,14 +107,19 @@ def create_app() -> FastAPI:
         from marketing_api.routes.email_automation import process_email_queue
 
         async def run_scheduler():
+            backoff_seconds = 5
+            max_backoff = 300
             while True:
                 try:
                     async for session in get_session():
                         await process_email_queue(session)
                         break
-                except Exception:
-                    pass  # Log error but continue
-                await asyncio.sleep(300)  # 5 minutes
+                    backoff_seconds = 5
+                    await asyncio.sleep(300)  # 5 minutes
+                except Exception:  # noqa: BLE001
+                    logger.exception("Email scheduler failed; backing off")
+                    await asyncio.sleep(backoff_seconds)
+                    backoff_seconds = min(max_backoff, backoff_seconds * 2)
 
         asyncio.create_task(run_scheduler())
 

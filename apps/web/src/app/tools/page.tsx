@@ -4,9 +4,6 @@ import { buildPageMetadata, buildLocalBusinessSchema, getDefaultSeoSettings } fr
 import { getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "Free Marketing Tools | SEO, Content, & Growth Calculators",
     description: "Access our suite of free marketing tools: SEO auditor, competitor comparison, marketing readiness assessment, content generator, lead potential calculator, and competitive intelligence reports. No signup required.",

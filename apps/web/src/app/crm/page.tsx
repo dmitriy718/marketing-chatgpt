@@ -1,12 +1,8 @@
 import { Metadata } from "next";
 import { CrmDashboardPageClient } from "./client";
-import { buildPageMetadata, getDefaultSeoSettings } from "@/lib/seo";
-import { getSiteSettings } from "@/lib/content";
+import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "CRM Dashboard | Carolina Growth",
     description: "Access your CRM dashboard to manage leads, customers, deals, and activities. Internal use only.",

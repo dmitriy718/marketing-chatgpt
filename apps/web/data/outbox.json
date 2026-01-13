@@ -1,0 +1,302 @@
+[
+  {
+    "id": "399adbed-bd70-4844-a2d3-88837ecb2f03",
+    "type": "lead",
+    "payload": {
+      "name": "Proposal Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Proposal Co",
+      "budget": "$18,000",
+      "details": "Proposal wizard: service=cro, scope=single-location, urgency=14, kpi=pipeline, estimate=10800",
+      "source": "proposal-wizard",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T09:51:30.474Z"
+  },
+  {
+    "id": "393c7c02-2abf-44fe-a2a2-3c4567876f6b",
+    "type": "lead",
+    "payload": {
+      "name": "Pricing Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Pricing Co",
+      "budget": "$25,000",
+      "details": "Pricing builder: tier=scale, locations=multi, urgency=standard, support=premium, estimate=29160",
+      "source": "pricing-builder",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T09:51:30.510Z"
+  },
+  {
+    "id": "adfe00a0-382a-4ea0-9fed-2b8aa6de5148",
+    "type": "lead",
+    "payload": {
+      "name": "Pricing Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Pricing Co",
+      "budget": "$25,000",
+      "details": "Pricing builder: tier=scale, locations=multi, urgency=standard, support=premium, estimate=29160",
+      "source": "pricing-builder",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T09:58:31.249Z"
+  },
+  {
+    "id": "f66c6c6f-06d6-4b5e-b2b7-dec196874658",
+    "type": "lead",
+    "payload": {
+      "name": "Proposal Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Proposal Co",
+      "budget": "$18,000",
+      "details": "Proposal wizard: service=cro, scope=single-location, urgency=14, kpi=pipeline, estimate=10800",
+      "source": "proposal-wizard",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T09:58:31.380Z"
+  },
+  {
+    "id": "74a6e464-cc9b-45f5-b6be-19e698b6b27a",
+    "type": "lead",
+    "payload": {
+      "name": "E2E Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Test Company",
+      "budget": "$10,000",
+      "details": "Goal: Increase qualified leads | Constraint: Limited inbound volume | Channel focus: SEO + Paid | Website: https://example.com | Target start: Next month | Team size: 5",
+      "source": "growth-sprint",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T09:58:37.651Z"
+  },
+  {
+    "id": "f2fbcfda-3abf-40a2-8c31-e15f2adf6757",
+    "type": "lead",
+    "payload": {
+      "name": "Pricing Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Pricing Co",
+      "budget": "$25,000",
+      "details": "Pricing builder: tier=scale, locations=multi, urgency=standard, support=premium, estimate=29160",
+      "source": "pricing-builder",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:06:31.975Z"
+  },
+  {
+    "id": "eb8c956a-7517-498e-900d-442784eec362",
+    "type": "lead",
+    "payload": {
+      "name": "Proposal Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Proposal Co",
+      "budget": "$18,000",
+      "details": "Proposal wizard: service=cro, scope=single-location, urgency=14, kpi=pipeline, estimate=10800",
+      "source": "proposal-wizard",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:06:32.095Z"
+  },
+  {
+    "id": "95becd14-ff8a-46e2-b24a-778eb28866ae",
+    "type": "lead",
+    "payload": {
+      "name": "E2E Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Test Company",
+      "budget": "$10,000",
+      "details": "Goal: Increase qualified leads | Constraint: Limited inbound volume | Channel focus: SEO + Paid | Website: https://example.com | Target start: Next month | Team size: 5",
+      "source": "growth-sprint",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:06:38.462Z"
+  },
+  {
+    "id": "5a539965-ec7d-4a67-9fbd-12a235af3bfe",
+    "type": "lead",
+    "payload": {
+      "name": "Proposal Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Proposal Co",
+      "budget": "$18,000",
+      "details": "Proposal wizard: service=cro, scope=single-location, urgency=14, kpi=pipeline, estimate=10800",
+      "source": "proposal-wizard",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:08:37.598Z"
+  },
+  {
+    "id": "dede0871-e1b7-4704-bb33-c0f3c4f8980c",
+    "type": "lead",
+    "payload": {
+      "name": "Pricing Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Pricing Co",
+      "budget": "$25,000",
+      "details": "Pricing builder: tier=scale, locations=multi, urgency=standard, support=premium, estimate=29160",
+      "source": "pricing-builder",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:08:37.159Z"
+  },
+  {
+    "id": "737aa184-edde-4c2a-a2dd-9692c3b92e09",
+    "type": "lead",
+    "payload": {
+      "name": "E2E Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Test Company",
+      "budget": "$10,000",
+      "details": "Goal: Increase qualified leads | Constraint: Limited inbound volume | Channel focus: SEO + Paid | Website: https://example.com | Target start: Next month | Team size: 5",
+      "source": "growth-sprint",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:08:42.848Z"
+  },
+  {
+    "id": "18496b29-2a9e-48c7-8f47-c79b2ea26168",
+    "type": "lead",
+    "payload": {
+      "name": "Pricing Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Pricing Co",
+      "budget": "$25,000",
+      "details": "Pricing builder: tier=scale, locations=multi, urgency=standard, support=premium, estimate=29160",
+      "source": "pricing-builder",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:10:08.246Z"
+  },
+  {
+    "id": "35350223-fb93-48e6-bfea-f6f97f4dc1f8",
+    "type": "lead",
+    "payload": {
+      "name": "Proposal Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Proposal Co",
+      "budget": "$18,000",
+      "details": "Proposal wizard: service=cro, scope=single-location, urgency=14, kpi=pipeline, estimate=10800",
+      "source": "proposal-wizard",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:10:08.257Z"
+  },
+  {
+    "id": "f33cd653-23fd-4764-aaec-e199b8657d01",
+    "type": "lead",
+    "payload": {
+      "name": "E2E Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Test Company",
+      "budget": "$10,000",
+      "details": "Goal: Increase qualified leads | Constraint: Limited inbound volume | Channel focus: SEO + Paid | Website: https://example.com | Target start: Next month | Team size: 5",
+      "source": "growth-sprint",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:10:14.016Z"
+  },
+  {
+    "id": "665729d5-25d1-439b-8a18-0b5841bb694a",
+    "type": "lead",
+    "payload": {
+      "name": "Proposal Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Proposal Co",
+      "budget": "$18,000",
+      "details": "Proposal wizard: service=cro, scope=single-location, urgency=14, kpi=pipeline, estimate=10800",
+      "source": "proposal-wizard",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:11:14.785Z"
+  },
+  {
+    "id": "0ad54849-4927-4ac4-95ab-704399311c33",
+    "type": "lead",
+    "payload": {
+      "name": "Pricing Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Pricing Co",
+      "budget": "$25,000",
+      "details": "Pricing builder: tier=scale, locations=multi, urgency=standard, support=premium, estimate=29160",
+      "source": "pricing-builder",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:11:14.783Z"
+  },
+  {
+    "id": "17bb4e11-a47d-4d7c-975b-3f8ff0887f78",
+    "type": "lead",
+    "payload": {
+      "name": "E2E Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Test Company",
+      "budget": "$10,000",
+      "details": "Goal: Increase qualified leads | Constraint: Limited inbound volume | Channel focus: SEO + Paid | Website: https://example.com | Target start: Next month | Team size: 5",
+      "source": "growth-sprint",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:11:20.545Z"
+  },
+  {
+    "id": "3a31b1df-e716-4051-9e0f-7827d724c031",
+    "type": "lead",
+    "payload": {
+      "name": "Pricing Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Pricing Co",
+      "budget": "$25,000",
+      "details": "Pricing builder: tier=scale, locations=multi, urgency=standard, support=premium, estimate=29160",
+      "source": "pricing-builder",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:13:30.195Z"
+  },
+  {
+    "id": "0aab0227-3c65-4a2b-b432-4a1e02cc2832",
+    "type": "lead",
+    "payload": {
+      "name": "Proposal Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Proposal Co",
+      "budget": "$18,000",
+      "details": "Proposal wizard: service=cro, scope=single-location, urgency=14, kpi=pipeline, estimate=10800",
+      "source": "proposal-wizard",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:13:30.197Z"
+  },
+  {
+    "id": "103f3f7d-4bf5-4d8b-957d-9f1c9c3020f7",
+    "type": "lead",
+    "payload": {
+      "name": "E2E Tester",
+      "email": "qa@carolinagrowth.co",
+      "company": "Test Company",
+      "budget": "$10,000",
+      "details": "Goal: Increase qualified leads | Constraint: Limited inbound volume | Channel focus: SEO + Paid | Website: https://example.com | Target start: Next month | Team size: 5",
+      "source": "growth-sprint",
+      "turnstileToken": null
+    },
+    "attempts": 1,
+    "lastAttemptedAt": "2026-01-12T10:13:35.975Z"
+  }
+]

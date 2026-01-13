@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { shouldBypassTurnstile } from "@/lib/turnstileServer";
 
 type AuditPayload = {
   url: string;
@@ -19,9 +20,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Missing URL." }, { status: 400 });
   }
 
-  const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
-  if (!turnstileOk) {
-    return NextResponse.json({ ok: false, error: "Bot verification failed." }, { status: 400 });
+  const bypassTurnstile = await shouldBypassTurnstile(
+    request,
+    body.turnstileToken ?? null
+  );
+  if (!bypassTurnstile) {
+    const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
+    if (!turnstileOk) {
+      return NextResponse.json(
+        { ok: false, error: "Bot verification failed." },
+        { status: 400 }
+      );
+    }
   }
 
   try {

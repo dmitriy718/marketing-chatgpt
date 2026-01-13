@@ -1,8 +1,9 @@
-from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from datetime import datetime, timedelta, timezone
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from marketing_api.db.models import ConsultationBooking
 from marketing_api.db.session import get_session
 from marketing_api.limits import limiter
 from marketing_api.notifications.email import notify_admin, send_email
@@ -22,11 +23,38 @@ class ConsultationRequest(BaseModel):
     turnstile_token: str | None = None
 
 
+def resolve_requested_datetime(
+    preferred_date: str | None, preferred_time: str | None
+) -> datetime:
+    if not preferred_date:
+        return datetime.now(timezone.utc) + timedelta(days=1)
+    try:
+        date_part = datetime.fromisoformat(preferred_date).date()
+    except ValueError:
+        return datetime.now(timezone.utc) + timedelta(days=1)
+
+    time_map = {
+        "morning": (9, 0),
+        "afternoon": (14, 0),
+        "evening": (18, 0),
+    }
+    hour, minute = time_map.get(preferred_time or "", (10, 0))
+    return datetime(
+        date_part.year,
+        date_part.month,
+        date_part.day,
+        hour,
+        minute,
+        tzinfo=timezone.utc,
+    )
+
+
 @router.post("/book", status_code=status.HTTP_200_OK)
 @limiter.limit("5/hour")
 async def book_consultation(
     request: Request,
     payload: ConsultationRequest,
+    background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict:
     """Book a free consultation."""
@@ -43,9 +71,30 @@ async def book_consultation(
         details=f"Free Consultation Request\nPreferred: {payload.preferred_date or 'Flexible'} {payload.preferred_time or ''}\n\n{payload.message or 'No additional message'}",
         source="consultation-booking",
     )
+
+    scheduled_at = resolve_requested_datetime(
+        payload.preferred_date, payload.preferred_time
+    )
+    booking = ConsultationBooking(
+        name=payload.name,
+        email=payload.email,
+        phone=payload.phone,
+        company=payload.company,
+        scheduled_at=scheduled_at,
+        notes="\n".join(
+            [
+                f"Preferred date: {payload.preferred_date or 'Flexible'}",
+                f"Preferred time: {payload.preferred_time or 'Flexible'}",
+                payload.message or "No additional message",
+            ]
+        ),
+    )
+    session.add(booking)
+    await session.commit()
     
     # Send confirmation to client
-    send_email(
+    background_tasks.add_task(
+        send_email,
         to_address=payload.email,
         subject="Consultation Request Received - Carolina Growth",
         body=f"""
@@ -70,7 +119,8 @@ Carolina Growth Team
     )
     
     # Notify admin
-    notify_admin(
+    background_tasks.add_task(
+        notify_admin,
         subject="New Consultation Request - HIGH PRIORITY",
         body=f"""
 New consultation request received:

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "node:crypto";
 
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { shouldBypassTurnstile } from "@/lib/turnstileServer";
 import { appendOutbox, flushOutbox } from "@/lib/outbox";
 
 type NewsletterPayload = {
@@ -66,9 +67,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Email is required." }, { status: 400 });
   }
 
-  const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
-  if (!turnstileOk) {
-    return NextResponse.json({ ok: false, error: "Bot verification failed." }, { status: 400 });
+  const bypassTurnstile = await shouldBypassTurnstile(
+    request,
+    body.turnstileToken ?? null
+  );
+  if (!bypassTurnstile) {
+    const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
+    if (!turnstileOk) {
+      return NextResponse.json(
+        { ok: false, error: "Bot verification failed." },
+        { status: 400 }
+      );
+    }
   }
 
   const entry: NewsletterPayload = {

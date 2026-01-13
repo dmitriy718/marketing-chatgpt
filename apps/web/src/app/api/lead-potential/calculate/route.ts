@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { shouldBypassTurnstile } from "@/lib/turnstileServer";
 
 type LeadPotentialPayload = {
-  industry: string;
-  monthly_website_visitors: number;
+  industry?: string;
+  monthly_website_visitors?: number;
+  monthly_traffic?: number;
   current_conversion_rate: number;
   average_deal_value: number;
   email?: string | null;
@@ -18,13 +20,25 @@ const INTERNAL_TOKEN = process.env.INTERNAL_API_TOKEN;
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as LeadPotentialPayload | null;
 
-  if (!body?.industry || !body?.monthly_website_visitors || !body?.current_conversion_rate || !body?.average_deal_value) {
+  const visitors = body?.monthly_website_visitors ?? body?.monthly_traffic;
+  if (!visitors || !body?.current_conversion_rate || !body?.average_deal_value) {
     return NextResponse.json({ ok: false, error: "Missing required fields." }, { status: 400 });
   }
 
-  const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
-  if (!turnstileOk) {
-    return NextResponse.json({ ok: false, error: "Bot verification failed." }, { status: 400 });
+  const industry = body?.industry ?? "other";
+
+  const bypassTurnstile = await shouldBypassTurnstile(
+    request,
+    body.turnstileToken ?? null
+  );
+  if (!bypassTurnstile) {
+    const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
+    if (!turnstileOk) {
+      return NextResponse.json(
+        { ok: false, error: "Bot verification failed." },
+        { status: 400 }
+      );
+    }
   }
 
   try {
@@ -35,8 +49,8 @@ export async function POST(request: Request) {
         ...(INTERNAL_TOKEN ? { "x-internal-token": INTERNAL_TOKEN } : null),
       },
       body: JSON.stringify({
-        industry: body.industry,
-        monthly_website_visitors: body.monthly_website_visitors,
+        industry,
+        monthly_website_visitors: visitors,
         current_conversion_rate: body.current_conversion_rate,
         average_deal_value: body.average_deal_value,
         email: body.email ?? null,

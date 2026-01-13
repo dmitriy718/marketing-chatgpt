@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { verifyTurnstileToken } from "@/lib/turnstile";
 
 type Finding = {
   type: "error" | "warning" | "info" | "success";

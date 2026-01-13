@@ -1,0 +1,229 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "Carolina Growth Carolina Growth" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "Carolina Growth" [ref=e8]
+          - generic [ref=e9]: Carolina Growth
+        - navigation [ref=e10]:
+          - link "Services" [ref=e12] [cursor=pointer]:
+            - /url: /services?utm_source=site&utm_medium=link&utm_campaign=navigation
+          - link "Local SEO" [ref=e13] [cursor=pointer]:
+            - /url: /local-seo?utm_source=site&utm_medium=link&utm_campaign=navigation
+          - link "Web Design" [ref=e14] [cursor=pointer]:
+            - /url: /web-design?utm_source=site&utm_medium=link&utm_campaign=navigation
+          - link "Pricing" [ref=e15] [cursor=pointer]:
+            - /url: /pricing?utm_source=site&utm_medium=link&utm_campaign=navigation
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio?utm_source=site&utm_medium=link&utm_campaign=navigation
+          - link "Insights" [ref=e17] [cursor=pointer]:
+            - /url: /blog?utm_source=site&utm_medium=link&utm_campaign=navigation
+          - link "About" [ref=e18] [cursor=pointer]:
+            - /url: /about?utm_source=site&utm_medium=link&utm_campaign=navigation
+          - link "Free Consultation" [ref=e19] [cursor=pointer]:
+            - /url: /free-consultation?utm_source=site&utm_medium=link&utm_campaign=navigation
+          - link "Contact" [ref=e20] [cursor=pointer]:
+            - /url: /contact?utm_source=site&utm_medium=link&utm_campaign=navigation
+          - link "Client Portal" [ref=e21] [cursor=pointer]:
+            - /url: /portal?utm_source=site&utm_medium=link&utm_campaign=navigation
+        - generic [ref=e22]:
+          - link "Book a Call" [ref=e23] [cursor=pointer]:
+            - /url: /contact?utm_source=site&utm_medium=nav&utm_campaign=header
+          - button "Toggle color theme" [ref=e25]:
+            - generic [ref=e26]: light
+    - main [ref=e28]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - paragraph [ref=e32]: Pricing
+          - heading "Clear price points and a custom build option." [level=1] [ref=e33]
+          - paragraph [ref=e34]: Choose one of the three core packages below. No enterprise tier is listed here because those are scoped only through a live consultation.
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - paragraph [ref=e37]: Launch
+            - paragraph [ref=e38]: $750/mo
+            - paragraph [ref=e39]: Best for local brands getting serious about acquisition.
+            - list [ref=e40]:
+              - listitem [ref=e41]: Foundational tracking + analytics
+              - listitem [ref=e43]: Local SEO + review engine
+              - listitem [ref=e45]: Monthly growth roadmap
+              - listitem [ref=e47]: One primary channel
+            - link "Book a call" [ref=e49] [cursor=pointer]:
+              - /url: /contact?utm_source=site&utm_medium=cta&utm_campaign=pricing-tiers
+            - link "Start subscription" [ref=e50] [cursor=pointer]:
+              - /url: /checkout?plan=marketing_launch_monthly
+          - generic [ref=e51]:
+            - paragraph [ref=e52]: Momentum
+            - paragraph [ref=e53]: $1,500/mo
+            - paragraph [ref=e54]: Multi-channel growth with conversion lift baked in.
+            - list [ref=e55]:
+              - listitem [ref=e56]: SEO + paid search
+              - listitem [ref=e58]: CRO teardown + fixes
+              - listitem [ref=e60]: Lifecycle email flows
+              - listitem [ref=e62]: Bi-weekly reporting
+            - link "Book a call" [ref=e64] [cursor=pointer]:
+              - /url: /contact?utm_source=site&utm_medium=cta&utm_campaign=pricing-tiers
+            - link "Start subscription" [ref=e65] [cursor=pointer]:
+              - /url: /checkout?plan=marketing_momentum_monthly
+          - generic [ref=e66]:
+            - paragraph [ref=e67]: Scale
+            - paragraph [ref=e68]: $3,000/mo
+            - paragraph [ref=e69]: Aggressive growth systems for teams ready to scale fast.
+            - list [ref=e70]:
+              - listitem [ref=e71]: Full funnel acquisition
+              - listitem [ref=e73]: Creative refresh + paid media
+              - listitem [ref=e75]: Revenue forecasting
+              - listitem [ref=e77]: Executive dashboards
+            - link "Book a call" [ref=e79] [cursor=pointer]:
+              - /url: /contact?utm_source=site&utm_medium=cta&utm_campaign=pricing-tiers
+            - link "Start subscription" [ref=e80] [cursor=pointer]:
+              - /url: /checkout?plan=marketing_scale_monthly
+        - generic [ref=e81]:
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - paragraph [ref=e85]: Option 4
+              - heading "Build your own package" [level=2] [ref=e86]
+              - paragraph [ref=e87]: Use the builder below to outline scope and priorities. If you choose this route, we take a 20% deposit to schedule a live consultation and finalize pricing.
+            - link "Request a custom build" [ref=e88] [cursor=pointer]:
+              - /url: /contact?utm_source=site&utm_medium=cta&utm_campaign=pricing-builder
+          - generic [ref=e89]:
+            - generic [ref=e90]:
+              - generic [ref=e91]:
+                - paragraph [ref=e92]: Choose your package
+                - generic [ref=e93]:
+                  - button "Starter" [ref=e94]
+                  - button "Growth" [ref=e95]
+                  - button "Scale" [ref=e96]
+              - generic [ref=e97]:
+                - paragraph [ref=e98]: Locations
+                - generic [ref=e99]:
+                  - button "Single location" [ref=e100]
+                  - button "Multi-location" [ref=e101]
+                  - button "Multi-brand" [ref=e102]
+              - generic [ref=e103]:
+                - paragraph [ref=e104]: Timeline
+                - generic [ref=e105]:
+                  - button "Standard" [ref=e106]
+                  - button "Fast" [ref=e107]
+                  - button "Rush" [ref=e108]
+              - generic [ref=e109]:
+                - paragraph [ref=e110]: Support level
+                - generic [ref=e111]:
+                  - button "Standard" [ref=e112]
+                  - button "Premium" [ref=e113]
+                  - button "Enterprise" [ref=e114]
+              - generic [ref=e115]:
+                - paragraph [ref=e116]: Estimated monthly range
+                - paragraph [ref=e117]: $9,900 - $12,100
+                - paragraph [ref=e118]: "Package: Growth"
+                - paragraph [ref=e119]: "Estimated deposit: $2,200 (20% of the estimate)"
+            - generic [ref=e120]:
+              - heading "Request a package recommendation" [level=3] [ref=e121]
+              - paragraph [ref=e122]: Share your details and we’ll recommend the best-fit package and next steps. A 20% deposit invoice is issued to reserve a consultation.
+              - generic [ref=e123]:
+                - generic [ref=e124]: Full name
+                - textbox "Full name" [ref=e125]
+              - generic [ref=e126]:
+                - generic [ref=e127]: Email
+                - textbox "Email" [ref=e128]
+              - generic [ref=e129]:
+                - generic [ref=e130]: Company
+                - textbox "Company" [ref=e131]
+              - generic [ref=e132]:
+                - generic [ref=e133]: Monthly growth budget
+                - textbox "Monthly growth budget" [ref=e134]
+              - button "Send my package + invoice" [ref=e135] [cursor=pointer]
+    - contentinfo [ref=e136]:
+      - generic [ref=e137]:
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - img "Carolina Growth" [ref=e140]
+            - paragraph [ref=e141]: Carolina Growth
+          - paragraph [ref=e142]: Boutique growth studio helping local brands scale with precision.
+        - generic [ref=e143]:
+          - paragraph [ref=e144]: Explore
+          - generic [ref=e145]:
+            - link "Local SEO" [ref=e146] [cursor=pointer]:
+              - /url: /local-seo?utm_source=site&utm_medium=link&utm_campaign=footer
+            - link "Web Design" [ref=e147] [cursor=pointer]:
+              - /url: /web-design?utm_source=site&utm_medium=link&utm_campaign=footer
+            - link "Pricing" [ref=e148] [cursor=pointer]:
+              - /url: /pricing?utm_source=site&utm_medium=link&utm_campaign=footer
+            - link "Portfolio" [ref=e149] [cursor=pointer]:
+              - /url: /portfolio?utm_source=site&utm_medium=link&utm_campaign=footer
+            - link "Insights" [ref=e150] [cursor=pointer]:
+              - /url: /blog?utm_source=site&utm_medium=link&utm_campaign=footer
+            - link "About" [ref=e151] [cursor=pointer]:
+              - /url: /about?utm_source=site&utm_medium=link&utm_campaign=footer
+            - link "Free Consultation" [ref=e152] [cursor=pointer]:
+              - /url: /free-consultation?utm_source=site&utm_medium=link&utm_campaign=footer
+            - link "Contact" [ref=e153] [cursor=pointer]:
+              - /url: /contact?utm_source=site&utm_medium=link&utm_campaign=footer
+            - link "Client Portal" [ref=e154] [cursor=pointer]:
+              - /url: /portal?utm_source=site&utm_medium=link&utm_campaign=footer
+        - generic [ref=e155]:
+          - paragraph [ref=e156]: Tools
+          - generic [ref=e157]:
+            - link "Competitor Comparison" [ref=e158] [cursor=pointer]:
+              - /url: /competitor-comparison?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "Readiness Assessment" [ref=e159] [cursor=pointer]:
+              - /url: /marketing-readiness?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "Lead Potential Calculator" [ref=e160] [cursor=pointer]:
+              - /url: /lead-potential?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "AI Content Generator" [ref=e161] [cursor=pointer]:
+              - /url: /content-generator?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "SEO Auditor" [ref=e162] [cursor=pointer]:
+              - /url: /seo-audit?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "Audit" [ref=e163] [cursor=pointer]:
+              - /url: /growth-audit?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "ROI Calculator" [ref=e164] [cursor=pointer]:
+              - /url: /roi-calculator?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "4-Week Sprint" [ref=e165] [cursor=pointer]:
+              - /url: /growth-sprint?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "CRO Teardown" [ref=e166] [cursor=pointer]:
+              - /url: /conversion-teardown?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "Lead Routing" [ref=e167] [cursor=pointer]:
+              - /url: /lead-routing?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "Revenue Forecast" [ref=e168] [cursor=pointer]:
+              - /url: /revenue-forecast?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "Paid Media Audit" [ref=e169] [cursor=pointer]:
+              - /url: /paid-media-audit?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "Email Nurture" [ref=e170] [cursor=pointer]:
+              - /url: /email-nurture?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "Retention + Referral" [ref=e171] [cursor=pointer]:
+              - /url: /retention-referral?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "Proposal Wizard" [ref=e172] [cursor=pointer]:
+              - /url: /proposal-wizard?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "UTM Builder" [ref=e173] [cursor=pointer]:
+              - /url: /utm-builder?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+            - link "Landing Templates" [ref=e174] [cursor=pointer]:
+              - /url: /landing-templates?utm_source=site&utm_medium=link&utm_campaign=footer-tools
+        - generic [ref=e175]:
+          - paragraph [ref=e176]: Company
+          - generic [ref=e177]:
+            - link "Team" [ref=e178] [cursor=pointer]:
+              - /url: /team?utm_source=site&utm_medium=link&utm_campaign=footer-company
+            - link "Contact" [ref=e179] [cursor=pointer]:
+              - /url: /contact?utm_source=site&utm_medium=link&utm_campaign=footer-company
+          - generic [ref=e180]:
+            - link "Legal" [ref=e181] [cursor=pointer]:
+              - /url: /legal?utm_source=site&utm_medium=link&utm_campaign=footer-legal
+            - link "Privacy" [ref=e182] [cursor=pointer]:
+              - /url: /privacy?utm_source=site&utm_medium=link&utm_campaign=footer-legal
+            - link "Terms" [ref=e183] [cursor=pointer]:
+              - /url: /terms?utm_source=site&utm_medium=link&utm_campaign=footer-legal
+            - link "Cookie Settings" [ref=e184] [cursor=pointer]:
+              - /url: /cookies?utm_source=site&utm_medium=link&utm_campaign=footer-legal
+            - link "Accessibility" [ref=e185] [cursor=pointer]:
+              - /url: /accessibility?utm_source=site&utm_medium=link&utm_campaign=footer-legal
+      - generic [ref=e186]: © 2026 Carolina Growth. All rights reserved.
+    - button "Chat with us" [ref=e188]: Chat with us
+  - button "Open Next.js Dev Tools" [ref=e195] [cursor=pointer]:
+    - img [ref=e196]
+  - alert [ref=e199]
+```

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { trackEvent } from "@/lib/analytics";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
@@ -52,7 +52,12 @@ export function PricingPackageBuilder() {
   const [message, setMessage] = useState<string | null>(null);
   const [invoiceUrl, setInvoiceUrl] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(false);
   const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   const estimate = useMemo(() => {
     const tier = tierPricing[state.tier as keyof typeof tierPricing] ?? tierPricing.growth;
@@ -130,14 +135,17 @@ export function PricingPackageBuilder() {
       });
 
       const invoicePayload = await invoiceResponse.json().catch(() => ({}));
-      if (!invoiceResponse.ok) {
-        throw new Error(invoicePayload?.error ?? "Invoice creation failed.");
+      if (invoiceResponse.ok) {
+        setInvoiceUrl(invoicePayload?.hosted_invoice_url ?? null);
+        setMessage(
+          "Thanks! Your deposit invoice is on the way. We will follow up within 48 hours."
+        );
+      } else {
+        setMessage(
+          "Thanks! We received your request and will send the deposit invoice within 48 hours."
+        );
       }
-      setInvoiceUrl(invoicePayload?.hosted_invoice_url ?? null);
       setStatus("success");
-      setMessage(
-        "Thanks! Your deposit invoice is on the way. We will follow up within 48 hours."
-      );
       trackEvent({
         name: "pricing_submit",
         params: { source: "pricing-builder", tier: state.tier },
@@ -270,6 +278,9 @@ export function PricingPackageBuilder() {
       </div>
       <form
         onSubmit={handleSubmit}
+        data-testid="pricing-builder-form"
+        data-status={status}
+        data-hydrated={hydrated ? "true" : "false"}
         className="grid gap-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6"
       >
         <h3 className="title text-2xl font-semibold">Request a package recommendation</h3>
@@ -301,7 +312,7 @@ export function PricingPackageBuilder() {
         <button
           type="submit"
           className="btn-primary rounded-full px-6 py-3 text-sm font-semibold"
-          disabled={status === "submitting"}
+          disabled={status === "submitting" || !hydrated}
         >
           {status === "submitting" ? "Sending..." : "Send my package + invoice"}
         </button>

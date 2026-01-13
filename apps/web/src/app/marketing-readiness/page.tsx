@@ -4,9 +4,6 @@ import { buildPageMetadata, buildLocalBusinessSchema, getDefaultSeoSettings } fr
 import { getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "Free Marketing Readiness Assessment | Discover Your Marketing Maturity",
     description: "Take our free 10-question marketing readiness assessment. Get your marketing maturity score (0-100) and personalized recommendations to accelerate your business growth.",

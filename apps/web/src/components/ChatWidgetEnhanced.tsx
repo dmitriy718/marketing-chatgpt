@@ -216,7 +216,7 @@ export function ChatWidgetEnhanced() {
           >
             {mode === "ai" && messages.length === 0 && (
               <div className="mb-4 text-sm text-[var(--muted)]">
-                <p className="mb-2">Hi! I'm the Carolina Growth AI assistant. How can I help you today?</p>
+                <p className="mb-2">Hi! I&apos;m the Carolina Growth AI assistant. How can I help you today?</p>
                 <div className="space-y-2">
                   <button
                     type="button"
@@ -237,7 +237,7 @@ export function ChatWidgetEnhanced() {
                     onClick={() => setMessage("I'd like to book a call")}
                     className="block w-full text-left rounded-xl border border-[var(--border)] px-3 py-2 text-xs hover:bg-[var(--surface-soft)]"
                   >
-                    I'd like to book a call
+                    I&apos;d like to book a call
                   </button>
                 </div>
               </div>

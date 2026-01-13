@@ -64,7 +64,7 @@ export function FreeConsultationPageClient() {
           <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center">
             <h1 className="title text-3xl font-semibold">Consultation Requested!</h1>
             <p className="mt-4 text-lg text-[var(--muted)]">
-              We've received your request and will contact you within 24 hours to confirm your consultation time.
+              We&apos;ve received your request and will contact you within 24 hours to confirm your consultation time.
             </p>
           </div>
         </div>

@@ -61,7 +61,7 @@ export function PostHogProvider({ children }: PostHogProviderProps) {
           });
 
           // Track page engagement (time on page, scroll depth)
-          let pageStartTime = Date.now();
+          const pageStartTime = Date.now();
           let maxScrollDepth = 0;
 
           const trackScrollDepth = () => {

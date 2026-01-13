@@ -1,5 +1,5 @@
 import json
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -159,6 +159,7 @@ def calculate_readiness_score(answers: dict[str, int]) -> dict:
 async def assess_readiness(
     request: Request,
     payload: ReadinessAssessmentRequest,
+    background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict:
     """Assess marketing readiness."""
@@ -203,15 +204,21 @@ Key Areas to Improve:
 
         report_body += "\n\nReady to improve your marketing readiness?\nBook a free strategy session: https://carolinagrowth.co/contact"
 
-        send_email(
+        background_tasks.add_task(
+            send_email,
             to_address=payload.email,
             subject=f"Your Marketing Readiness: {assessment['score']}% - {assessment['level']}",
             body=report_body,
         )
 
-        notify_admin(
+        background_tasks.add_task(
+            notify_admin,
             subject="New marketing readiness assessment",
-            body=f"Email: {payload.email}\nScore: {assessment['score']}%\nLevel: {assessment['level']}",
+            body=(
+                f"Email: {payload.email}\n"
+                f"Score: {assessment['score']}%\n"
+                f"Level: {assessment['level']}"
+            ),
             reply_to=payload.email,
         )
 

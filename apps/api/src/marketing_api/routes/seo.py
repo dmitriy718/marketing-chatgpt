@@ -2,12 +2,10 @@ import json
 from urllib.parse import urlparse, urljoin
 
 from bs4 import BeautifulSoup
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr, HttpUrl
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
-import httpx
 
 from marketing_api.db.models import Lead, LeadStatus, SeoAudit
 from marketing_api.db.session import get_session
@@ -16,6 +14,7 @@ from marketing_api.notifications.email import notify_admin, send_email
 from marketing_api.routes.public import should_bypass_turnstile
 from marketing_api.posthog_client import capture_feature_usage
 from marketing_api.settings import settings
+from marketing_api.utils.ssrf import fetch_validated_html, validate_external_url
 
 router = APIRouter(prefix="/public/seo", tags=["seo"])
 
@@ -29,9 +28,9 @@ class SeoAuditRequest(BaseModel):
 async def fetch_url(url: str) -> tuple[str, int]:
     """Fetch URL and return HTML content and status code."""
     try:
-        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-            response = await client.get(str(url), headers={"User-Agent": "Carolina Growth SEO Auditor"})
-            return response.text, response.status_code
+        return await fetch_validated_html(
+            url, user_agent="Carolina Growth SEO Auditor"
+        )
     except Exception:
         raise HTTPException(status_code=400, detail="Failed to fetch URL.")
 
@@ -127,6 +126,7 @@ def analyze_seo(html: str, url: str) -> dict:
 async def audit_website(
     request: Request,
     payload: SeoAuditRequest,
+    background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict:
     """Audit a website for SEO issues."""
@@ -135,6 +135,7 @@ async def audit_website(
         await verify_turnstile(payload.turnstile_token)
 
     url_str = str(payload.url)
+    validate_external_url(url_str)
 
     # Check for cached result (same URL, last 30 days)
     existing = await session.execute(
@@ -208,7 +209,8 @@ Summary:
 For a comprehensive SEO strategy, contact Carolina Growth.
 """
 
-            send_email(
+            background_tasks.add_task(
+                send_email,
                 to_address=payload.email,
                 subject=f"SEO Audit Report for {urlparse(url_str).netloc}",
                 body=report_body,
@@ -224,9 +226,14 @@ For a comprehensive SEO strategy, contact Carolina Growth.
                 },
             )
             
-            notify_admin(
+            background_tasks.add_task(
+                notify_admin,
                 subject="New SEO audit request",
-                body=f"Email: {payload.email}\nURL: {url_str}\nScore: {analysis['score']}/100",
+                body=(
+                    f"Email: {payload.email}\n"
+                    f"URL: {url_str}\n"
+                    f"Score: {analysis['score']}/100"
+                ),
                 reply_to=payload.email,
             )
 

@@ -3,17 +3,17 @@
 ## Endpoint
 - **Path**: `/public/leads`
 - **Method**: POST
-- **Rate Limit**: 10/hour
+- **Rate Limit**: 6/minute
 - **Turnstile**: Required
 
 ## Request Body
 ```json
 {
-  "full_name": "John Doe",
+  "name": "Jane Doe",
   "email": "john@example.com",
-  "phone": "+1234567890",
   "company": "Example Corp",
-  "message": "Interested in services",
+  "budget": "$5,000/mo",
+  "details": "Interested in services",
   "source": "contact-form",
   "turnstile_token": "token-here"
 }
@@ -22,8 +22,7 @@
 ## Response
 ```json
 {
-  "success": true,
-  "lead_id": "uuid-here"
+  "status": "ok"
 }
 ```
 
@@ -31,7 +30,6 @@
 - Automatic lead creation
 - Email confirmation
 - Admin notification
-- Duplicate prevention (unique email)
 - Source tracking
 
 ## Error Handling

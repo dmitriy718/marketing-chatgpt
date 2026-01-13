@@ -4,9 +4,6 @@ import { buildPageMetadata, buildLocalBusinessSchema, getDefaultSeoSettings } fr
 import { getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "Free Marketing Consultation | Book Your Strategy Call",
     description: "Schedule a free 30-minute marketing consultation. Discuss your growth goals, get expert advice, and discover how Carolina Growth can accelerate your business. No obligation, just actionable insights.",

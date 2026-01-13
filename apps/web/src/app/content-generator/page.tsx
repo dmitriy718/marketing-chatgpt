@@ -4,9 +4,6 @@ import { buildPageMetadata, buildLocalBusinessSchema, getDefaultSeoSettings } fr
 import { getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "Free AI Content Generator | Create Marketing Content in Seconds",
     description: "Generate high-quality blog posts, social media content, and email campaigns with AI. Customize tone, length, and style to match your brand voice. Free marketing content generator tool.",

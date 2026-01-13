@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import { cookies } from "next/headers";
 
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { shouldBypassTurnstile } from "@/lib/turnstileServer";
 import { appendOutbox, flushOutbox } from "@/lib/outbox";
 
 type LeadPayload = {
@@ -30,6 +31,8 @@ type ApiResult = {
 };
 
 async function sendLeadToApi(entry: LeadPayload): Promise<ApiResult> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 3000);
   const apiResponse = await fetch(`${API_URL}/public/leads`, {
     method: "POST",
     headers: {
@@ -40,7 +43,8 @@ async function sendLeadToApi(entry: LeadPayload): Promise<ApiResult> {
       ...entry,
       turnstile_token: entry.turnstileToken ?? null,
     }),
-  });
+    signal: controller.signal,
+  }).finally(() => clearTimeout(timeout));
 
   if (apiResponse.ok) {
     return { ok: true, retryable: false, status: apiResponse.status };
@@ -57,6 +61,21 @@ async function sendLeadToApi(entry: LeadPayload): Promise<ApiResult> {
 async function sendLeadToApiForFlush(entry: LeadPayload) {
   const result = await sendLeadToApi(entry);
   return result.ok;
+}
+
+async function safeAppendOutbox(entry: {
+  id: string;
+  type: string;
+  payload: LeadPayload;
+  attempts: number;
+  lastAttemptedAt: string;
+}) {
+  try {
+    await appendOutbox(entry);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function getUtmDetails(cookieStore: Awaited<ReturnType<typeof cookies>>) {
@@ -93,13 +112,9 @@ export async function POST(request: Request) {
   }
 
   const cookieStore = await cookies();
-  const internalCookie = cookieStore.get("cg_internal")?.value ?? null;
-  const internalTokenHeader = request.headers.get("x-internal-token");
-  const bypassTurnstile = Boolean(
-    INTERNAL_TOKEN &&
-      ((internalTokenHeader && internalTokenHeader === INTERNAL_TOKEN) ||
-        (internalCookie && internalCookie === INTERNAL_TOKEN) ||
-        body.turnstileToken === INTERNAL_TOKEN)
+  const bypassTurnstile = await shouldBypassTurnstile(
+    request,
+    body.turnstileToken ?? null
   );
   if (!bypassTurnstile) {
     const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
@@ -115,8 +130,10 @@ export async function POST(request: Request) {
     source: body.source ?? "web",
   };
 
-  await flushOutbox<LeadPayload>({
+  flushOutbox<LeadPayload>({
     lead: sendLeadToApiForFlush,
+  }).catch(() => {
+    // Outbox contention shouldn't block inbound leads.
   });
 
   try {
@@ -128,7 +145,7 @@ export async function POST(request: Request) {
           { status: result.status || 502 }
         );
       }
-      await appendOutbox({
+      void safeAppendOutbox({
         id: crypto.randomUUID(),
         type: "lead",
         payload: entry,
@@ -138,7 +155,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, queued: true }, { status: 202 });
     }
   } catch {
-    await appendOutbox({
+    void safeAppendOutbox({
       id: crypto.randomUUID(),
       type: "lead",
       payload: entry,

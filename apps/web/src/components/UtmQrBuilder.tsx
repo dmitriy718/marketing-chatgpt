@@ -131,7 +131,9 @@ export function UtmQrBuilder() {
       <div className="grid gap-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6">
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] p-4 text-sm">
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">UTM preview</p>
-          <p className="mt-2 break-all text-sm">{utmUrl || "Add a destination URL to begin."}</p>
+          <p className="mt-2 break-all text-sm" data-testid="utm-preview">
+            {utmUrl || "Add a destination URL to begin."}
+          </p>
         </div>
         <div className="grid place-items-center rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] p-6">
           {qrUrl ? (

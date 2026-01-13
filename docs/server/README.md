@@ -10,22 +10,7 @@ This section contains technical documentation for server-side features, APIs, an
 
 ### Public Endpoints
 - [Lead Capture API](./api/lead-capture.md)
-- [Newsletter API](./api/newsletter.md)
 - [Chat API](./api/chat.md)
-- [Stripe Integration](./api/stripe.md)
-- [SEO Tools API](./api/seo-tools.md)
-- [Content Generation API](./api/content-generation.md)
-- [Email Automation API](./api/email-automation.md)
-
-### Authentication
-- [JWT Authentication](./auth/jwt.md)
-- [Role-Based Access Control](./auth/rbac.md)
-- [Internal API Tokens](./auth/internal-tokens.md)
-
-### Database
-- [Database Models](./database/models.md)
-- [Migrations](./database/migrations.md)
-- [Stripe Database](./database/stripe-db.md)
 
 ## Features
 

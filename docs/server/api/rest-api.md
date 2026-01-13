@@ -178,12 +178,14 @@ Get assessment questions.
 {
   "questions": [
     {
-      "id": "q1",
-      "question": "Do you have a clear marketing strategy?",
+      "id": "seo",
+      "question": "How would you rate your website's SEO optimization?",
       "options": {
-        "0": "No strategy",
-        "1": "Basic strategy",
-        "2": "Comprehensive strategy"
+        "1": "We don't have SEO",
+        "2": "Basic SEO, not optimized",
+        "3": "Some optimization, needs work",
+        "4": "Well optimized",
+        "5": "Expertly optimized"
       }
     }
   ]
@@ -209,7 +211,7 @@ Submit assessment answers.
 ```json
 {
   "score": 75,
-  "level": "intermediate",
+  "level": "Intermediate",
   "message": "You're on the right track...",
   "recommendations": [],
   "breakdown": {}
@@ -224,7 +226,8 @@ Calculate lead generation potential.
 **Request Body:**
 ```json
 {
-  "monthly_traffic": 10000,
+  "industry": "services",
+  "monthly_website_visitors": 10000,
   "current_conversion_rate": 2.5,
   "average_deal_value": 5000,
   "email": "user@example.com",
@@ -246,9 +249,13 @@ Calculate lead generation potential.
     "revenue_per_month": 2500000
   },
   "improvement": {
-    "conversion_lift": 100,
-    "additional_leads": 250,
-    "additional_revenue": 1250000
+    "lead_increase": 250,
+    "revenue_increase": 1250000,
+    "improvement_percentage": 100
+  },
+  "benchmark": {
+    "industry_average": 3.0,
+    "your_current": 2.5
   }
 }
 ```
@@ -271,15 +278,34 @@ Generate competitive intelligence report.
 ```json
 {
   "url": "https://example.com",
-  "report": {
-    "overview": "Company overview...",
-    "strengths": ["Strong SEO", "Good content"],
-    "weaknesses": ["Slow site speed"],
-    "opportunities": ["Social media presence"],
-    "threats": ["Competition"],
-    "recommendations": ["Improve speed", "Expand social"]
+  "seo_score": 82,
+  "seo_summary": {
+    "total_images": 10,
+    "images_without_alt": 2,
+    "total_links": 25,
+    "internal_links": 12,
+    "has_structured_data": true
   },
-  "cached": false
+  "social_presence": {
+    "social_links_found": 3,
+    "platforms": ["facebook", "instagram"]
+  },
+  "contact_accessibility": {
+    "has_phone": true,
+    "has_email": false,
+    "has_address": true
+  },
+  "trust_signals": {
+    "has_testimonials": true,
+    "has_certifications": false,
+    "has_case_studies": false
+  },
+  "recommendations": [
+    "Improve SEO score to match or exceed competitors",
+    "Enhance social media presence",
+    "Add trust signals like testimonials and certifications",
+    "Ensure contact information is easily accessible"
+  ]
 }
 ```
 
@@ -291,12 +317,12 @@ Book a free consultation.
 **Request Body:**
 ```json
 {
-  "name": "John Doe",
-  "email": "john@example.com",
+  "name": "Jane Doe",
+  "email": "jane@example.com",
   "company": "Example Corp",
   "phone": "+1234567890",
   "preferred_date": "2026-01-15",
-  "preferred_time": "10:00",
+  "preferred_time": "afternoon",
   "message": "I need help with SEO",
   "turnstile_token": "token"
 }
@@ -305,9 +331,8 @@ Book a free consultation.
 **Response:**
 ```json
 {
-  "status": "success",
-  "message": "Consultation request received",
-  "consultation_id": "uuid"
+  "status": "ok",
+  "message": "Consultation request received. We'll contact you within 24 hours."
 }
 ```
 
@@ -319,8 +344,12 @@ Send a chat message.
 **Request Body:**
 ```json
 {
+  "name": "Jane Doe",
+  "email": "jane@example.com",
   "message": "Hello",
-  "email": "user@example.com",
+  "page_url": "https://carolinagrowth.co",
+  "user_agent": "Mozilla/5.0 ...",
+  "referrer": "https://google.com",
   "turnstile_token": "token"
 }
 ```
@@ -328,8 +357,7 @@ Send a chat message.
 **Response:**
 ```json
 {
-  "message": "Hello! How can I help?",
-  "is_ai_response": true
+  "status": "ok"
 }
 ```
 
@@ -349,7 +377,8 @@ Get AI response to a message.
 ```json
 {
   "response": "We offer SEO, content marketing...",
-  "session_id": "uuid"
+  "session_id": "uuid",
+  "needs_escalation": false
 }
 ```
 
@@ -370,7 +399,7 @@ Subscribe to email campaigns.
 **Response:**
 ```json
 {
-  "status": "success",
+  "status": "ok",
   "message": "Subscribed successfully"
 }
 ```
@@ -389,7 +418,7 @@ Unsubscribe from email campaigns.
 **Response:**
 ```json
 {
-  "status": "success",
+  "status": "ok",
   "message": "Unsubscribed successfully"
 }
 ```
@@ -402,11 +431,11 @@ Submit a lead.
 **Request Body:**
 ```json
 {
-  "full_name": "John Doe",
-  "email": "john@example.com",
+  "name": "Jane Doe",
+  "email": "jane@example.com",
   "company": "Example Corp",
-  "phone": "+1234567890",
-  "message": "Interested in services",
+  "budget": "$5,000/mo",
+  "details": "Interested in services",
   "source": "contact-form",
   "turnstile_token": "token"
 }
@@ -415,9 +444,7 @@ Submit a lead.
 **Response:**
 ```json
 {
-  "status": "success",
-  "message": "Lead captured successfully",
-  "lead_id": "uuid"
+  "status": "ok"
 }
 ```
 
@@ -430,6 +457,7 @@ Subscribe to newsletter.
 ```json
 {
   "email": "user@example.com",
+  "lead_magnet": "Local Growth Playbook",
   "turnstile_token": "token"
 }
 ```
@@ -437,8 +465,7 @@ Subscribe to newsletter.
 **Response:**
 ```json
 {
-  "status": "success",
-  "message": "Subscribed to newsletter"
+  "status": "ok"
 }
 ```
 

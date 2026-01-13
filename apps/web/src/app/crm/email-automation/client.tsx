@@ -2,7 +2,7 @@
 
 import { CrmShell } from "@/components/crm/CrmShell";
 import { useCrmAuth } from "@/components/crm/CrmAuth";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://carolinagrowth.co";
 
@@ -101,12 +101,7 @@ function EmailAutomationContent() {
   const [selectedCampaign, setSelectedCampaign] = useState<string | null>(null);
   const [sequences, setSequences] = useState<Sequence[]>([]);
 
-  useEffect(() => {
-    if (!token) return;
-    loadData();
-  }, [token, selectedCampaign]);
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     if (!token) return;
     setLoading(true);
     setError(null);
@@ -136,7 +131,11 @@ function EmailAutomationContent() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [selectedCampaign, token]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   if (loading && !analytics) {
     return <div className="p-6">Loading email automation data...</div>;

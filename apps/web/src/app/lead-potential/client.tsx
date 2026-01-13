@@ -15,13 +15,18 @@ type CalculationResult = {
     revenue_per_month: number;
   };
   improvement: {
-    conversion_lift: number;
-    additional_leads: number;
-    additional_revenue: number;
+    lead_increase: number;
+    revenue_increase: number;
+    improvement_percentage: number;
+  };
+  benchmark: {
+    industry_average: number;
+    your_current: number;
   };
 };
 
 export function LeadPotentialPageClient() {
+  const [industry, setIndustry] = useState("services");
   const [monthlyTraffic, setMonthlyTraffic] = useState("");
   const [currentConversionRate, setCurrentConversionRate] = useState("");
   const [averageDealValue, setAverageDealValue] = useState("");
@@ -48,7 +53,8 @@ export function LeadPotentialPageClient() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          monthly_traffic: Number(monthlyTraffic),
+          industry,
+          monthly_website_visitors: Number(monthlyTraffic),
           current_conversion_rate: Number(currentConversionRate),
           average_deal_value: Number(averageDealValue),
           email: email || null,
@@ -83,7 +89,7 @@ export function LeadPotentialPageClient() {
         <form onSubmit={handleSubmit} className="mb-8 grid gap-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6">
           <div>
             <label htmlFor="traffic" className="block text-sm font-semibold">
-              Monthly Website Traffic
+              Monthly Traffic
             </label>
             <input
               id="traffic"
@@ -95,6 +101,26 @@ export function LeadPotentialPageClient() {
               required
               className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] px-4 py-3"
             />
+          </div>
+
+          <div>
+            <label htmlFor="industry" className="block text-sm font-semibold">
+              Industry
+            </label>
+            <select
+              id="industry"
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+              className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] px-4 py-3"
+            >
+              <option value="services">Services</option>
+              <option value="ecommerce">E-commerce</option>
+              <option value="saas">SaaS</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="real_estate">Real estate</option>
+              <option value="legal">Legal</option>
+              <option value="other">Other</option>
+            </select>
           </div>
 
           <div>
@@ -173,7 +199,7 @@ export function LeadPotentialPageClient() {
                 Potential Improvement
               </p>
               <p className="mt-2 text-5xl font-bold text-[var(--primary)]">
-                +{result.improvement.conversion_lift.toFixed(1)}%
+                +{result.improvement.improvement_percentage.toFixed(1)}%
               </p>
               <p className="mt-2 text-lg font-semibold">Conversion Rate Lift</p>
             </div>
@@ -184,7 +210,7 @@ export function LeadPotentialPageClient() {
                   Additional Leads/Month
                 </p>
                 <p className="mt-2 text-2xl font-semibold">
-                  +{result.improvement.additional_leads.toLocaleString()}
+                  +{result.improvement.lead_increase.toLocaleString()}
                 </p>
               </div>
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] p-4">
@@ -192,7 +218,7 @@ export function LeadPotentialPageClient() {
                   Additional Revenue/Month
                 </p>
                 <p className="mt-2 text-2xl font-semibold">
-                  ${result.improvement.additional_revenue.toLocaleString()}
+                  ${result.improvement.revenue_increase.toLocaleString()}
                 </p>
               </div>
             </div>
@@ -206,6 +232,9 @@ export function LeadPotentialPageClient() {
                 <p className="text-sm text-[var(--muted)]">
                   ${result.current.revenue_per_month.toLocaleString()}/month
                 </p>
+                <p className="mt-2 text-xs text-[var(--muted)]">
+                  Current conversion: {result.benchmark.your_current}%
+                </p>
               </div>
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] p-4">
                 <p className="text-sm font-semibold">Potential Performance</p>
@@ -214,6 +243,9 @@ export function LeadPotentialPageClient() {
                 </p>
                 <p className="text-sm text-[var(--muted)]">
                   ${result.potential.revenue_per_month.toLocaleString()}/month
+                </p>
+                <p className="mt-2 text-xs text-[var(--muted)]">
+                  Industry benchmark: {result.benchmark.industry_average}%
                 </p>
               </div>
             </div>

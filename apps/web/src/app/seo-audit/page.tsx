@@ -4,9 +4,6 @@ import { buildPageMetadata, buildLocalBusinessSchema, getDefaultSeoSettings } fr
 import { getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "Free SEO Website Auditor | Analyze Any Website's SEO Score",
     description: "Get an instant SEO score (0-100) for any website with actionable recommendations. Free SEO analysis tool that checks title tags, meta descriptions, headings, images, links, and structured data.",

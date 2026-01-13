@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { shouldBypassTurnstile } from "@/lib/turnstileServer";
 
 type ChatAiPayload = {
   message: string;
@@ -22,9 +23,11 @@ export async function POST(request: Request) {
   }
 
   // Allow bypass with internal token for E2E tests
-  const internalToken = request.headers.get("x-internal-token");
-  const shouldBypass = INTERNAL_TOKEN && internalToken === INTERNAL_TOKEN;
-  
+  const shouldBypass = await shouldBypassTurnstile(
+    request,
+    body.turnstileToken ?? null
+  );
+
   if (!shouldBypass) {
     const turnstileOk = await verifyTurnstileToken(body.turnstileToken ?? null);
     if (!turnstileOk) {

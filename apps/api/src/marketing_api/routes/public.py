@@ -144,6 +144,7 @@ async def upsert_lead(
     *,
     full_name: str,
     email: str,
+    phone: str | None = None,
     company: str | None,
     details: str,
     source: str,
@@ -154,6 +155,8 @@ async def upsert_lead(
     lead = existing.scalar_one_or_none()
     if lead:
         lead.full_name = lead.full_name or full_name
+        if phone and not lead.phone:
+            lead.phone = phone
         lead.company = lead.company or company
         lead.details = merge_details(lead.details, details)
         lead.source = lead.source or source
@@ -163,6 +166,7 @@ async def upsert_lead(
         Lead(
             full_name=full_name,
             email=email,
+            phone=phone,
             company=company,
             details=details,
             source=source,

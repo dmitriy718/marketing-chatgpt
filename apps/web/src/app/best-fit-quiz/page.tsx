@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import { buildPageMetadata, getDefaultSeoSettings } from "@/lib/seo";
-import { getSiteSettings } from "@/lib/content";
+import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({

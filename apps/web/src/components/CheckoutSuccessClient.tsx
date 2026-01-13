@@ -14,7 +14,6 @@ export function CheckoutSuccessClient() {
 
   useEffect(() => {
     if (!clientSecret) {
-      setStatus("processing");
       return;
     }
     stripePromise?.then((stripe) => {

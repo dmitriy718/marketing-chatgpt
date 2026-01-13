@@ -2,11 +2,9 @@ import json
 from typing import List
 
 from bs4 import BeautifulSoup
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr, HttpUrl
 from sqlalchemy.ext.asyncio import AsyncSession
-
-import httpx
 
 from marketing_api.db.models import CompetitorComparison
 from marketing_api.db.session import get_session
@@ -15,13 +13,14 @@ from marketing_api.notifications.email import notify_admin, send_email
 from marketing_api.routes.public import should_bypass_turnstile, verify_turnstile
 from marketing_api.routes.seo import analyze_seo
 from marketing_api.posthog_client import capture_feature_usage
+from marketing_api.utils.ssrf import fetch_validated_html
 
 async def fetch_url(url: str) -> tuple[str, int]:
     """Fetch URL and return HTML content and status code."""
     try:
-        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-            response = await client.get(str(url), headers={"User-Agent": "Carolina Growth Competitor Analyzer"})
-            return response.text, response.status_code
+        return await fetch_validated_html(
+            url, user_agent="Carolina Growth Competitor Analyzer"
+        )
     except Exception:
         raise HTTPException(status_code=400, detail="Failed to fetch URL.")
 
@@ -160,6 +159,7 @@ async def compare_websites(user_url: str, competitor_urls: List[str]) -> dict:
 async def compare_competitors(
     request: Request,
     payload: CompetitorComparisonRequest,
+    background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict:
     """Compare user website against competitors."""
@@ -214,15 +214,24 @@ Key Gaps Identified:
 
             report_body += "\n\nGet a free consultation to close these gaps and beat your competitors.\nBook a call: https://carolinagrowth.co/contact"
 
-            send_email(
+            background_tasks.add_task(
+                send_email,
                 to_address=payload.email,
-                subject=f"Competitor Comparison: You're {'Behind' if comparison['comparison']['your_score'] < comparison['comparison']['avg_competitor_score'] else 'Ahead'}",
+                subject=(
+                    "Competitor Comparison: You're "
+                    f"{'Behind' if comparison['comparison']['your_score'] < comparison['comparison']['avg_competitor_score'] else 'Ahead'}"
+                ),
                 body=report_body,
             )
 
-            notify_admin(
+            background_tasks.add_task(
+                notify_admin,
                 subject="New competitor comparison request",
-                body=f"Email: {payload.email}\nUser site: {user_url_str}\nScore: {comparison['comparison']['your_score']}/100",
+                body=(
+                    f"Email: {payload.email}\n"
+                    f"User site: {user_url_str}\n"
+                    f"Score: {comparison['comparison']['your_score']}/100"
+                ),
                 reply_to=payload.email,
             )
 

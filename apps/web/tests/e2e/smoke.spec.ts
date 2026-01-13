@@ -2,10 +2,7 @@ import { expect, test } from "@playwright/test";
 
 const testEmail = process.env.E2E_TEST_EMAIL || "qa@carolinagrowth.co";
 const internalToken = process.env.INTERNAL_API_TOKEN?.trim();
-const baseUrl =
-  process.env.PLAYWRIGHT_BASE_URL ??
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  "http://localhost:3001";
+const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3001";
 const cookieDomain = new URL(baseUrl).hostname;
 
 async function setupLeadSubmission(page) {

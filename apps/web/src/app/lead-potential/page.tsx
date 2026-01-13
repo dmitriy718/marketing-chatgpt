@@ -4,9 +4,6 @@ import { buildPageMetadata, buildLocalBusinessSchema, getDefaultSeoSettings } fr
 import { getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSiteSettings();
-  const seo = getDefaultSeoSettings(settings);
-  
   return buildPageMetadata({
     title: "Free Lead Generation Potential Calculator | Calculate Your Growth Opportunity",
     description: "Calculate your untapped lead generation potential. Enter your traffic, conversion rate, and deal value to see how many additional leads and revenue you could generate with conversion optimization.",

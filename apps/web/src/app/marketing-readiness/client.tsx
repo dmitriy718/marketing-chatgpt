@@ -39,7 +39,7 @@ export function MarketingReadinessPageClient() {
         if (response.ok && data.questions) {
           setQuestions(data.questions);
         }
-      } catch (err) {
+      } catch {
         setError("Failed to load questions");
       }
     }

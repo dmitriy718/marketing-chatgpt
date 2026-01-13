@@ -2,8 +2,7 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 
 import { CheckoutClient } from "@/components/CheckoutClient";
-import { buildPageMetadata, getDefaultSeoSettings } from "@/lib/seo";
-import { getSiteSettings } from "@/lib/content";
+import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({

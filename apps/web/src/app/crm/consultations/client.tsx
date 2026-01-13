@@ -2,7 +2,7 @@
 
 import { CrmShell } from "@/components/crm/CrmShell";
 import { useCrmAuth } from "@/components/crm/CrmAuth";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -54,12 +54,7 @@ function ConsultationCalendarContent() {
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<"dayGridMonth" | "timeGridWeek" | "timeGridDay">("dayGridMonth");
 
-  useEffect(() => {
-    if (!token) return;
-    loadBookings();
-  }, [token]);
-
-  async function loadBookings() {
+  const loadBookings = useCallback(async () => {
     if (!token) return;
     setLoading(true);
     setError(null);
@@ -81,7 +76,11 @@ function ConsultationCalendarContent() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [token]);
+
+  useEffect(() => {
+    loadBookings();
+  }, [loadBookings]);
 
   const calendarEvents = bookings.map((booking) => ({
     id: booking.id,

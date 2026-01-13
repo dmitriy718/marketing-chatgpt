@@ -30,6 +30,8 @@ export async function POST(request: Request) {
   }
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
     const apiResponse = await fetch(`${API_URL}/public/stripe/invoice`, {
       method: "POST",
       headers: {
@@ -46,7 +48,8 @@ export async function POST(request: Request) {
         days_until_due: body.daysUntilDue ?? null,
         request_id: body.requestId ?? null,
       }),
-    });
+      signal: controller.signal,
+    }).finally(() => clearTimeout(timeout));
 
     const payload = await apiResponse.json().catch(() => ({}));
     if (!apiResponse.ok) {

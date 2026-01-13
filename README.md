@@ -90,3 +90,4 @@ When running Docker, set `API_INTERNAL_URL` to the API container URL (default `h
 Production Stripe transaction storage requires `STRIPE_DATABASE_URL` in addition to
 the primary `DATABASE_URL`.
 Trusted server-to-server calls can use `INTERNAL_API_TOKEN` when Turnstile is enabled.
+Do not commit plaintext `.env` files; use the templates and `secrets/.env.prod.enc` for production.

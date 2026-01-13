@@ -57,6 +57,8 @@ docker compose -f /opt/marketing/docker-compose.prod.yml --env-file /opt/marketi
 ## Notes
 - The plaintext file `secrets/.env.prod` is ignored by git.
 - The encrypted file `secrets/.env.prod.enc` is safe to commit.
+- Keep `.env` and any password files out of the repo; use `.env.example` / `.env.prod.example`
+  plus `secrets/.env.prod.enc` for real values.
 - You can override paths with:
   - `SOPS_AGE_KEY_FILE`
   - `PLAINTEXT_PATH`

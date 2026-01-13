@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from pydantic import BaseModel, EmailStr
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
+from pydantic import BaseModel, EmailStr, Field, AliasChoices
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from marketing_api.db.session import get_session
@@ -12,7 +12,9 @@ router = APIRouter(prefix="/public/lead-potential", tags=["lead-potential"])
 
 class LeadPotentialRequest(BaseModel):
     industry: str
-    monthly_website_visitors: int
+    monthly_website_visitors: int = Field(
+        validation_alias=AliasChoices("monthly_website_visitors", "monthly_traffic")
+    )
     current_conversion_rate: float  # percentage
     average_deal_value: float
     email: str | None = None
@@ -78,6 +80,7 @@ def calculate_lead_potential(
 async def calculate_potential(
     request: Request,
     payload: LeadPotentialRequest,
+    background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict:
     """Calculate lead generation potential."""
@@ -132,15 +135,23 @@ Ready to unlock this potential?
 Book a free strategy session: https://carolinagrowth.co/contact
 """
         
-        send_email(
+        background_tasks.add_task(
+            send_email,
             to_address=payload.email,
-            subject=f"Your Lead Generation Potential: ${result['improvement']['revenue_increase']:,.0f}/month",
+            subject=(
+                "Your Lead Generation Potential: "
+                f"${result['improvement']['revenue_increase']:,.0f}/month"
+            ),
             body=report_body,
         )
         
-        notify_admin(
+        background_tasks.add_task(
+            notify_admin,
             subject="New lead potential calculation",
-            body=f"Email: {payload.email}\nPotential increase: ${result['improvement']['revenue_increase']:,.0f}/month",
+            body=(
+                f"Email: {payload.email}\n"
+                f"Potential increase: ${result['improvement']['revenue_increase']:,.0f}/month"
+            ),
             reply_to=payload.email,
         )
     

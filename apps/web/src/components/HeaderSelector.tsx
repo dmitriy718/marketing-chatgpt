@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SiteHeader } from "./SiteHeader";
 import { SiteHeaderDev } from "./SiteHeaderDev";
 
@@ -13,20 +13,11 @@ import { SiteHeaderDev } from "./SiteHeaderDev";
  * Dev nav is ONLY shown on development.carolinagrowth.co domain.
  */
 export function HeaderSelector() {
-  const [isDev, setIsDev] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    // Check the actual hostname at runtime
-    const hostname = window.location.hostname;
-    setIsDev(hostname === "development.carolinagrowth.co");
-  }, []);
-
-  // During SSR or before mount, default to production header
-  if (!mounted) {
-    return <SiteHeader />;
-  }
+  const [isDev] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.location.hostname === "development.carolinagrowth.co"
+  );
 
   return isDev ? <SiteHeaderDev /> : <SiteHeader />;
 }

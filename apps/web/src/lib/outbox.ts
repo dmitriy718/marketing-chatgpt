@@ -1,4 +1,5 @@
 import { promises as fs } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 export type OutboxEntry<T> = {
@@ -9,7 +10,7 @@ export type OutboxEntry<T> = {
   lastAttemptedAt: string;
 };
 
-const DEFAULT_OUTBOX_PATH = path.join(process.cwd(), "data", "outbox.json");
+const DEFAULT_OUTBOX_PATH = path.join(os.tmpdir(), "carolina-growth", "outbox.json");
 
 function getOutboxPath() {
   return process.env.LEAD_OUTBOX_PATH || DEFAULT_OUTBOX_PATH;

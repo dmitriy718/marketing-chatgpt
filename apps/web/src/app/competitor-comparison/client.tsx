@@ -135,6 +135,7 @@ export function CompetitorComparisonPageClient() {
                     type="text"
                     value={competitor}
                     onChange={(e) => updateCompetitor(index, e.target.value)}
+                    aria-label={`Competitor URL ${index + 1}`}
                     placeholder={`https://competitor${index + 1}.com`}
                     className="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] px-4 py-3"
                     required={index === 0}

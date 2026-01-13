@@ -33,7 +33,7 @@ export default function LegalPage() {
               <div>
                 <p className="font-semibold text-[var(--foreground)]">1. Acceptance of Terms</p>
                 <p className="mt-1">
-                  By accessing and using Carolina Growth's website and services, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
+                  By accessing and using Carolina Growth&apos;s website and services, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
                 </p>
               </div>
               <div>
@@ -54,7 +54,7 @@ export default function LegalPage() {
                   Specific scopes, timelines, deliverables, and payment terms are detailed in individual statements of work (SOW) or service agreements. All services are subject to the terms outlined in the applicable SOW.
                 </p>
                 <p className="mt-2 text-xs">
-                  <strong>Free Tools:</strong> Our free marketing tools (SEO Auditor, Content Generator, etc.) are provided "as-is" for informational purposes. Results are estimates and should not be considered professional advice without consultation.
+                  <strong>Free Tools:</strong> Our free marketing tools (SEO Auditor, Content Generator, etc.) are provided &quot;as-is&quot; for informational purposes. Results are estimates and should not be considered professional advice without consultation.
                 </p>
               </div>
               <div>
@@ -72,7 +72,7 @@ export default function LegalPage() {
               <div>
                 <p className="font-semibold text-[var(--foreground)]">5. Intellectual Property</p>
                 <p className="mt-1">
-                  All work product, deliverables, and materials created by Carolina Growth remain our property until full payment is received. Upon full payment, ownership transfers to the client as specified in the SOW. Client-provided materials remain the client's property.
+                  All work product, deliverables, and materials created by Carolina Growth remain our property until full payment is received. Upon full payment, ownership transfers to the client as specified in the SOW. Client-provided materials remain the client&apos;s property.
                 </p>
               </div>
               <div>
@@ -136,7 +136,7 @@ export default function LegalPage() {
                   <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
                 </ul>
                 <p className="mt-2 text-xs">
-                  <strong>AI Services:</strong> When you use our Content Generator, your prompts and topics may be sent to OpenAI to generate content. OpenAI's privacy policy applies to this data.
+                  <strong>AI Services:</strong> When you use our Content Generator, your prompts and topics may be sent to OpenAI to generate content. OpenAI&apos;s privacy policy applies to this data.
                 </p>
               </div>
               <div>
@@ -191,7 +191,7 @@ export default function LegalPage() {
               <div>
                 <p className="font-semibold text-[var(--foreground)]">Website Content</p>
                 <p className="mt-1">
-                  The information on this website is provided "as is" without warranties of any kind. We make no representations or warranties regarding the accuracy, completeness, or suitability of the information.
+                  The information on this website is provided &quot;as is&quot; without warranties of any kind. We make no representations or warranties regarding the accuracy, completeness, or suitability of the information.
                 </p>
               </div>
             </div>

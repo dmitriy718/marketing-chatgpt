@@ -1,6 +1,5 @@
 import json
-import httpx
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr, HttpUrl
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -80,6 +79,7 @@ async def generate_intelligence_report(url: str) -> dict:
 async def generate_report(
     request: Request,
     payload: IntelligenceReportRequest,
+    background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> dict:
     """Generate competitive intelligence report (requires email)."""
@@ -129,13 +129,15 @@ KEY RECOMMENDATIONS
         
         report_body += "\n\nWant a comprehensive competitive analysis?\nBook a free consultation: https://carolinagrowth.co/contact"
         
-        send_email(
+        background_tasks.add_task(
+            send_email,
             to_address=payload.email,
             subject=f"Competitive Intelligence Report: {url_str}",
             body=report_body,
         )
         
-        notify_admin(
+        background_tasks.add_task(
+            notify_admin,
             subject="New competitive intelligence report request",
             body=f"Email: {payload.email}\nURL: {url_str}",
             reply_to=payload.email,
