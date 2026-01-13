@@ -13,6 +13,20 @@ This document provides comprehensive implementation plans for five major enhance
 - We have already begun implementing Tool 2 (Backlink Analyzer), Tool 3 (A/B Testing Platform), and Tool 4 (Keyword Research Tool), and these three will ship directly to production.
 - All other enhancements described in this document must be tested on the development server before going live.
 
+### Status Map (Current Tracking)
+
+| Area | Item | Status | Rollout |
+| --- | --- | --- | --- |
+| Additional Marketing Tools | Tool 1: Social Media Scheduler | Planned | Dev → Live |
+| Additional Marketing Tools | Tool 2: Backlink Analyzer | In Progress | Direct to Live |
+| Additional Marketing Tools | Tool 3: A/B Testing Platform | In Progress | Direct to Live |
+| Additional Marketing Tools | Tool 4: Keyword Research Tool | In Progress | Direct to Live |
+| Additional Marketing Tools | Tool 5: Landing Page Builder | Planned | Dev → Live |
+| Advanced Analytics Features | All items | Planned | Dev → Live |
+| Mobile App Development | All items | Planned | Dev → Live |
+| Additional Integrations | All items | Planned | Dev → Live |
+| Enhanced Reporting System | All items | Planned | Dev → Live |
+
 ### Decision Log (Required Updates)
 
 - **Social Media Scheduler**: The Instagram Basic Display API is read-only and cannot publish/schedule posts. The correct path for scheduling requires the Instagram Graph API with a connected Facebook Page and appropriate permissions.
@@ -52,11 +66,15 @@ The platform currently includes:
 
 ### Tool 1: Social Media Scheduler
 
+**Status:** Planned (Dev → Live)
+
 #### Feature Summary
 
 A multi-platform social media content scheduling tool that allows users to create, schedule, and manage posts across major social networks (Facebook, Twitter/X, LinkedIn, Instagram). The tool includes content calendar visualization, bulk upload capabilities, and performance tracking.
 
 #### Technical Approach
+
+**Correction (Required):** Instagram Basic Display API is read-only. Scheduling/publishing requires the Instagram Graph API with a linked Facebook Page and the correct permissions.
 
 **Architecture:**
 - Backend: FastAPI routes for scheduling logic and API integrations
@@ -146,6 +164,8 @@ Create: `apps/web/src/app/social-scheduler/page.tsx` and `client.tsx`
 ---
 
 ### Tool 2: Backlink Analyzer
+
+**Status:** In Progress (Direct to Live)
 
 #### Feature Summary
 
@@ -240,11 +260,15 @@ Create: `apps/web/src/app/backlink-analyzer/page.tsx` and `client.tsx`
 
 ### Tool 3: A/B Testing Platform
 
+**Status:** In Progress (Direct to Live)
+
 #### Feature Summary
 
 A built-in A/B testing platform that allows users to test variations of landing pages, email campaigns, and CTAs. Includes statistical significance calculations, winner determination, and integration with existing tools.
 
 #### Technical Approach
+
+**Correction (Required):** Middleware-based variant serving needs an explicit cache-safe strategy (cookie-based variation + cache-control/matchers). Otherwise, variants can leak across users and be cached incorrectly.
 
 **Architecture:**
 - Backend: FastAPI routes for test management and variant serving
@@ -333,6 +357,8 @@ Create: `apps/web/src/app/ab-testing/page.tsx` and `client.tsx`
 ---
 
 ### Tool 4: Keyword Research Tool
+
+**Status:** In Progress (Direct to Live)
 
 #### Feature Summary
 
@@ -426,11 +452,15 @@ Create: `apps/web/src/app/keyword-research/page.tsx` and `client.tsx`
 
 ### Tool 5: Landing Page Builder
 
+**Status:** Planned (Dev → Live)
+
 #### Feature Summary
 
 A drag-and-drop landing page builder that allows users to create high-converting landing pages without coding. Includes template library, A/B testing integration, and analytics tracking.
 
 #### Technical Approach
+
+**Correction (Required):** The referenced `apps/web/src/app/landing/[slug]/page.tsx` route does not exist in this repo and must be created as a new route.
 
 **Architecture:**
 - Backend: FastAPI routes for page storage and rendering
@@ -521,6 +551,8 @@ Create: `apps/web/src/app/landing/[slug]/page.tsx` (enhance existing)
 
 ## 2. Advanced Analytics Features
 
+**Status:** Planned (Dev → Live)
+
 This section outlines five advanced analytics capabilities to enhance data insights and decision-making. All features integrate with the existing PostHog infrastructure.
 
 ### Current Analytics Setup
@@ -554,6 +586,8 @@ Cohort analysis segments users by acquisition date and tracks their behavior ove
 - Store cohort assignments in database
 - Calculate retention metrics server-side
 - Build custom visualization dashboard
+
+**Correction (Required):** Choose a single source of truth (PostHog or DB-backed cohorts) or define reconciliation rules to prevent metric drift between systems.
 
 #### Implementation Plan
 
@@ -1044,6 +1078,8 @@ Create: `apps/web/src/app/crm/analytics/kpis/page.tsx` and `client.tsx`
 
 ## 3. Mobile App Development
 
+**Status:** Planned (Dev → Live)
+
 This section provides a comprehensive roadmap for developing a mobile application with full feature parity to the web platform.
 
 ### Architecture Decision Matrix
@@ -1395,6 +1431,8 @@ jobs:
 ---
 
 ## 4. Additional Integrations
+
+**Status:** Planned (Dev → Live)
 
 This section outlines five strategic integrations to expand platform capabilities and streamline workflows.
 
@@ -1937,6 +1975,8 @@ Create: `apps/web/src/app/crm/integrations/slack/page.tsx`
 ---
 
 ## 5. Enhanced Reporting System
+
+**Status:** Planned (Dev → Live)
 
 This section describes the design and implementation of a comprehensive reporting system for both internal team members and client users.
 

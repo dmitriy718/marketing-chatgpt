@@ -213,6 +213,47 @@ async def track_conversion(
     return {"status": "tracked"}
 
 
+@router.get("/tests")
+@limiter.limit("30/minute")
+async def list_tests(
+    request: Request,
+    session: AsyncSession = Depends(get_session),
+):
+    """List all A/B tests."""
+    result = await session.execute(
+        select(ABTest).order_by(ABTest.created_at.desc())
+    )
+    tests = result.scalars().all()
+    
+    test_list = []
+    for test in tests:
+        # Get variant count
+        variants_result = await session.execute(
+            select(func.count(TestVariant.id)).where(TestVariant.test_id == test.id)
+        )
+        variant_count = variants_result.scalar() or 0
+        
+        # Get total visitors
+        assignments_result = await session.execute(
+            select(func.count(TestAssignment.id)).where(TestAssignment.test_id == test.id)
+        )
+        total_visitors = assignments_result.scalar() or 0
+        
+        test_list.append({
+            "test_id": str(test.id),
+            "name": test.name,
+            "description": test.description,
+            "target_url": test.target_url,
+            "status": test.status,
+            "conversion_event": test.conversion_event,
+            "variant_count": variant_count,
+            "total_visitors": total_visitors,
+            "created_at": test.created_at.isoformat() if test.created_at else None,
+        })
+    
+    return {"tests": test_list}
+
+
 @router.get("/tests/{test_id}/results")
 @limiter.limit("30/minute")
 async def get_test_results(
@@ -258,4 +299,11 @@ async def get_test_results(
             "conversion_rate": round(conversion_rate, 2),
         })
     
-    return {"test_id": test_id, "results": results}
+    return {
+        "test_id": test_id,
+        "test_name": test.name,
+        "test_description": test.description,
+        "test_status": test.status,
+        "conversion_event": test.conversion_event,
+        "results": results,
+    }
