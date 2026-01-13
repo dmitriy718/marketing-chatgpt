@@ -39,9 +39,9 @@ export function ChatWidgetEnhanced() {
   const handleAiMessage = async (text: string) => {
     if (!text.trim()) return;
 
-    // Check for Turnstile token if enabled
+    // Check for Turnstile token if enabled - but allow retry if missing
     if (turnstileEnabled && !turnstileToken) {
-      setError("Please complete the bot check.");
+      setError("Please complete the bot verification check below.");
       return;
     }
 
@@ -62,7 +62,7 @@ export function ChatWidgetEnhanced() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: text.trim(),
-          session_id: sessionId,
+          sessionId: sessionId,
           name: name.trim() || null,
           email: email.trim() || null,
           turnstileToken: turnstileToken || null,
@@ -71,6 +71,10 @@ export function ChatWidgetEnhanced() {
 
       const data = await response.json();
       if (!response.ok) {
+        // If bot verification failed, reset the token so user can try again
+        if (data.error?.includes("verification") || data.error?.includes("bot")) {
+          setTurnstileToken(null);
+        }
         throw new Error(data.error || data.detail || "AI response failed");
       }
 
@@ -90,10 +94,12 @@ export function ChatWidgetEnhanced() {
         setMode("human");
       }
       setStatus("idle");
+      // Reset Turnstile token after successful message so it verifies again for next message
       setTurnstileToken(null);
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Failed to get AI response");
+      // Don't reset status to idle on error, let user see the error and retry
     }
   };
 
