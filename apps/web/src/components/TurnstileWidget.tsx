@@ -34,6 +34,12 @@ const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 export function TurnstileWidget({ onVerify, onError, onExpire }: TurnstileWidgetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
+  const callbacksRef = useRef({ onVerify, onError, onExpire });
+
+  // Update callbacks ref when they change, but don't trigger re-render
+  useEffect(() => {
+    callbacksRef.current = { onVerify, onError, onExpire };
+  }, [onVerify, onError, onExpire]);
 
   const resetWidget = () => {
     if (widgetIdRef.current && window.turnstile) {
@@ -56,7 +62,7 @@ export function TurnstileWidget({ onVerify, onError, onExpire }: TurnstileWidget
 
     const internalToken = (window as Window & { __internalApiToken?: string }).__internalApiToken;
     if (internalToken) {
-      onVerify(internalToken);
+      callbacksRef.current.onVerify(internalToken);
       return;
     }
 
@@ -64,27 +70,20 @@ export function TurnstileWidget({ onVerify, onError, onExpire }: TurnstileWidget
       if (!window.turnstile || !containerRef.current) {
         return;
       }
-      // Reset if widget already exists
+      // Only render if widget doesn't exist
       if (widgetIdRef.current) {
-        try {
-          window.turnstile.reset(widgetIdRef.current);
-          return;
-        } catch {
-          // If reset fails, clear and re-render
-          containerRef.current.innerHTML = "";
-          widgetIdRef.current = null;
-        }
+        return; // Widget already exists, don't re-render
       }
       widgetIdRef.current = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
-        callback: onVerify,
+        callback: (token: string) => callbacksRef.current.onVerify(token),
         "error-callback": () => {
           resetWidget();
-          onError?.();
+          callbacksRef.current.onError?.();
         },
         "expired-callback": () => {
           resetWidget();
-          onExpire?.();
+          callbacksRef.current.onExpire?.();
         },
         theme: "auto",
       });
@@ -109,8 +108,19 @@ export function TurnstileWidget({ onVerify, onError, onExpire }: TurnstileWidget
     script.addEventListener("load", renderWidget);
     document.head.appendChild(script);
 
-    return () => script.removeEventListener("load", renderWidget);
-  }, [onExpire, onError, onVerify]);
+    return () => {
+      script.removeEventListener("load", renderWidget);
+      // Clean up widget on unmount
+      if (widgetIdRef.current && window.turnstile) {
+        try {
+          window.turnstile.remove(widgetIdRef.current);
+        } catch {
+          // Ignore errors during cleanup
+        }
+        widgetIdRef.current = null;
+      }
+    };
+  }, []); // Empty deps - only run once on mount
 
   if (!siteKey) {
     return null;
