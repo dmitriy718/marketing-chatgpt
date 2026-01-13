@@ -33,6 +33,20 @@ export function TurnstileWidget({ onVerify, onError, onExpire }: TurnstileWidget
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
 
+  const resetWidget = () => {
+    if (widgetIdRef.current && window.turnstile) {
+      try {
+        window.turnstile.reset(widgetIdRef.current);
+      } catch (e) {
+        // If reset fails, remove and re-render
+        if (containerRef.current) {
+          containerRef.current.innerHTML = "";
+          widgetIdRef.current = null;
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (!siteKey || !containerRef.current) {
       return;
@@ -45,14 +59,31 @@ export function TurnstileWidget({ onVerify, onError, onExpire }: TurnstileWidget
     }
 
     const renderWidget = () => {
-      if (!window.turnstile || !containerRef.current || widgetIdRef.current) {
+      if (!window.turnstile || !containerRef.current) {
         return;
+      }
+      // Reset if widget already exists
+      if (widgetIdRef.current) {
+        try {
+          window.turnstile.reset(widgetIdRef.current);
+          return;
+        } catch {
+          // If reset fails, clear and re-render
+          containerRef.current.innerHTML = "";
+          widgetIdRef.current = null;
+        }
       }
       widgetIdRef.current = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
         callback: onVerify,
-        "error-callback": onError,
-        "expired-callback": onExpire,
+        "error-callback": () => {
+          resetWidget();
+          onError?.();
+        },
+        "expired-callback": () => {
+          resetWidget();
+          onExpire?.();
+        },
         theme: "auto",
       });
     };

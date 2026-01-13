@@ -74,7 +74,10 @@ export function BacklinkAnalyzerPageClient() {
         setShowEmail(true);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to analyze backlinks");
+      const errorMessage = err instanceof Error ? err.message : "Failed to analyze backlinks";
+      setError(errorMessage);
+      // Reset Turnstile token on error so user can try again
+      setTurnstileToken(null);
     } finally {
       setLoading(false);
     }
@@ -124,7 +127,13 @@ export function BacklinkAnalyzerPageClient() {
 
           <TurnstileWidget
             onVerify={(token) => setTurnstileToken(token)}
-            onError={() => setTurnstileToken(null)}
+            onError={() => {
+              setTurnstileToken(null);
+              setError("Bot verification failed. Please try again.");
+            }}
+            onExpire={() => {
+              setTurnstileToken(null);
+            }}
           />
 
           {error && (

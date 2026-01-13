@@ -30,67 +30,51 @@ class BacklinkAnalysisRequest(BaseModel):
 async def analyze_backlinks(url: str) -> dict:
     """
     Analyze backlinks for a given URL.
-    This is a basic implementation that can be extended with API integration.
+    This is a basic implementation that validates the URL and provides a placeholder response.
+    Real backlink analysis requires external APIs (Ahrefs, Moz, SEMrush) to find links pointing TO the target URL.
     """
     try:
-        # Fetch the target page
+        # Validate URL is accessible
         html, status_code = await fetch_validated_html(url, user_agent="Carolina Growth Backlink Analyzer")
-        soup = BeautifulSoup(html, "lxml")
+        if status_code != 200:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"URL returned status {status_code}. Please ensure the URL is accessible."
+            )
 
-        # Extract basic backlink information
-        # Note: This is a simplified analysis. Real implementation would use
-        # Ahrefs/Moz API or more sophisticated scraping
-        links = soup.find_all("a", href=True)
+        # Parse the URL to extract domain
+        parsed_url = urlparse(url)
+        domain = parsed_url.netloc
         
-        backlinks = []
-        referring_domains = set()
+        # Note: Real backlink analysis requires external APIs to find links pointing TO the target URL.
+        # This is a placeholder implementation that validates the URL and returns sample data.
+        # For production, integrate with Ahrefs, Moz, SEMrush, or similar APIs.
         
-        for link in links[:50]:  # Limit to first 50 for demo
-            href = link.get("href", "")
-            if not href:
-                continue
-            
-            # Resolve relative URLs
-            if href.startswith("/"):
-                full_url = f"{urlparse(str(url)).scheme}://{urlparse(str(url)).netloc}{href}"
-            elif href.startswith("http"):
-                full_url = href
-            else:
-                continue
-            
-            # Extract domain
-            try:
-                domain = urlparse(full_url).netloc
-                referring_domains.add(domain)
-            except Exception:
-                continue
-            
-            anchor_text = link.get_text(strip=True) or ""
-            link_type = "dofollow" if link.get("rel") != "nofollow" else "nofollow"
-            
-            backlinks.append({
-                "source_url": full_url,
-                "target_url": str(url),
-                "anchor_text": anchor_text[:500],
-                "link_type": link_type,
-                "domain_authority": None,  # Would come from API
-            })
-
-        # Calculate quality score (simplified)
-        quality_score = min(100, max(0, len(referring_domains) * 2 + len(backlinks)))
-
+        # For now, return a basic analysis indicating the URL is valid
+        # In a real implementation, you would:
+        # 1. Call an external backlink API with the target URL
+        # 2. Parse the response to get actual backlinks
+        # 3. Calculate quality scores based on domain authority, link types, etc.
+        
+        logger.info(f"Backlink analysis requested for {url} (placeholder implementation)")
+        
+        # Return placeholder data indicating the URL is valid but no backlinks were found via scraping
+        # This is expected since we can't find backlinks by scraping the target site itself
         return {
-            "total_backlinks": len(backlinks),
-            "referring_domains": len(referring_domains),
-            "quality_score": quality_score,
-            "backlinks": backlinks[:20],  # Return top 20
-            "top_domains": list(referring_domains)[:10],
+            "total_backlinks": 0,
+            "referring_domains": 0,
+            "quality_score": 0,
+            "backlinks": [],
+            "top_domains": [],
+            "note": "This is a placeholder implementation. Real backlink analysis requires integration with external APIs (Ahrefs, Moz, SEMrush) to find links pointing to your site.",
         }
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error("Error analyzing backlinks: %s", e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to analyze backlinks"
+            detail=f"Failed to analyze backlinks: {str(e)}"
         )
 
 
