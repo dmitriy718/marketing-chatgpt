@@ -9,8 +9,8 @@ type AnalyzePayload = {
   turnstileToken?: string | null;
 };
 
-const API_URL =
-  process.env.API_INTERNAL_URL ?? process.env.API_URL ?? "http://localhost:8001";
+// Use API_URL (external) as primary, with internal as fallback
+const API_URL = process.env.API_URL ?? process.env.API_INTERNAL_URL ?? "https://carolinagrowth.co";
 const INTERNAL_TOKEN = process.env.INTERNAL_API_TOKEN;
 
 export async function POST(request: Request) {
