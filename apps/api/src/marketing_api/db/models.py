@@ -358,3 +358,107 @@ class ConsultationBooking(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     duration_minutes: Mapped[int] = mapped_column(Integer, server_default="30", nullable=False)
     status: Mapped[str] = mapped_column(String(50), server_default="pending", nullable=False)
     notes: Mapped[str | None] = mapped_column(Text())
+
+
+class BacklinkAnalysis(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "backlink_analyses"
+
+    url: Mapped[str] = mapped_column(String(500), nullable=False, index=True)
+    email: Mapped[str | None] = mapped_column(String(255), index=True)
+    status: Mapped[str] = mapped_column(String(50), server_default="pending", nullable=False)
+    analysis_json: Mapped[str | None] = mapped_column(Text)
+    quality_score: Mapped[int | None] = mapped_column(Integer)
+    total_backlinks: Mapped[int | None] = mapped_column(Integer)
+    referring_domains: Mapped[int | None] = mapped_column(Integer)
+
+
+class Backlink(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "backlinks"
+
+    analysis_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("backlink_analyses.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    source_url: Mapped[str] = mapped_column(String(500), nullable=False)
+    target_url: Mapped[str] = mapped_column(String(500), nullable=False)
+    anchor_text: Mapped[str | None] = mapped_column(String(500))
+    domain_authority: Mapped[int | None] = mapped_column(Integer)
+    link_type: Mapped[str | None] = mapped_column(String(50))  # dofollow, nofollow, etc.
+
+
+class ABTest(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "ab_tests"
+
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String(50), server_default="draft", nullable=False)  # draft, active, paused, completed
+    start_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    end_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    target_url: Mapped[str | None] = mapped_column(String(500))
+    conversion_event: Mapped[str | None] = mapped_column(String(255))
+    traffic_split: Mapped[str | None] = mapped_column(String(50))  # JSON: {"control": 50, "variant": 50}
+
+
+class TestVariant(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "test_variants"
+
+    test_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("ab_tests.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    variant_key: Mapped[str] = mapped_column(String(50), nullable=False)  # control, variant_a, etc.
+    content_json: Mapped[str] = mapped_column(Text, nullable=False)  # JSON with variant content
+    weight: Mapped[int] = mapped_column(Integer, server_default="50", nullable=False)  # Traffic percentage
+
+
+class TestAssignment(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "test_assignments"
+
+    test_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("ab_tests.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    variant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("test_variants.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    user_id: Mapped[str | None] = mapped_column(String(255), index=True)  # Can be user ID or session ID
+    session_id: Mapped[str | None] = mapped_column(String(255), index=True)
+    assigned_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+
+class TestConversion(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "test_conversions"
+
+    test_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("ab_tests.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    variant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("test_variants.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    assignment_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("test_assignments.id", ondelete="SET NULL"), index=True
+    )
+    user_id: Mapped[str | None] = mapped_column(String(255), index=True)
+    event_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    converted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+
+class KeywordResearch(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "keyword_researches"
+
+    seed_keyword: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    email: Mapped[str | None] = mapped_column(String(255), index=True)
+    research_json: Mapped[str | None] = mapped_column(Text)  # JSON with keyword data
+    total_keywords: Mapped[int | None] = mapped_column(Integer)
+
+
+class Keyword(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "keywords"
+
+    research_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("keyword_researches.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    keyword: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    search_volume: Mapped[int | None] = mapped_column(Integer)
+    difficulty: Mapped[int | None] = mapped_column(Integer)  # 0-100
+    cpc: Mapped[float | None] = mapped_column()  # Cost per click
+    competition: Mapped[str | None] = mapped_column(String(50))  # low, medium, high
+    intent: Mapped[str | None] = mapped_column(String(50))  # informational, commercial, transactional

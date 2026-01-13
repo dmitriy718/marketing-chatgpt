@@ -11,7 +11,9 @@ from marketing_api.auth.dependencies import extract_bearer_token, resolve_user_f
 from marketing_api.graphql.schema import schema
 from marketing_api.limits import limiter
 from marketing_api.middleware.posthog import PostHogMiddleware
+from marketing_api.routes.ab_testing import router as ab_testing_router
 from marketing_api.routes.auth import router as auth_router
+from marketing_api.routes.backlink_analyzer import router as backlink_analyzer_router
 from marketing_api.routes.chat_ai import router as chat_ai_router
 from marketing_api.routes.competitor import router as competitor_router
 from marketing_api.routes.consultation import router as consultation_router
@@ -21,6 +23,7 @@ from marketing_api.routes.email_automation import router as email_automation_rou
 from marketing_api.routes.email_admin import router as email_admin_router
 from marketing_api.routes.health import router as health_router
 from marketing_api.routes.intelligence import router as intelligence_router
+from marketing_api.routes.keyword_research import router as keyword_research_router
 from marketing_api.routes.lead_potential import router as lead_potential_router
 from marketing_api.routes.public import router as public_router
 from marketing_api.routes.readiness import router as readiness_router
@@ -76,6 +79,8 @@ def create_app() -> FastAPI:
     app.include_router(health_router)
     app.include_router(auth_router)
     app.include_router(public_router)
+    app.include_router(ab_testing_router)
+    app.include_router(backlink_analyzer_router)
     app.include_router(chat_ai_router)
     app.include_router(competitor_router)
     app.include_router(consultation_router)
@@ -84,6 +89,7 @@ def create_app() -> FastAPI:
     app.include_router(email_automation_router)
     app.include_router(email_admin_router)
     app.include_router(intelligence_router)
+    app.include_router(keyword_research_router)
     app.include_router(lead_potential_router)
     app.include_router(readiness_router)
     app.include_router(seo_router)

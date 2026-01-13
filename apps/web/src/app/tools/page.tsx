@@ -55,6 +55,27 @@ const tools = [
     icon: "✍️",
     category: "Content",
   },
+  {
+    name: "Backlink Analyzer",
+    description: "Analyze your website's backlink profile, identify linking opportunities, and get actionable insights for link building campaigns.",
+    href: "/backlink-analyzer?utm_source=site&utm_medium=link&utm_campaign=tools-page",
+    icon: "🔗",
+    category: "SEO",
+  },
+  {
+    name: "Keyword Research Tool",
+    description: "Discover high-value keywords for your SEO strategy. Get keyword suggestions, search volume estimates, and competition analysis.",
+    href: "/keyword-research?utm_source=site&utm_medium=link&utm_campaign=tools-page",
+    icon: "🔑",
+    category: "SEO",
+  },
+  {
+    name: "A/B Testing Platform",
+    description: "Test variations of landing pages, email campaigns, and CTAs. Get statistical significance calculations and determine winners.",
+    href: "/ab-testing?utm_source=site&utm_medium=link&utm_campaign=tools-page",
+    icon: "🧪",
+    category: "Testing",
+  },
 ];
 
 export default function ToolsPage() {
