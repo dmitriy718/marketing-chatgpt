@@ -2,11 +2,25 @@
 
 **Date**: January 12, 2026  
 **Version**: 1.0  
-**Status**: Planning & Design Phase
+**Status**: Planning & Design Phase (with partial implementation underway)
 
 ## Overview
 
 This document provides comprehensive implementation plans for five major enhancement areas to expand the Carolina Growth marketing platform. Each section includes detailed technical specifications, step-by-step implementation guides, tooling recommendations, and risk assessments.
+
+### Implementation Status & Rollout Policy
+
+- We have already begun implementing Tool 2 (Backlink Analyzer), Tool 3 (A/B Testing Platform), and Tool 4 (Keyword Research Tool), and these three will ship directly to production.
+- All other enhancements described in this document must be tested on the development server before going live.
+
+### Decision Log (Required Updates)
+
+- **Social Media Scheduler**: The Instagram Basic Display API is read-only and cannot publish/schedule posts. The correct path for scheduling requires the Instagram Graph API with a connected Facebook Page and appropriate permissions.
+- **A/B Testing Middleware**: Variant serving must include a cache-safe routing strategy (e.g., cookie-based variation with explicit cache-control and middleware matchers) to prevent variant leakage and caching issues.
+- **Landing Page Builder**: The document references an existing `apps/web/src/app/landing/[slug]/page.tsx` route, but it does not exist in this repo. This should be created explicitly as a new route.
+- **Cohort Analytics Source of Truth**: The plan currently mixes PostHog cohort queries and custom DB-backed cohorts. Pick one canonical source or define reconciliation rules to avoid metric divergence.
+- **Background Jobs**: If introducing Celery/Redis, define infra, deployment, and migration from current BackgroundTasks usage. Otherwise, keep job execution within the existing async/background model.
+- **OAuth Token Storage**: “Encrypted credentials” requires a concrete key management plan (KMS or envelope encryption, rotation, and access controls).
 
 ## Table of Contents
 
@@ -2301,4 +2315,3 @@ This document outlines comprehensive enhancement plans for five major areas of t
 **Document Version**: 1.0  
 **Last Updated**: January 12, 2026  
 **Next Review**: Quarterly or as priorities change
-
