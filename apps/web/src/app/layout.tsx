@@ -1,7 +1,7 @@
 import { Manrope, Sora } from "next/font/google";
 
 import { SiteFooter } from "@/components/SiteFooter";
-import { HeaderSelector } from "@/components/HeaderSelector";
+import { SiteHeader } from "@/components/SiteHeader";
 import { ChatWidgetEnhanced } from "@/components/ChatWidgetEnhanced";
 import { Analytics } from "@/components/Analytics";
 import { PostHogProvider } from "@/components/PostHogProvider";
@@ -79,7 +79,7 @@ export default function RootLayout({
               <a href="#main-content" className="skip-link">
                 Skip to content
               </a>
-              <HeaderSelector />
+              <SiteHeader />
               <main id="main-content" className="flex-1">
                 {children}
               </main>
