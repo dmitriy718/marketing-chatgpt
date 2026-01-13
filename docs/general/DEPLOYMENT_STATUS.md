@@ -1,4 +1,20 @@
 # Deployment Status
+## Recent Critical Fixes
+
+### 2026-01-13 - Navigation Reversion Fix (CRITICAL)
+**Issue**: Production site navigation reverted to old style after web container rebuild
+**Root Cause**: `layout.tsx` was using `HeaderSelector` component which conditionally rendered headers, and `SiteHeader.tsx` still contained the old navigation design
+**Fix Applied**:
+- Updated `SiteHeader.tsx` with the new modern navigation design (two-tier layout with gradient background)
+- Changed `layout.tsx` to directly use `SiteHeader` instead of `HeaderSelector`
+- Rebuilt and redeployed web container immediately
+- Verified new navigation is live on production
+
+**Prevention**: 
+- Always verify navigation components are updated before deployment
+- Test production builds locally before deploying to VPS
+- Ensure `SiteHeader.tsx` matches the intended production design
+
 ## Last Updated: 2026-01-11 (Version 1.0 Complete)
 
 ## Current Status
