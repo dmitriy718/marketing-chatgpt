@@ -89,8 +89,7 @@ async def research_keywords_endpoint(
 ):
     """Research keywords based on a seed keyword."""
     # Turnstile verification
-    should_bypass = await should_bypass_turnstile(request, body.turnstile_token)
-    if not should_bypass:
+    if not should_bypass_turnstile(request):
         from marketing_api.routes.public import verify_turnstile
         await verify_turnstile(body.turnstile_token)
 
