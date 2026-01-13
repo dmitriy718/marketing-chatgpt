@@ -62,7 +62,7 @@ export function ChatWidgetEnhanced() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: text.trim(),
-          sessionId: sessionId,
+          sessionId: sessionId || null,
           name: name.trim() || null,
           email: email.trim() || null,
           turnstileToken: turnstileToken || null,

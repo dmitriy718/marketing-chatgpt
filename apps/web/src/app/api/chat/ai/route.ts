@@ -44,10 +44,10 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         message: body.message,
-        session_id: body.sessionId ?? null,
-        name: body.name ?? null,
-        email: body.email ?? null,
-        turnstile_token: body.turnstileToken ?? null,
+        session_id: body.sessionId || null,
+        name: body.name || null,
+        email: body.email || null,
+        turnstile_token: body.turnstileToken || null,
       }),
     });
 
