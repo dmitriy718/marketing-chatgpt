@@ -52,5 +52,44 @@ docker compose -f docker-compose.staging.yml up -d web_staging
 
 The site runs on port 3002 internally and is proxied by Nginx to development.carolinagrowth.co
 
+## Current Status
+
+✅ **Development server is running the latest code**
+- All new features (Backlink Analyzer, A/B Testing, Keyword Research) are deployed
+- API and Web containers are up to date
+- Environment variables (OpenAI, PostHog) are configured
+
+## Quick Commands
+
+### Update Development Server
+```bash
+# SSH to VPS
+ssh root@74.208.153.193
+
+# Navigate to project
+cd /opt/marketing
+
+# Pull latest code
+git pull origin main
+
+# Rebuild and restart staging containers
+docker compose -f docker-compose.staging.yml build api_staging web_staging
+docker compose -f docker-compose.staging.yml up -d api_staging web_staging
+```
+
+### Check Container Status
+```bash
+docker compose -f docker-compose.staging.yml ps
+```
+
+### View Logs
+```bash
+# API logs
+docker compose -f docker-compose.staging.yml logs -f api_staging
+
+# Web logs
+docker compose -f docker-compose.staging.yml logs -f web_staging
+```
+
 ## Last Updated
-2026-01-11
+2026-01-13
