@@ -148,7 +148,7 @@ export function SiteHeader() {
             <div className="hidden md:flex">
               <ThemeToggle />
             </div>
-            <details className="md:hidden">
+            <details ref={mobileRef} className="md:hidden">
               <summary className="cursor-pointer text-xs font-bold uppercase tracking-wider text-[var(--foreground)]">
                 Menu
               </summary>
