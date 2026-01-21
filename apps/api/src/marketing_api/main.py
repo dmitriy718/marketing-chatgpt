@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from strawberry.fastapi import GraphQLRouter
@@ -57,6 +58,9 @@ def create_app() -> FastAPI:
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
     
+    # GZip compression
+    app.add_middleware(GZipMiddleware, minimum_size=1000)
+
     # PostHog middleware for error tracking and performance monitoring
     app.add_middleware(PostHogMiddleware)
     
@@ -105,29 +109,6 @@ def create_app() -> FastAPI:
                 password=settings.admin_password,
             )
             break
-
-    # Background task for email automation (runs every 5 minutes)
-    @app.on_event("startup")
-    async def start_email_scheduler() -> None:
-        import asyncio
-        from marketing_api.routes.email_automation import process_email_queue
-
-        async def run_scheduler():
-            backoff_seconds = 5
-            max_backoff = 300
-            while True:
-                try:
-                    async for session in get_session():
-                        await process_email_queue(session)
-                        break
-                    backoff_seconds = 5
-                    await asyncio.sleep(300)  # 5 minutes
-                except Exception:  # noqa: BLE001
-                    logger.exception("Email scheduler failed; backing off")
-                    await asyncio.sleep(backoff_seconds)
-                    backoff_seconds = min(max_backoff, backoff_seconds * 2)
-
-        asyncio.create_task(run_scheduler())
 
     return app
 
