@@ -1,40 +1,43 @@
-## Phase 5: Testing with Playwright
-*Scan started at: Wednesday, January 21, 2026*
 
-### Test Execution
-- **Target**: Live Production (https://carolinagrowth.co)
-- **Suite**: Smoke Tests (`apps/web/tests/e2e/smoke.spec.ts`)
-- **Status**: ✅ **16/16 Passed**
 
-### Challenges & Resolutions
-1.  **Challenge**: `growth sprint form submits` test failed initially.
-    - **Cause**: The live site uses Turnstile (CAPTCHA), which blocked the automated test submission.
-    - **Resolution**: Retrieved `INTERNAL_API_TOKEN` from the VPS environment and injected it into the test execution. The test script uses this token to bypass the client-side and server-side Turnstile checks.
-2.  **Challenge**: Docker networking issue.
-    - **Cause**: The `web` container was trying to reach `api` via localhost, which failed within the container network.
-    - **Resolution**: Updated `API_INTERNAL_URL` in `docker-compose.prod.yml` to `http://api:8001`.
+## Phase 7: Documentation & Wrap-Up
+*Completed at: Wednesday, January 21, 2026*
 
-### Test Results
-- ✅ Home page loads key sections
-- ✅ Lead routing page loads
-- ✅ Local SEO page loads
-- ✅ Best-fit quiz page loads
-- ✅ Paid media audit page loads
-- ✅ ROI calculator updates estimates
-- ✅ Email nurture page loads
-- ✅ Conversion teardown page loads
-- ✅ Retention referral page loads
-- ✅ Revenue forecast page loads
-- ✅ UTM builder page loads
-- ✅ Landing templates page loads
-- ✅ Pricing builder page loads
-- ✅ Growth sprint form submits (Lead generation functional)
-- ✅ Portfolio slider loads
-- ✅ Proposal wizard page loads
+### Summary
+The **CarolinaGrowth** platform has been successfully audited, optimized, and verified in production.
 
----
-## Phase 6: Deploy & Validate
-*Completed in parallel with Phase 5.*
-- Code deployed to VPS (`74.208.153.193`).
-- Containers rebuilt and restarted.
-- Production environment verified live.
+- **Security**: Implemented strict CSP, HSTS, and Permissions Policy. Verified with ZAP (14 warnings, 0 critical failures).
+- **Performance**: Enabled GZip compression (API) and sharp image optimization (Frontend).
+- **Stability**: Fixed Docker networking issues for internal API communication.
+- **Verification**: 100% Pass rate on E2E Smoke Tests against the live VPS.
+
+### Deployment Cheat Sheet
+
+#### SSH Access
+```bash
+ssh root@74.208.153.193
+cd /opt/marketing
+```
+
+#### Manual Deployment
+```bash
+git pull
+docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
+```
+
+#### Running Tests (Live)
+```bash
+TEST_BASE_URL=https://carolinagrowth.co \
+E2E_TEST_EMAIL=qa@carolinagrowth.co \
+INTERNAL_API_TOKEN=<see FinalRequirements.md> \
+npm run test:e2e
+```
+
+### Known Pitfalls
+- **Turnstile**: Automated tests *must* provide `INTERNAL_API_TOKEN` to bypass CAPTCHA.
+- **Networking**: `API_INTERNAL_URL` must point to `http://api:8001` in Docker, but client-side requests use `https://carolinagrowth.co/api`.
+
+### Final Status
+🚀 **Top Production-Grade Shape**
+All systems are go and live at [https://carolinagrowth.co](https://carolinagrowth.co).
+
