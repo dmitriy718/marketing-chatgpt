@@ -12,7 +12,8 @@ from marketing_api.auth.dependencies import extract_bearer_token, resolve_user_f
 from marketing_api.graphql.schema import schema
 from marketing_api.limits import limiter
 from marketing_api.middleware.posthog import PostHogMiddleware
-from marketing_api.routes.ab_testing import router as ab_testing_router
+from marketing_api.middleware.alerts import ErrorAlertMiddleware
+from marketing_api.routes.admin_dashboard import router as admin_dashboard_router
 from marketing_api.routes.auth import router as auth_router
 from marketing_api.routes.backlink_analyzer import router as backlink_analyzer_router
 from marketing_api.routes.chat_ai import router as chat_ai_router
@@ -61,6 +62,9 @@ def create_app() -> FastAPI:
     # GZip compression
     app.add_middleware(GZipMiddleware, minimum_size=1000)
 
+    # Error Alert Middleware
+    app.add_middleware(ErrorAlertMiddleware)
+    
     # PostHog middleware for error tracking and performance monitoring
     app.add_middleware(PostHogMiddleware)
     
@@ -81,6 +85,7 @@ def create_app() -> FastAPI:
     graphql_app = GraphQLRouter(schema, context_getter=get_context)
 
     app.include_router(health_router)
+    app.include_router(admin_dashboard_router)
     app.include_router(auth_router)
     app.include_router(public_router)
     app.include_router(ab_testing_router)

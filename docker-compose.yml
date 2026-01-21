@@ -120,6 +120,37 @@ services:
     command: >
       node leadgen/src/server.js
 
+  redis:
+    image: redis:7
+    container_name: carolina_growth_redis
+    network_mode: host
+    ports:
+      - "6379:6379"
+
+  celery_worker:
+    build:
+      context: ./apps/api
+    container_name: carolina_growth_celery
+    network_mode: host
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://marketing:change_me@localhost:${POSTGRES_PORT:-5434}/carolina_growth}
+      CELERY_BROKER_URL: "redis://localhost:6379/0"
+      CELERY_RESULT_BACKEND: "redis://localhost:6379/0"
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      PYTHONPATH: /app/src
+    volumes:
+      - ./apps/api:/app
+    command: >
+      poetry run celery -A marketing_api.celery_app worker --loglevel=info
+
 volumes:
   carolina_growth_postgres_data:
   carolina_growth_web_node_modules:

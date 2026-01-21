@@ -464,7 +464,7 @@ async def capture_chat_message(
 
 
 @router.post("/stripe/subscription")
-@limiter.limit("6/minute")
+@limiter.limit("3/minute")
 async def create_stripe_subscription(
     request: Request,
     payload: StripeSubscriptionRequest,
@@ -517,7 +517,7 @@ async def create_stripe_subscription(
 
 
 @router.post("/stripe/payment-intent")
-@limiter.limit("6/minute")
+@limiter.limit("3/minute")
 async def create_stripe_payment_intent(
     request: Request,
     payload: StripePaymentIntentRequest,
@@ -556,7 +556,7 @@ async def create_stripe_payment_intent(
 
 
 @router.post("/stripe/invoice")
-@limiter.limit("4/minute")
+@limiter.limit("2/minute")
 async def create_stripe_invoice(
     request: Request,
     payload: StripeInvoiceRequest,

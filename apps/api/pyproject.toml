@@ -28,6 +28,8 @@ lxml = "^5.3.0"
 openai = "^1.54.5"
 posthog = "^3.5.0"
 scipy = "^1.13.1"
+celery = "^5.3.6"
+redis = "^5.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.2"

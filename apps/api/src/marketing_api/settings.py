@@ -61,13 +61,24 @@ class Settings(BaseSettings):
     pushover_user_key: str | None = None
     pushover_group_key: str | None = None
     openai_api_key: str | None = None
+    celery_broker_url: str = "redis://redis:6379/0"
+    celery_result_backend: str = "redis://redis:6379/0"
 
     model_config = SettingsConfigDict(
         env_file=(str(ROOT_DIR / ".env"), ".env"), extra="ignore"
     )
-    
+
     def model_post_init(self, __context):
-        """Post-initialization to support alternative env var names."""
+        """Post-initialization validation and support for alternative env var names."""
+        if self.app_env == "production":
+            unsafe_defaults = ["change_me", "sk_test_change_me", "whsec_change_me", "phc_change_me"]
+            if self.jwt_secret in unsafe_defaults:
+                raise ValueError("Insecure 'jwt_secret' detected in production!")
+            if self.session_secret in unsafe_defaults:
+                raise ValueError("Insecure 'session_secret' detected in production!")
+            if self.stripe_secret_key in unsafe_defaults:
+                raise ValueError("Insecure 'stripe_secret_key' detected in production!")
+
         # Support both POSTHOG_PERSONAL_API_KEY and POSTHOG_PERSONAL_KEY
         # Check environment variable directly if not set via Pydantic
         if not self.posthog_personal_api_key:
