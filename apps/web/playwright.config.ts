@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 
 const baseURL =
+  process.env.TEST_BASE_URL ??
   process.env.PLAYWRIGHT_BASE_URL ??
   process.env.NEXT_PUBLIC_SITE_URL ??
   "http://localhost:3001";
